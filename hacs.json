@@ -1,0 +1,7 @@
+{
+  "name": "Aurora Card",
+  "render_readme": true,
+  "filename": "dist/aurora-card.js",
+  "country": ["GB", "PL", "US"],
+  "hacs": "1.32.0"
+}
