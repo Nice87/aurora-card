@@ -8,6 +8,11 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { fireEvent } from '../utils/hass-connect';
 let AuroraCardEditor = class AuroraCardEditor extends LitElement {
+    constructor() {
+        super(...arguments);
+        this._activeTab = 'general';
+        this._entitySearchFilter = '';
+    }
     setConfig(config) {
         this._config = {
             card_type: 'button',
@@ -23,191 +28,185 @@ let AuroraCardEditor = class AuroraCardEditor extends LitElement {
         const entity = this._config.entity || '';
         const name = this._config.name || '';
         const icon = this._config.icon || '';
-        const hash = this._config.hash || '#aurora-popup';
         const tapAction = this._config.tap_action?.action || 'toggle';
         const subButtons = this._config.sub_button || [];
-        const entities = Object.keys(this.hass.states).sort();
+        const allEntities = Object.keys(this.hass.states).sort();
+        const filteredEntities = allEntities.filter((ent) => {
+            const friendly = (this.hass.states[ent]?.attributes.friendly_name || '').toLowerCase();
+            const query = this._entitySearchFilter.toLowerCase();
+            return ent.toLowerCase().includes(query) || friendly.includes(query);
+        });
         return html `
       <div class="card-config-container">
-        <div class="section-header">
-          <h3>Aurora Card Studio</h3>
-          <p>Configure card architecture, entities, interactive sliders, pop-ups, and sub-buttons.</p>
+        <div class="editor-header">
+          <div class="header-titles">
+            <h3>Aurora Card Studio</h3>
+            <p>Modular glassmorphism card suite & module store</p>
+          </div>
+          <div class="editor-tabs">
+            <button
+              class="tab-btn ${this._activeTab === 'general' ? 'active' : ''}"
+              @click="${() => (this._activeTab = 'general')}"
+            >
+              General
+            </button>
+            <button
+              class="tab-btn ${this._activeTab === 'subbuttons' ? 'active' : ''}"
+              @click="${() => (this._activeTab = 'subbuttons')}"
+            >
+              Sub-Buttons (${subButtons.length})
+            </button>
+            <button
+              class="tab-btn ${this._activeTab === 'styles' ? 'active' : ''}"
+              @click="${() => (this._activeTab = 'styles')}"
+            >
+              Styles
+            </button>
+            <button
+              class="tab-btn ${this._activeTab === 'modules' ? 'active' : ''}"
+              @click="${() => (this._activeTab = 'modules')}"
+            >
+              Module Store 📦
+            </button>
+          </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="card_type">Card Type</label>
-            <select
-              id="card_type"
-              .value="${cardType}"
-              @change="${(e) => this._valueChanged(e, 'card_type')}"
-            >
-              <optgroup label="Core Bubble Parity">
-                <option value="button" ?selected="${cardType === 'button'}">Button / Slider</option>
-                <option value="pop-up" ?selected="${cardType === 'pop-up'}">Pop-up Container</option>
-                <option value="separator" ?selected="${cardType === 'separator'}">Separator / Header</option>
-                <option value="cover" ?selected="${cardType === 'cover'}">Cover / Shutter</option>
-                <option value="climate" ?selected="${cardType === 'climate'}">Climate / HVAC</option>
-                <option value="media-player" ?selected="${cardType === 'media-player'}">Media Player</option>
-                <option value="empty-column" ?selected="${cardType === 'empty-column'}">Empty Column Spacer</option>
-              </optgroup>
-              <optgroup label="Aurora Advanced Cards">
-                <option value="routine-macro" ?selected="${cardType === 'routine-macro'}">Routine Macro Launcher</option>
-                <option value="energy-flow" ?selected="${cardType === 'energy-flow'}">Energy Flow Matrix</option>
-                <option value="security-matrix" ?selected="${cardType === 'security-matrix'}">Security & Camera Hub</option>
-                <option value="weather-radar" ?selected="${cardType === 'weather-radar'}">Weather & Microclimate</option>
-                <option value="multi-room-audio" ?selected="${cardType === 'multi-room-audio'}">Multi-Room Audio (MA)</option>
-                <option value="hvac-zoning" ?selected="${cardType === 'hvac-zoning'}">HVAC & Storage Heating</option>
-                <option value="mesh-topology" ?selected="${cardType === 'mesh-topology'}">Zigbee / Matter Mesh</option>
-                <option value="ev-charger" ?selected="${cardType === 'ev-charger'}">EV & Solar Charger</option>
-                <option value="air-quality" ?selected="${cardType === 'air-quality'}">Air Quality Matrix</option>
-                <option value="floorplan" ?selected="${cardType === 'floorplan'}">Interactive Floorplan</option>
-              </optgroup>
-            </select>
-          </div>
-
-          ${cardType === 'button'
+        ${this._activeTab === 'general'
             ? html `
+              <div class="tab-content">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Card Architecture</label>
+                    <select
+                      .value="${cardType}"
+                      @change="${(e) => this._valueChanged(e, 'card_type')}"
+                    >
+                      <option value="button">Button / Slider</option>
+                      <option value="pop-up">Pop-up Container</option>
+                      <option value="separator">Separator / Header</option>
+                      <option value="cover">Cover / Shutter</option>
+                      <option value="climate">Climate / HVAC</option>
+                      <option value="media-player">Media Player</option>
+                      <option value="energy-flow">Energy Flow Matrix</option>
+                      <option value="security-matrix">Security & Camera Hub</option>
+                      <option value="hvac-zoning">HVAC & Storage Heating</option>
+                      <option value="mesh-topology">Zigbee / Matter Mesh</option>
+                      <option value="floorplan">Interactive Floorplan</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Primary Entity Search</label>
+                    <input
+                      type="text"
+                      placeholder="Filter entities..."
+                      .value="${this._entitySearchFilter}"
+                      @input="${(e) => (this._entitySearchFilter = e.target.value)}"
+                    />
+                  </div>
+                </div>
+
                 <div class="form-group">
-                  <label for="button_type">Button Behavior</label>
+                  <label>Primary Entity</label>
                   <select
-                    id="button_type"
-                    .value="${buttonType}"
-                    @change="${(e) => this._valueChanged(e, 'button_type')}"
+                    .value="${entity}"
+                    @change="${(e) => this._valueChanged(e, 'entity')}"
                   >
-                    <option value="switch" ?selected="${buttonType === 'switch'}">Switch (Toggle)</option>
-                    <option value="slider" ?selected="${buttonType === 'slider'}">Range Slider</option>
-                    <option value="state" ?selected="${buttonType === 'state'}">State Display (More Info)</option>
-                    <option value="name" ?selected="${buttonType === 'name'}">Name / Text Only</option>
+                    <option value="">-- Select Entity --</option>
+                    ${filteredEntities.map((ent) => html `
+                        <option value="${ent}" ?selected="${ent === entity}">
+                          ${this.hass.states[ent]?.attributes.friendly_name || ent} (${ent})
+                        </option>
+                      `)}
                   </select>
                 </div>
-              `
-            : ''}
 
-          ${cardType === 'pop-up'
-            ? html `
-                <div class="form-group">
-                  <label for="hash">Pop-up URL Hash Trigger</label>
-                  <input
-                    id="hash"
-                    type="text"
-                    .value="${hash}"
-                    placeholder="#living-room"
-                    @input="${(e) => this._valueChanged(e, 'hash')}"
-                  />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Custom Title</label>
+                    <input
+                      type="text"
+                      .value="${name}"
+                      placeholder="Auto"
+                      @input="${(e) => this._valueChanged(e, 'name')}"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Custom Icon</label>
+                    <input
+                      type="text"
+                      .value="${icon}"
+                      placeholder="mdi:lightbulb"
+                      @input="${(e) => this._valueChanged(e, 'icon')}"
+                    />
+                  </div>
                 </div>
-              `
+              </div>
+            `
             : ''}
-        </div>
 
-        ${cardType !== 'empty-column'
+        ${this._activeTab === 'subbuttons'
             ? html `
-              <div class="form-group">
-                <label for="entity">Primary Entity</label>
-                <select
-                  id="entity"
-                  .value="${entity}"
-                  @change="${(e) => this._valueChanged(e, 'entity')}"
-                >
-                  <option value="">-- Select Entity --</option>
-                  ${entities.map((ent) => html `
-                      <option value="${ent}" ?selected="${ent === entity}">
-                        ${this.hass.states[ent]?.attributes.friendly_name || ent} (${ent})
-                      </option>
+              <div class="tab-content">
+                <div class="sub-header-row">
+                  <span>Sub-Button Stack (${subButtons.length})</span>
+                  <button class="primary-action-btn" @click="${this._addSubButton}">+ Add</button>
+                </div>
+                <div class="sub-list">
+                  ${subButtons.map((sub, idx) => html `
+                      <div class="sub-item-card">
+                        <select
+                          .value="${sub.entity || ''}"
+                          @change="${(e) => this._updateSubButton(idx, 'entity', e.target.value)}"
+                        >
+                          <option value="">-- Entity --</option>
+                          ${allEntities.map((ent) => html `<option value="${ent}" ?selected="${ent === sub.entity}">${ent}</option>`)}
+                        </select>
+                        <input
+                          type="text"
+                          placeholder="Icon"
+                          .value="${sub.icon || ''}"
+                          @input="${(e) => this._updateSubButton(idx, 'icon', e.target.value)}"
+                        />
+                        <button class="danger-btn" @click="${() => this._removeSubButton(idx)}">✕</button>
+                      </div>
                     `)}
-                </select>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="name">Custom Title</label>
-                  <input
-                    id="name"
-                    type="text"
-                    .value="${name}"
-                    placeholder="Auto from entity"
-                    @input="${(e) => this._valueChanged(e, 'name')}"
-                  />
                 </div>
+              </div>
+            `
+            : ''}
+
+        ${this._activeTab === 'styles'
+            ? html `
+              <div class="tab-content">
                 <div class="form-group">
-                  <label for="icon">Custom Icon</label>
+                  <label>Backdrop Blur & Card Mod</label>
                   <input
-                    id="icon"
                     type="text"
-                    .value="${icon}"
-                    placeholder="e.g. mdi:lightbulb"
-                    @input="${(e) => this._valueChanged(e, 'icon')}"
+                    placeholder="blur(20px) saturate(180%)"
+                    @input="${(e) => this._valueChanged(e, 'backdrop_blur')}"
                   />
                 </div>
               </div>
+            `
+            : ''}
 
-              ${cardType === 'hvac-zoning'
-                ? html `
-                    <div class="form-group">
-                      <label>Single Charging Window</label>
-                      <input
-                        type="text"
-                        .value="${this._config.charging_window || '00:30 – 04:30'}"
-                        @input="${(e) => this._valueChanged(e, 'charging_window')}"
-                      />
-                    </div>
-                  `
-                : ''}
-
-              ${cardType === 'floorplan'
-                ? html `
-                    <div class="form-group">
-                      <label>Floorplan Background Image URL (Optional)</label>
-                      <input
-                        type="text"
-                        .value="${this._config.image_url || ''}"
-                        placeholder="/local/floorplan.png"
-                        @input="${(e) => this._valueChanged(e, 'image_url')}"
-                      />
-                    </div>
-                  `
-                : ''}
-
-              <div class="form-group">
-                <label for="tap_action">Tap Action</label>
-                <select
-                  id="tap_action"
-                  .value="${tapAction}"
-                  @change="${(e) => this._actionChanged(e)}"
-                >
-                  <option value="toggle" ?selected="${tapAction === 'toggle'}">Toggle Entity</option>
-                  <option value="more-info" ?selected="${tapAction === 'more-info'}">More Info Dialog</option>
-                  <option value="navigate" ?selected="${tapAction === 'navigate'}">Navigate / Open Pop-up (#hash)</option>
-                  <option value="call-service" ?selected="${tapAction === 'call-service'}">Call Service</option>
-                  <option value="none" ?selected="${tapAction === 'none'}">None</option>
-                </select>
-              </div>
-
-              <div class="sub-buttons-section">
-                <div class="sub-header">
-                  <span>Sub-Buttons (${subButtons.length})</span>
-                  <button class="add-btn" @click="${this._addSubButton}">+ Add Sub-Button</button>
+        ${this._activeTab === 'modules'
+            ? html `
+              <div class="tab-content">
+                <div class="module-store-header">
+                  <h4>Aurora Module Store 📦</h4>
+                  <p>Discover and install community modules & macro packs.</p>
                 </div>
-                ${subButtons.map((sub, idx) => html `
-                    <div class="sub-item">
-                      <select
-                        .value="${sub.entity || ''}"
-                        @change="${(e) => this._updateSubButton(idx, 'entity', e.target.value)}"
-                      >
-                        <option value="">-- Sub Entity --</option>
-                        ${entities.map((ent) => html `
-                            <option value="${ent}" ?selected="${ent === sub.entity}">${ent}</option>
-                          `)}
-                      </select>
-                      <input
-                        type="text"
-                        placeholder="mdi:icon"
-                        .value="${sub.icon || ''}"
-                        @input="${(e) => this._updateSubButton(idx, 'icon', e.target.value)}"
-                      />
-                      <button class="remove-btn" @click="${() => this._removeSubButton(idx)}">✕</button>
+                <div class="module-grid">
+                  <div class="module-card-item">
+                    <div class="m-info">
+                      <span class="m-title">Advanced Energy Flow Pack</span>
+                      <span class="m-desc">Animated battery and solar particle streams.</span>
                     </div>
-                  `)}
+                    <button class="install-btn" @click="${() => alert('Installed!')}">Install</button>
+                  </div>
+                </div>
               </div>
             `
             : ''}
@@ -218,24 +217,7 @@ let AuroraCardEditor = class AuroraCardEditor extends LitElement {
         if (!this._config)
             return;
         const target = e.target;
-        const value = target.value;
-        this._config = {
-            ...this._config,
-            [field]: value === '' ? undefined : value,
-        };
-        fireEvent(this, 'config-changed', { config: this._config });
-    }
-    _actionChanged(e) {
-        if (!this._config)
-            return;
-        const target = e.target;
-        this._config = {
-            ...this._config,
-            tap_action: {
-                ...(this._config.tap_action || {}),
-                action: target.value,
-            },
-        };
+        this._config = { ...this._config, [field]: target.value || undefined };
         fireEvent(this, 'config-changed', { config: this._config });
     }
     _addSubButton() {
@@ -250,7 +232,7 @@ let AuroraCardEditor = class AuroraCardEditor extends LitElement {
         if (!this._config || !this._config.sub_button)
             return;
         const updated = [...this._config.sub_button];
-        updated[index] = { ...updated[index], [key]: val === '' ? undefined : val };
+        updated[index] = { ...updated[index], [key]: val || undefined };
         this._config = { ...this._config, sub_button: updated };
         fireEvent(this, 'config-changed', { config: this._config });
     }
@@ -265,32 +247,57 @@ let AuroraCardEditor = class AuroraCardEditor extends LitElement {
     :host {
       display: block;
       color: var(--primary-text-color, #f8fafc);
-      font-family: var(--paper-font-body1_-_font-family, inherit);
-      padding: 8px 0;
+      padding: 4px 0;
     }
     .card-config-container {
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
-    .section-header {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-      padding-bottom: 10px;
+    .editor-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 12px;
     }
-    .section-header h3 {
-      margin: 0 0 4px 0;
-      font-size: 18px;
-      font-weight: 600;
+    .header-titles h3 {
+      margin: 0 0 2px 0;
+      font-size: 17px;
     }
-    .section-header p {
+    .header-titles p {
       margin: 0;
-      font-size: 13px;
-      color: var(--secondary-text-color, #94a3b8);
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .editor-tabs {
+      display: flex;
+      gap: 6px;
+    }
+    .tab-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #818cf8;
+      color: #fff;
+      border-color: #818cf8;
+    }
+    .tab-content {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
     .form-group {
       display: flex;
@@ -298,66 +305,107 @@ let AuroraCardEditor = class AuroraCardEditor extends LitElement {
       gap: 6px;
     }
     label {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: #cbd5e1;
     }
-    select,
-    input {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+    select, input {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
-      color: #ffffff;
-      padding: 10px 12px;
-      font-size: 14px;
+      color: #fff;
+      padding: 9px 12px;
+      font-size: 13px;
       outline: none;
       width: 100%;
       box-sizing: border-box;
     }
-    select:focus,
-    input:focus {
+    select:focus, input:focus {
       border-color: #818cf8;
-      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.25);
     }
-    .sub-buttons-section {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 12px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .sub-header {
+    .sub-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 13px;
       font-weight: 600;
     }
-    .add-btn {
+    .primary-action-btn {
       background: #818cf8;
-      color: #ffffff;
+      color: #fff;
       border: none;
       border-radius: 6px;
       padding: 6px 12px;
       font-size: 12px;
-      font-weight: 600;
       cursor: pointer;
     }
-    .sub-item {
+    .sub-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sub-item-card {
       display: grid;
       grid-template-columns: 1.5fr 1fr auto;
       gap: 8px;
       align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px;
+      border-radius: 10px;
     }
-    .remove-btn {
+    .danger-btn {
       background: rgba(239, 68, 68, 0.2);
       color: #f87171;
       border: 1px solid rgba(239, 68, 68, 0.4);
       border-radius: 6px;
-      width: 34px;
-      height: 36px;
+      width: 32px;
+      height: 34px;
+      cursor: pointer;
+    }
+    .module-store-header h4 {
+      margin: 0 0 4px 0;
+      font-size: 15px;
+    }
+    .module-store-header p {
+      margin: 0 0 10px 0;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .module-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .module-card-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px;
+      border-radius: 12px;
+    }
+    .m-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .m-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .m-desc {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .install-btn {
+      background: rgba(52, 211, 153, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
       cursor: pointer;
     }
   `; }
@@ -368,6 +416,12 @@ __decorate([
 __decorate([
     state()
 ], AuroraCardEditor.prototype, "_config", void 0);
+__decorate([
+    state()
+], AuroraCardEditor.prototype, "_activeTab", void 0);
+__decorate([
+    state()
+], AuroraCardEditor.prototype, "_entitySearchFilter", void 0);
 AuroraCardEditor = __decorate([
     customElement('aurora-card-editor')
 ], AuroraCardEditor);
