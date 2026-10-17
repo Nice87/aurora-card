@@ -623,3 +623,11 @@ export class AuroraCard extends LitElement implements LovelaceCard {
     }
   `;
 }
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "aurora-card",
+  name: "Aurora Card",
+  description: "A high-performance modular card inspired by Bubble Card.",
+  preview: true, // Optional: enables visual preview in the card picker
+});
