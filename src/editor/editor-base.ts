@@ -1,29 +1,16 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant, LovelaceCardEditor } from 'custom-card-helpers';
-import { AuroraCardConfig, AuroraSubButtonConfig, AuroraActionConfig, ExtendedAuroraConfig, fireEvent } from '../utils/hass-connect';
-
-export interface AuroraModuleDefinition {
-  id: string;
-  name: string;
-  version: string;
-  creator: string;
-  description: string;
-  supportedCards: string[];
-  allCards: boolean;
-  codeTemplate: string;
-  editorSchemaYaml: string;
-  suggestionRulesYaml: string;
-  computedSuggestionsJs: string;
-  yamlExample: string;
-  builtIn?: boolean;
-}
+import { AuroraCardConfig, AuroraSubButtonConfig, ExtendedAuroraConfig, fireEvent } from '../utils/hass-connect';
+import { AuroraModuleDefinition } from '../modules/module.interface';
+import { moduleRegistry } from '../modules/registry';
 
 type PickerTarget =
   | { type: 'main' }
   | { type: 'sub'; index: number }
-  | { type: 'module_field'; moduleId: string; fieldKey: string }
-  | { type: 'creator_preview' };
+  | { type: 'icon_main' }
+  | { type: 'icon_sub'; index: number }
+  | { type: 'module_field'; moduleId: string; fieldKey: string };
 
 const AVAILABLE_STATE_ATTRIBUTES = [
   { id: 'state', label: 'State' },
@@ -46,23 +33,18 @@ const SUPPORTED_CARD_TYPES: Array<{ id: string; label: string }> = [
   { id: 'sub-buttons', label: 'Sub-buttons' },
 ];
 
-const DEFAULT_INSTALLED_MODULES: AuroraModuleDefinition[] = [
-  {
-    id: 'card_backdrop_image',
-    name: 'Card Backdrop Image',
-    version: 'v1.2.0',
-    creator: 'Aurora Studio',
-    description: 'Add a configurable image backdrop to an individual card or all cards.',
-    supportedCards: ['button', 'climate', 'media-player', 'pop-up', 'cover'],
-    allCards: true,
-    codeTemplate: '.aurora-card {\n  background-image: url("${module.image_url}");\n}',
-    editorSchemaYaml: 'image_url:\n  type: string',
-    suggestionRulesYaml: '',
-    computedSuggestionsJs: '',
-    yamlExample: 'card_backdrop_image:\n  image_url: "/local/bg.jpg"',
-    builtIn: true,
-  },
+const POPULAR_ICONS = [
+  'mdi:home', 'mdi:lightbulb', 'mdi:power', 'mdi:fan', 'mdi:television', 'mdi:speaker',
+  'mdi:sofa', 'mdi:bed', 'mdi:door', 'mdi:window-open', 'mdi:thermometer', 'mdi:water',
+  'mdi:fire', 'mdi:security', 'mdi:lock', 'mdi:camera', 'mdi:robot-vacuum', 'mdi:car',
+  'mdi:garage', 'mdi:weather-sunny', 'mdi:weather-night', 'mdi:weather-partly-cloudy',
+  'mdi:weather-pouring', 'mdi:snowflake', 'mdi:palette', 'mdi:brightness-6', 'mdi:flash',
+  'mdi:battery', 'mdi:wifi', 'mdi:router-wireless', 'mdi:cast', 'mdi:air-conditioner',
+  'mdi:ceiling-fan', 'mdi:washing-machine', 'mdi:silverware-fork-knife', 'mdi:desk',
+  'mdi:desktop-pc', 'mdi:laptop', 'mdi:flower', 'mdi:leaf'
 ];
+
+
 
 @customElement('aurora-card-editor')
 export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
@@ -70,19 +52,19 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
   @state() private _config?: ExtendedAuroraConfig;
   @state() private _activeCategory: 'all' | 'general' | 'subbuttons' | 'styles' | 'modules' = 'all';
   @state() private _moduleSubTab: 'my_modules' | 'store' = 'my_modules';
-  @state() private _moduleSearchFilter = '';
 
   @state() private _pickerOpen = false;
+  @state() private _iconPickerOpen = false;
   @state() private _pickerTarget: PickerTarget = { type: 'main' };
   @state() private _pickerSearchQuery = '';
   @state() private _pickerDomainFilter = 'all';
   @state() private _statePickerOpen = false;
+  @state() private _customAttributeInput: string = '';
 
-  @state() private _installedModules: AuroraModuleDefinition[] = [...DEFAULT_INSTALLED_MODULES];
   @state() private _expandedModules: Record<string, boolean> = {};
+  @state() private _expandedSubButtons: Record<number, boolean> = {};
   @state() private _statusToast = '';
 
-  // Creator & Import state
   @state() private _creatorOpen = false;
   @state() private _importYamlOpen = false;
   @state() private _importYamlText = '';
@@ -92,12 +74,10 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
     version: '1.0',
     creator: 'Przemysław',
     description: '',
+    type: 'base-extension',
     supportedCards: ['button'],
-    allCards: true,
     codeTemplate: '.aurora-card {\n  \n}',
     editorSchemaYaml: '',
-    suggestionRulesYaml: '',
-    computedSuggestionsJs: '',
     yamlExample: '',
   };
 
@@ -121,7 +101,6 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
       show_name: true,
       state_content: ['state'],
       active_modules: [],
-      global_modules: [],
       module_configs: {},
       ...config,
     };
@@ -135,10 +114,58 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
   }
 
   private _toggleHub(key: string): void {
-    this._openHubs = {
-      ...this._openHubs,
-      [key]: !this._openHubs[key],
+    this._openHubs = { ...this._openHubs, [key]: !this._openHubs[key] };
+  }
+
+  private _toggleModuleSettings(modId: string): void {
+    this._expandedModules = {
+      ...this._expandedModules,
+      [modId]: !this._expandedModules[modId]
     };
+  }
+
+  private _toggleSubButtonSettings(index: number): void {
+    this._expandedSubButtons = {
+      ...this._expandedSubButtons,
+      [index]: !this._expandedSubButtons[index]
+    };
+  }
+
+  private _editUserModule(mod: AuroraModuleDefinition): void {
+    this._creatorDraft = { ...mod };
+    this._creatorOpen = true;
+  }
+
+  private _getModuleConfigString(modId: string): string {
+    if (!this._config || !this._config.module_configs) return '';
+    const configObj = this._config.module_configs[modId];
+    if (!configObj) return '';
+    return Object.entries(configObj)
+      .map(([k, v]) => `${k}:${v}`)
+      .join('\n');
+  }
+
+  private _setModuleConfigString(modId: string, val: string): void {
+    if (!this._config) return;
+    const newConfig: Record<string, any> = {};
+    val.split('\n').forEach(line => {
+      const parts = line.split(':');
+      if (parts.length >= 2) {
+        const k = parts[0].trim();
+        let v: any = parts.slice(1).join(':').trim();
+        if (v === 'true') v = true;
+        else if (v === 'false') v = false;
+        else if (!isNaN(Number(v)) && v !== '') v = Number(v);
+        else if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1);
+        if (k) newConfig[k] = v;
+      }
+    });
+
+    const currentConfigs = this._config.module_configs || {};
+    this._setDirectValue('module_configs', {
+      ...currentConfigs,
+      [modId]: newConfig
+    });
   }
 
   private _openEntityPicker(target: PickerTarget): void {
@@ -148,8 +175,38 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
     this._pickerOpen = true;
   }
 
+  private _openIconPicker(target: PickerTarget): void {
+    this._pickerTarget = target;
+    this._pickerSearchQuery = '';
+    this._iconPickerOpen = true;
+  }
+
   private _closeEntityPicker(): void {
     this._pickerOpen = false;
+  }
+
+  private _closeIconPicker(): void {
+    this._iconPickerOpen = false;
+  }
+
+  private _selectEntityFromModal(entityId: string): void {
+    if (!this._config) return;
+    if (this._pickerTarget.type === 'main') {
+      this._setDirectValue('entity', entityId);
+    } else if (this._pickerTarget.type === 'sub') {
+      this._updateSubButton(this._pickerTarget.index, 'entity', entityId);
+    }
+    this._pickerOpen = false;
+  }
+
+  private _selectIconFromModal(iconString: string): void {
+    if (!this._config) return;
+    if (this._pickerTarget.type === 'icon_main') {
+      this._setDirectValue('icon', iconString);
+    } else if (this._pickerTarget.type === 'icon_sub') {
+      this._updateSubButton(this._pickerTarget.index, 'icon', iconString);
+    }
+    this._iconPickerOpen = false;
   }
 
   private _getEntityFriendlyName(entityId: string): string {
@@ -195,24 +252,20 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
     });
   }
 
-  private _isModuleAppliedThisCard(modId: string): boolean {
+  private _getFilteredIcons(): string[] {
+    const q = this._pickerSearchQuery.trim().toLowerCase();
+    if (!q) return POPULAR_ICONS;
+    return POPULAR_ICONS.filter(icon => icon.toLowerCase().includes(q));
+  }
+
+  private _isModuleEnabled(modId: string): boolean {
     return (this._config?.active_modules ?? []).includes(modId);
   }
 
-  private _isModuleAppliedAllCards(modId: string): boolean {
-    return (this._config?.global_modules ?? []).includes(modId);
-  }
-
-  private _toggleModuleApplyThis(modId: string): void {
+  private _toggleModuleEnabled(modId: string): void {
     const list = [...(this._config?.active_modules ?? [])];
     const next = list.includes(modId) ? list.filter((id) => id !== modId) : [...list, modId];
     this._setDirectValue('active_modules', next);
-  }
-
-  private _toggleModuleApplyAll(modId: string): void {
-    const list = [...(this._config?.global_modules ?? [])];
-    const next = list.includes(modId) ? list.filter((id) => id !== modId) : [...list, modId];
-    this._setDirectValue('global_modules', next);
   }
 
   protected render(): TemplateResult {
@@ -246,6 +299,7 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
         </div>
 
         ${this._pickerOpen ? this._renderEntityPickerModal() : html``}
+        ${this._iconPickerOpen ? this._renderIconPickerModal() : html``}
         ${this._statePickerOpen ? this._renderStatePickerModal() : html``}
         ${this._creatorOpen ? this._renderCreatorModal() : html``}
         ${this._importYamlOpen ? this._renderImportModal() : html``}
@@ -255,7 +309,7 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
 
   private _renderCategoryTabs(): TemplateResult {
     const subCount = (this._config?.sub_button ?? []).length;
-    const modCount = (this._config?.active_modules ?? []).length + (this._config?.global_modules ?? []).length;
+    const modCount = (this._config?.active_modules ?? []).length;
 
     return html`
       <div class="category-bar">
@@ -280,10 +334,10 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
           <span>Card Identity & Primary Entity</span>
         </div>
         <div class="hub-body">
-          <div class="ha-filled-box">
+          <div class="ha-filled-box" @click="${() => this.shadowRoot?.getElementById('cardTypeSelect')?.click()}">
             <div class="box-content">
               <span class="floating-label">Card type</span>
-              <select class="native-select" .value="${cardType}" @change="${(e: Event) => this._valueChanged(e, 'card_type')}">
+              <select id="cardTypeSelect" class="native-select" .value="${cardType}" @change="${(e: Event) => this._valueChanged(e, 'card_type')}">
                 <option value="button">Button</option>
                 <option value="pop-up">Pop-up</option>
                 <option value="separator">Separator</option>
@@ -294,17 +348,17 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
               </select>
             </div>
             <div class="box-controls">
-              <button class="clear-btn" title="Reset" @click="${() => this._setDirectValue('card_type', 'button')}">✕</button>
-              <span class="dropdown-caret">▼</span>
+              <button class="clear-btn" title="Reset" @click="${(e: Event) => { e.stopPropagation(); this._setDirectValue('card_type', 'button'); }}">✕</button>
+              <span class="dropdown-caret" @click="${(e: Event) => { e.stopPropagation(); this.shadowRoot?.getElementById('cardTypeSelect')?.click(); }}">▼</span>
             </div>
           </div>
 
           ${cardType === 'button'
             ? html`
-                <div class="ha-filled-box">
+                <div class="ha-filled-box" @click="${() => this.shadowRoot?.getElementById('buttonTypeSelect')?.click()}">
                   <div class="box-content">
                     <span class="floating-label">Button type</span>
-                    <select class="native-select" .value="${buttonType}" @change="${(e: Event) => this._valueChanged(e, 'button_type')}">
+                    <select id="buttonTypeSelect" class="native-select" .value="${buttonType}" @change="${(e: Event) => this._valueChanged(e, 'button_type')}">
                       <option value="switch">Switch</option>
                       <option value="slider">Slider</option>
                       <option value="state">State</option>
@@ -312,8 +366,8 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
                     </select>
                   </div>
                   <div class="box-controls">
-                    <button class="clear-btn" title="Reset" @click="${() => this._setDirectValue('button_type', 'switch')}">✕</button>
-                    <span class="dropdown-caret">▼</span>
+                    <button class="clear-btn" title="Reset" @click="${(e: Event) => { e.stopPropagation(); this._setDirectValue('button_type', 'switch'); }}">✕</button>
+                    <span class="dropdown-caret" @click="${(e: Event) => { e.stopPropagation(); this.shadowRoot?.getElementById('buttonTypeSelect')?.click(); }}">▼</span>
                   </div>
                 </div>
               `
@@ -333,7 +387,7 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
                   <div class="box-controls">
                     ${entity
                       ? html`
-                          <button class="clear-btn" @click="${(e: Event) => { e.stopPropagation(); this._setDirectValue('entity', undefined); }}">✕</button>
+                          <button class="clear-btn" title="Clear entity" @click="${(e: Event) => { e.stopPropagation(); this._setDirectValue('entity', undefined); }}">✕</button>
                         `
                       : html``}
                     <span class="dropdown-caret">▼</span>
@@ -372,13 +426,25 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
                     <span class="floating-label">Optional - Name</span>
                     <input type="text" class="native-input" .value="${name}" @input="${(e: Event) => this._valueChanged(e, 'name')}" />
                   </div>
-                </div>
-                <div class="ha-filled-box">
-                  <div class="box-content">
-                    <span class="floating-label">Optional - Icon</span>
-                    <input type="text" class="native-input" .value="${icon}" @input="${(e: Event) => this._valueChanged(e, 'icon')}" />
+                  <div class="box-controls">
+                    <button class="clear-btn" title="Clear name" @click="${() => this._setDirectValue('name', undefined)}">✕</button>
                   </div>
                 </div>
+                
+                <div class="ha-filled-box" @click="${() => this._openIconPicker({ type: 'icon_main' })}">
+                  <div class="box-content">
+                    <span class="floating-label">Optional - Icon</span>
+                    <div class="icon-trigger-preview">
+                      <ha-icon .icon="${icon || 'mdi:image-outline'}"></ha-icon>
+                      <span>${icon || 'Select an icon...'}</span>
+                    </div>
+                  </div>
+                  <div class="box-controls">
+                    ${icon ? html`<button class="clear-btn" title="Clear icon" @click="${(e: Event) => { e.stopPropagation(); this._setDirectValue('icon', undefined); }}">✕</button>` : html``}
+                    <span class="dropdown-caret">▼</span>
+                  </div>
+                </div>
+
                 <div class="toggle-list">
                   ${this._renderToggleRow('Text scrolling effect', scrolling, (val) => this._setDirectValue('scrolling_effect', val))}${this._renderToggleRow('Show icon', showIcon, (val) => this._setDirectValue('show_icon', val))}
                   ${this._renderToggleRow('Prioritise icon over entity picture', prioritiseIcon, (val) => this._setDirectValue('prioritise_icon', val))}${this._renderToggleRow('Show name', showName, (val) => this._setDirectValue('show_name', val))}
@@ -456,8 +522,8 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
         ${isOpen
           ? html`
               <div class="hub-body">
-                ${this._renderActionSelector('Tap action on icon', 'icon_tap_action', iconAction)}
-                ${this._renderActionSelector('Tap action on card', 'tap_action', cardAction)}${this._renderActionSelector('Hold behavior', 'hold_action', holdAction)}
+                ${this._renderActionSelector('Tap action on icon', 'icon_tap_action', iconAction, 'iconActionSel')}
+                ${this._renderActionSelector('Tap action on card', 'tap_action', cardAction, 'cardActionSel')}${this._renderActionSelector('Hold behavior', 'hold_action', holdAction, 'holdActionSel')}
               </div>
             `
           : html``}
@@ -482,15 +548,39 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
           ? html`
               <div class="hub-body">
                 ${subButtons.map(
-                  (sub, idx) => html`
-                    <div class="sub-button-row">
-                      <button type="button" class="sub-entity-picker-btn" @click="${() => this._openEntityPicker({ type: 'sub', index: idx })}">
-                        <ha-icon .icon="${this._getEntityIcon(sub.entity ?? '')}"></ha-icon>
-                        <span class="sub-ent-label">${this._getEntityFriendlyName(sub.entity ?? '')}</span>
-                      </button>
-                      <button class="danger-icon-btn" @click="${() => this._removeSubButton(idx)}">✕</button>
+                  (sub, idx) => {
+                    const tapAct = (sub as any).tap_action?.action ?? 'toggle';
+                    const holdAct = (sub as any).hold_action?.action ?? 'more-info';
+                    const dblTapAct = (sub as any).double_tap_action?.action ?? 'none';
+                    
+                    return html`
+                    <div class="sub-button-container">
+                      <div class="sub-button-row">
+                        <button type="button" class="sub-icon-btn" title="Change Icon" @click="${() => this._openIconPicker({ type: 'icon_sub', index: idx })}">
+                          <ha-icon .icon="${sub.icon ?? 'mdi:power'}"></ha-icon>
+                        </button>
+                        <button type="button" class="sub-entity-picker-btn" title="Change Entity" @click="${() => this._openEntityPicker({ type: 'sub', index: idx })}">
+                          <span class="sub-ent-label">${this._getEntityFriendlyName(sub.entity ?? '')}</span>
+                          <span class="dropdown-caret">▼</span>
+                        </button>
+                        <button class="icon-action-btn" title="Action Settings" @click="${() => this._toggleSubButtonSettings(idx)}">
+                          <ha-icon icon="mdi:cog"></ha-icon>
+                        </button>
+                        <button class="danger-icon-btn" title="Remove sub-button" @click="${() => this._removeSubButton(idx)}">✕</button>
+                      </div>
+                      
+                      ${this._expandedSubButtons[idx]
+                        ? html`
+                            <div class="module-settings-drawer">
+                              <div class="section-caption" style="margin-top:0;">Sub-Button Actions</div>
+                              ${this._renderSubActionSelector(idx, 'Tap action', 'tap_action', tapAct, `subTapSel_${idx}`)}
+                              ${this._renderSubActionSelector(idx, 'Hold behavior', 'hold_action', holdAct, `subHoldSel_${idx}`)}
+                              ${this._renderSubActionSelector(idx, 'Double tap action', 'double_tap_action', dblTapAct, `subDblTapSel_${idx}`)}
+                            </div>
+                          `
+                        : html``}
                     </div>
-                  `
+                  `}
                 )}
                 <button class="chip-add-btn" @click="${this._addSubButton}"><span>＋</span><span>Add sub-button</span></button>
               </div>
@@ -517,17 +607,19 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
         ${isOpen
           ? html`
               <div class="hub-body">
-                <div class="ha-filled-box">
+                <div class="ha-filled-box" @click="${() => this.shadowRoot?.getElementById('vibePresetSelect')?.click()}">
                   <div class="box-content">
                     <span class="floating-label">Aurora Aesthetic Vibe Preset</span>
-                    <select class="native-select" .value="${preset}" @change="${(e: Event) => this._valueChanged(e, 'vibe_preset')}">
+                    <select id="vibePresetSelect" class="native-select" .value="${preset}" @change="${(e: Event) => this._valueChanged(e, 'vibe_preset')}">
                       <option value="aurora_lumina">Aurora Lumina (Frosted Glass)</option>
                       <option value="crimson_midnight">Crimson Midnight (Gothic Dark)</option>
                       <option value="obsidian_minimal">Obsidian Minimal</option>
                       <option value="ha_native">Home Assistant Native Surface</option>
                     </select>
                   </div>
-                  <div class="box-controls"><span class="dropdown-caret">▼</span></div>
+                  <div class="box-controls">
+                    <span class="dropdown-caret" @click="${(e: Event) => { e.stopPropagation(); this.shadowRoot?.getElementById('vibePresetSelect')?.click(); }}">▼</span>
+                  </div>
                 </div>
                 <textarea class="code-textarea" rows="4" placeholder=".aurora-card { --aurora-blur: 24px; }" .value="${customStyles}" @input="${(e: Event) => this._valueChanged(e, 'custom_styles')}"></textarea>
               </div>
@@ -537,11 +629,9 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
     `;
   }
 
-  // ============================================================================
-  // PHASE 4: EXTENSION MODULES ECOSYSTEM & STUDIO (Grid Pills, Hubs, Import)
-  // ============================================================================
   private _renderModulesHub(): TemplateResult {
     const isOpen = Boolean(this._openHubs.modules);
+    const allModules = moduleRegistry.getAllModules();
 
     return html`
       <div class="aurora-hub-card" ?data-open="${isOpen}">
@@ -567,11 +657,11 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
                 </div>
 
                 <div class="module-subtabs">
-                  <button class="mod-tab" ?data-active="${this._moduleSubTab === 'my_modules'}" @click="${() => (this._moduleSubTab = 'my_modules')}">My Modules (${this._installedModules.length})</button>
+                  <button class="mod-tab" ?data-active="${this._moduleSubTab === 'my_modules'}" @click="${() => (this._moduleSubTab = 'my_modules')}">Installed Modules (${allModules.length})</button>
                   <button class="mod-tab" ?data-active="${this._moduleSubTab === 'store'}" @click="${() => (this._moduleSubTab = 'store')}">Module Store</button>
                 </div>
 
-                ${this._moduleSubTab === 'my_modules' ? this._renderMyModulesView() : this._renderModuleStoreView()}
+                ${this._moduleSubTab === 'my_modules' ? this._renderMyModulesView(allModules) : this._renderModuleStoreView()}
               </div>
             `
           : html``}
@@ -579,10 +669,10 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
     `;
   }
 
-  private _renderMyModulesView(): TemplateResult {
+  private _renderMyModulesView(allModules: AuroraModuleDefinition[]): TemplateResult {
     return html`
       <div class="modules-grid-list">
-        ${this._installedModules.map(
+        ${allModules.map(
           (mod) => html`
             <div class="module-hub-card">
               <div class="mod-hub-top">
@@ -590,21 +680,54 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
                   <ha-icon icon="mdi:puzzle-outline"></ha-icon>
                   <span class="mod-name">${mod.name}</span>
                   <span class="mod-version">${mod.version}</span>
+                  <span class="mod-type-badge">${mod.type}</span>
                 </div>
                 <p class="mod-desc">${mod.description}</p>
               </div>
+              
               <div class="mod-hub-footer">
                 <div class="scope-toggles">
-                  <label class="scope-toggle-pill" ?data-active="${this._isModuleAppliedThisCard(mod.id)}">
-                    <input type="checkbox" .checked="${this._isModuleAppliedThisCard(mod.id)}" @change="${() => this._toggleModuleApplyThis(mod.id)}" hidden />
-                    <span>This Card</span>
+                  <label class="scope-toggle-pill" ?data-active="${this._isModuleEnabled(mod.id)}">
+                    <input type="checkbox" .checked="${this._isModuleEnabled(mod.id)}" @change="${() => this._toggleModuleEnabled(mod.id)}" hidden />
+                    <span>${this._isModuleEnabled(mod.id) ? 'Enabled' : 'Disabled'}</span>
                   </label>
-                  <label class="scope-toggle-pill" ?data-active="${this._isModuleAppliedAllCards(mod.id)}">
-                    <input type="checkbox" .checked="${this._isModuleAppliedAllCards(mod.id)}" @change="${() => this._toggleModuleApplyAll(mod.id)}" hidden />
-                    <span>All Cards</span>
-                  </label>
+                  
+                  <button class="icon-action-btn" title="Module Settings" @click="${() => this._toggleModuleSettings(mod.id)}">
+                    <ha-icon icon="mdi:cog"></ha-icon>
+                  </button>
+
+                  ${!mod.builtIn
+                    ? html`
+                        <button class="icon-action-btn" title="Edit Module" @click="${() => this._editUserModule(mod)}">
+                          <ha-icon icon="mdi:pencil"></ha-icon>
+                        </button>
+                        <button class="danger-icon-btn" title="Delete Module" @click="${() => {
+                          moduleRegistry.deleteUserModule(mod.id);
+                          this.requestUpdate();
+                          this._showToast('Module deleted');
+                        }}">
+                          <ha-icon icon="mdi:delete"></ha-icon>
+                        </button>
+                      `
+                    : html``}
                 </div>
               </div>
+
+              ${this._expandedModules[mod.id]
+                ? html`
+                    <div class="module-settings-drawer">
+                      <div class="section-caption">Module Configuration</div>
+                      <p class="muted-note" style="text-align:left; padding: 2px 0;">Settings based on schema: <code>${mod.id}</code></p>
+                      <textarea 
+                        class="code-textarea" 
+                        rows="4" 
+                        placeholder="key: value"
+                        .value="${this._getModuleConfigString(mod.id)}" 
+                        @input="${(e: Event) => this._setModuleConfigString(mod.id, (e.target as HTMLTextAreaElement).value)}"
+                      ></textarea>
+                    </div>
+                  `
+                : html``}
             </div>
           `
         )}
@@ -625,6 +748,19 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
             <button class="modal-close-btn" @click="${() => (this._creatorOpen = false)}">Close</button>
           </div>
           <div class="creator-body">
+            <div class="ha-filled-box">
+              <div class="box-content">
+                <span class="floating-label">Module Type</span>
+                <select id="modTypeSel" class="native-select" .value="${this._creatorDraft.type}" @change="${(e: Event) => (this._creatorDraft = { ...this._creatorDraft, type: (e.target as HTMLSelectElement).value as any })}">
+                  <option value="base-extension">Base Extension (Style/Behavior Injector)</option>
+                  <option value="custom-card">Custom Card (Standalone Element)</option>
+                </select>
+              </div>
+              <div class="box-controls">
+                <span class="dropdown-caret" @click="${() => this.shadowRoot?.getElementById('modTypeSel')?.click()}">▼</span>
+              </div>
+            </div>
+
             <div class="ha-filled-box">
               <div class="box-content">
                 <span class="floating-label">Module Unique ID</span>
@@ -664,9 +800,10 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
             <button
               class="chip-add-btn primary-save"
               @click="${() => {
-                this._installedModules = [...this._installedModules, { ...this._creatorDraft }];
+                moduleRegistry.registerUserModule({ ...this._creatorDraft });
                 this._creatorOpen = false;
                 this._showToast('Custom module created and installed successfully!');
+                this.requestUpdate();
               }}"
             >
               <span>💾</span><span>Save & Install Module</span>
@@ -687,7 +824,7 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
           </div>
           <div class="creator-body">
             <p class="muted-note">Paste your module YAML definition below:</p>
-            <textarea class="code-textarea" rows="10" placeholder="my_imported_module:&#10;  setting: value" .value="${this._importYamlText}" @input="${(e: Event) => (this._importYamlText = (e.target as HTMLInputElement).value)}"></textarea>
+            <textarea class="code-textarea" rows="10" placeholder="my_imported_module:&#10;  type: base-extension&#10;  setting: value" .value="${this._importYamlText}" @input="${(e: Event) => (this._importYamlText = (e.target as HTMLInputElement).value)}"></textarea>
             <button
               class="chip-add-btn primary-save"
               @click="${() => {
@@ -714,12 +851,12 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
     `;
   }
 
-  private _renderActionSelector(label: string, field: string, currentAction: string): TemplateResult {
+  private _renderActionSelector(label: string, field: string, currentAction: string, selectId: string): TemplateResult {
     return html`
-      <div class="ha-filled-box">
+      <div class="ha-filled-box" @click="${() => this.shadowRoot?.getElementById(selectId)?.click()}">
         <div class="box-content">
           <span class="floating-label">${label}</span>
-          <select class="native-select" .value="${currentAction}" @change="${(e: Event) => this._actionChanged(e, field)}">
+          <select id="${selectId}" class="native-select" .value="${currentAction}" @change="${(e: Event) => this._actionChanged(e, field)}">
             <option value="toggle">Toggle</option>
             <option value="more-info">More info</option>
             <option value="navigate">Navigate</option>
@@ -728,8 +865,29 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
           </select>
         </div>
         <div class="box-controls">
-          <button class="clear-btn" @click="${() => this._actionChangedByVal(field, 'toggle')}">✕</button>
-          <span class="dropdown-caret">▼</span>
+          <button class="clear-btn" title="Reset" @click="${(e: Event) => { e.stopPropagation(); this._actionChangedByVal(field, 'toggle'); }}">✕</button>
+          <span class="dropdown-caret" @click="${(e: Event) => { e.stopPropagation(); this.shadowRoot?.getElementById(selectId)?.click(); }}">▼</span>
+        </div>
+      </div>
+    `;
+  }
+
+  private _renderSubActionSelector(index: number, label: string, field: string, currentAction: string, selectId: string): TemplateResult {
+    return html`
+      <div class="ha-filled-box" @click="${() => this.shadowRoot?.getElementById(selectId)?.click()}">
+        <div class="box-content">
+          <span class="floating-label">${label}</span>
+          <select id="${selectId}" class="native-select" .value="${currentAction}" @change="${(e: Event) => this._subActionChanged(index, field, e)}">
+            <option value="toggle">Toggle</option>
+            <option value="more-info">More info</option>
+            <option value="navigate">Navigate</option>
+            <option value="call-service">Call service</option>
+            <option value="none">No action</option>
+          </select>
+        </div>
+        <div class="box-controls">
+          <button class="clear-btn" title="Reset" @click="${(e: Event) => { e.stopPropagation(); this._subActionChangedByVal(index, field, 'toggle'); }}">✕</button>
+          <span class="dropdown-caret" @click="${(e: Event) => { e.stopPropagation(); this.shadowRoot?.getElementById(selectId)?.click(); }}">▼</span>
         </div>
       </div>
     `;
@@ -789,6 +947,18 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
     fireEvent(this, 'config-changed', { config: this._config });
   }
 
+  private _subActionChanged(index: number, actionType: string, e: Event): void {
+    this._subActionChangedByVal(index, actionType, (e.target as HTMLSelectElement).value);
+  }
+
+  private _subActionChangedByVal(index: number, actionType: string, val: string): void {
+    if (!this._config || !this._config.sub_button) return;
+    const updated = [...this._config.sub_button];
+    const existingAction = (updated[index] as any)[actionType] ?? {};
+    updated[index] = { ...updated[index], [actionType]: { ...existingAction, action: val } };
+    this._setDirectValue('sub_button', updated);
+  }
+
   private _addSubButton(): void {
     if (!this._config) return;
     const current = [...(this._config.sub_button ?? [])];
@@ -816,9 +986,39 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
       <div class="picker-backdrop" @click="${() => (this._statePickerOpen = false)}">
         <div class="picker-sheet" @click="${(e: Event) => e.stopPropagation()}">
           <div class="picker-header">
-            <span class="picker-sheet-title">Select State Attribute to Display</span>
+            <span class="picker-sheet-title">Select or Type Attribute</span>
             <button class="modal-close-btn" @click="${() => (this._statePickerOpen = false)}">Cancel</button>
           </div>
+          
+          <div class="creator-body" style="padding-bottom: 0;">
+            <div class="ha-filled-box">
+              <div class="box-content">
+                <span class="floating-label">Custom Attribute / State Key</span>
+                <input 
+                  type="text" 
+                  class="native-input" 
+                  placeholder="e.g. media_title, fan_speed..." 
+                  .value="${this._customAttributeInput}" 
+                  @input="${(e: Event) => (this._customAttributeInput = (e.target as HTMLInputElement).value)}" 
+                />
+              </div>
+              <button 
+                class="chip-add-btn primary-save" 
+                style="margin-top:0;"
+                @click="${() => {
+                  if (this._customAttributeInput.trim()) {
+                    this._addSpecificStateChip(this._customAttributeInput.trim());
+                    this._customAttributeInput = '';
+                    this._statePickerOpen = false;
+                  }
+                }}"
+              >
+                <span>Add Custom</span>
+              </button>
+            </div>
+            <div class="section-caption" style="margin-top: 12px;">Or choose from common attributes:</div>
+          </div>
+
           <div class="picker-list">
             ${available.map(
               (attr) => html`
@@ -837,23 +1037,12 @@ export class AuroraCardEditor extends LitElement implements LovelaceCardEditor {
                 </div>
               `
             )}
-            ${available.length === 0
-              ? html`<div class="picker-empty">All available state attributes have already been added.</div>`
-              : html``}
           </div>
         </div>
       </div>
     `;
   }
-private _selectEntityFromModal(entityId: string): void {
-    if (!this._config) return;
-    if (this._pickerTarget.type === 'main') {
-      this._setDirectValue('entity', entityId);
-    } else if (this._pickerTarget.type === 'sub') {
-      this._updateSubButton(this._pickerTarget.index, 'entity', entityId);
-    }
-    this._pickerOpen = false;
-  }
+
   private _renderEntityPickerModal(): TemplateResult {
     const list = this._getModalFilteredEntities().slice(0, 100);
     return html`
@@ -876,6 +1065,33 @@ private _selectEntityFromModal(entityId: string): void {
                 </div>
               `
             )}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  private _renderIconPickerModal(): TemplateResult {
+    const list = this._getFilteredIcons();
+    return html`
+      <div class="picker-backdrop" @click="${this._closeIconPicker}">
+        <div class="picker-sheet" @click="${(e: Event) => e.stopPropagation()}">
+          <div class="picker-header">
+            <input type="text" class="picker-search-input" placeholder="Search icons (e.g., mdi:home)..." .value="${this._pickerSearchQuery}" @input="${(e: Event) => (this._pickerSearchQuery = (e.target as HTMLInputElement).value)}" autofocus />
+            <button class="modal-close-btn" @click="${this._closeIconPicker}">Cancel</button>
+          </div>
+          <div class="picker-list icon-grid">
+            ${list.map(
+              (iconStr) => html`
+                <div class="icon-tile" @click="${() => this._selectIconFromModal(iconStr)}" title="${iconStr}">
+                  <ha-icon .icon="${iconStr}"></ha-icon>
+                  <span>${iconStr.replace('mdi:', '')}</span>
+                </div>
+              `
+            )}
+            ${list.length === 0
+              ? html`<div class="picker-empty" style="grid-column: 1 / -1;">No matching icons found. Type a valid MDI string to manually select.</div>`
+              : html``}
           </div>
         </div>
       </div>
@@ -1033,6 +1249,7 @@ private _selectEntityFromModal(entityId: string): void {
       border-radius: 4px 4px 0 0;
       padding: 6px 12px;
       min-height: 44px;
+      cursor: pointer;
     }
 
     .box-content {
@@ -1040,6 +1257,7 @@ private _selectEntityFromModal(entityId: string): void {
       flex-direction: column;
       flex: 1;
       gap: 2px;
+      pointer-events: none;
     }
 
     .floating-label {
@@ -1056,6 +1274,11 @@ private _selectEntityFromModal(entityId: string): void {
       padding: 2px 0;
       outline: none;
       width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      pointer-events: auto;
     }
 
     .native-select option {
@@ -1063,10 +1286,21 @@ private _selectEntityFromModal(entityId: string): void {
       color: var(--primary-text-color, #ffffff);
     }
 
+    .icon-trigger-preview {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+      color: var(--primary-text-color, #ffffff);
+      font-size: 14px;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
     .box-controls {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
 
     .clear-btn {
@@ -1081,7 +1315,8 @@ private _selectEntityFromModal(entityId: string): void {
     .dropdown-caret {
       font-size: 10px;
       color: var(--secondary-text-color, #9b9b9b);
-      padding-left: 2px;
+      cursor: pointer;
+      padding: 4px;
     }
 
     .ha-entity-box {
@@ -1246,23 +1481,52 @@ private _selectEntityFromModal(entityId: string): void {
       margin-top: 8px;
     }
 
+    .sub-button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.04));
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
     .sub-button-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--secondary-background-color, rgba(255, 255, 255, 0.04));
-      padding: 8px;
+      gap: 12px;
+    }
+
+    .sub-icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.1));
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.15));
       border-radius: 8px;
+      color: var(--primary-text-color, #ffffff);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .sub-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
     }
 
     .sub-entity-picker-btn {
       display: flex;
+      flex: 1;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
       background: transparent;
       border: none;
       color: var(--primary-text-color, #ffffff);
       cursor: pointer;
+      font-size: 14px;
+      text-align: left;
     }
 
     .danger-icon-btn {
@@ -1383,6 +1647,15 @@ private _selectEntityFromModal(entityId: string): void {
       color: var(--secondary-text-color, #9b9b9b);
     }
 
+    .mod-type-badge {
+      font-size: 10px;
+      background: rgba(3, 169, 244, 0.15);
+      color: var(--primary-color, #03a9f4);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
     .mod-desc {
       font-size: 12px;
       color: var(--secondary-text-color, #b0b0b0);
@@ -1396,14 +1669,15 @@ private _selectEntityFromModal(entityId: string): void {
 
     .scope-toggles {
       display: flex;
-      gap: 6px;
+      gap: 8px;
+      align-items: center;
     }
 
     .scope-toggle-pill {
       background: var(--secondary-background-color, rgba(255, 255, 255, 0.05));
       border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
       border-radius: 14px;
-      padding: 4px 10px;
+      padding: 4px 12px;
       font-size: 11px;
       font-weight: 600;
       color: var(--secondary-text-color, #9b9b9b);
@@ -1414,6 +1688,37 @@ private _selectEntityFromModal(entityId: string): void {
       background: var(--primary-color, #03a9f4);
       color: #ffffff;
       border-color: var(--primary-color, #03a9f4);
+    }
+
+    .icon-action-btn {
+      background: transparent;
+      border: none;
+      color: var(--secondary-text-color, #9b9b9b);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .icon-action-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--primary-text-color, #ffffff);
+    }
+
+    .icon-action-btn ha-icon, .danger-icon-btn ha-icon {
+      --mdc-icon-size: 18px;
+    }
+
+    .module-settings-drawer {
+      margin-top: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--divider-color, rgba(255, 255, 255, 0.08));
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .card-pills-grid {
@@ -1540,6 +1845,45 @@ private _selectEntityFromModal(entityId: string): void {
     .picker-row-sub {
       font-size: 12px;
       color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .icon-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 6px;
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.05));
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.1));
+      border-radius: 12px;
+      cursor: pointer;
+      color: var(--primary-text-color, #ffffff);
+      transition: all 0.2s ease;
+    }
+
+    .icon-tile:hover {
+      background: rgba(3, 169, 244, 0.15);
+      border-color: var(--primary-color, #03a9f4);
+      transform: translateY(-2px);
+    }
+
+    .icon-tile ha-icon {
+      font-size: 24px;
+    }
+
+    .icon-tile span {
+      font-size: 10px;
+      text-align: center;
+      word-break: break-all;
+      color: var(--secondary-text-color, #9b9b9b);
+      line-height: 1.2;
     }
 
     .picker-empty, .muted-note {

@@ -8,6 +8,15 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { executeAuroraAction, } from './utils/hass-connect';
 import { AuroraModuleManager } from './modules/module-manager';
+import { moduleRegistry } from './modules/registry';
+// Import specialized card components so custom elements are registered
+import './cards/button-card';
+import './cards/climate-card';
+import './cards/cover-card';
+import './cards/media-card';
+import './cards/pop-up-card';
+import './cards/separator-card';
+import './cards/empty-column-card';
 import './editor/editor-base';
 let AuroraCard = class AuroraCard extends LitElement {
     constructor() {
@@ -16,6 +25,8 @@ let AuroraCard = class AuroraCard extends LitElement {
         this._subButtonsCollapsed = false;
         this._holdTimer = null;
         this._holdTriggered = false;
+        this._subHoldTimer = null;
+        this._subHoldTriggered = false;
     }
     static async getConfigElement() {
         return document.createElement('aurora-card-editor');
@@ -43,12 +54,23 @@ let AuroraCard = class AuroraCard extends LitElement {
             prioritise_icon: false,
             show_name: true,
             state_content: ['state'],
+            active_modules: [],
+            module_configs: {},
             ...config,
         };
         AuroraModuleManager.syncGlobalConfigFromCard(this._config);
     }
     getCardSize() {
-        return 1;
+        if (!this._config)
+            return 1;
+        switch (this._config.card_type) {
+            case 'media-player':
+            case 'climate':
+            case 'cover':
+                return 2;
+            default:
+                return 1;
+        }
     }
     _isEntityActive(entityId) {
         if (!entityId || !this.hass || !this.hass.states[entityId])
@@ -102,6 +124,9 @@ let AuroraCard = class AuroraCard extends LitElement {
             if (chipKey === 'state') {
                 const unit = stateObj.attributes.unit_of_measurement ?? '';
                 parts.push(unit ? `${stateObj.state}${unit}` : stateObj.state);
+            }
+            else if (chipKey === 'last_changed') {
+                parts.push(new Date(stateObj.last_changed).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
             }
             else if (stateObj.attributes[chipKey] !== undefined) {
                 parts.push(String(stateObj.attributes[chipKey]));
@@ -198,25 +223,79 @@ let AuroraCard = class AuroraCard extends LitElement {
             return;
         executeAuroraAction(this, this.hass, this._config, this._config.icon_tap_action ?? this._config.tap_action);
     }
+    _compileRegistryModuleStyles() {
+        const activeModules = this._config?.active_modules ?? [];
+        const moduleConfigs = this._config?.module_configs ?? {};
+        const customStyles = this._config?.custom_styles ?? '';
+        const modStyles = activeModules
+            .map((modId) => {
+            const modDef = moduleRegistry.getAllModules().find((m) => m.id === modId);
+            if (!modDef || modDef.type !== 'base-extension')
+                return '';
+            let template = modDef.codeTemplate || '';
+            const modConfig = moduleConfigs[modId] || {};
+            template = template.replace(/\$\{\s*module\.([a-zA-Z0-9_]+)\s*\}/g, (_, key) => {
+                return modConfig[key] !== undefined ? String(modConfig[key]) : '';
+            });
+            return template;
+        })
+            .join('\n');
+        return `${modStyles}\n${customStyles}`;
+    }
     render() {
-        if (!this._config)
+        if (!this._config || !this.hass)
             return html ``;
         const cardType = this._config.card_type ?? 'button';
+        const dynamicCss = AuroraModuleManager.generateDynamicStyles(this.hass, this._config);
+        const registryCss = this._compileRegistryModuleStyles();
+        // 1. Route Empty Column
         if (cardType === 'empty-column') {
-            return html `<div class="aurora-empty-column"></div>`;
+            return html `<aurora-empty-column-card .config="${this._config}"></aurora-empty-column-card>`;
         }
+        // 2. Route Dedicated Card Types to their specialized components
+        if (cardType === 'climate') {
+            return html `
+        <style>${dynamicCss} ${registryCss}</style>
+        <aurora-climate-card .hass="${this.hass}" .config="${this._config}"></aurora-climate-card>
+      `;
+        }
+        if (cardType === 'cover') {
+            return html `
+        <style>${dynamicCss} ${registryCss}</style>
+        <aurora-cover-card .hass="${this.hass}" .config="${this._config}"></aurora-cover-card>
+      `;
+        }
+        if (cardType === 'media-player') {
+            return html `
+        <style>${dynamicCss} ${registryCss}</style>
+        <aurora-media-card .hass="${this.hass}" .config="${this._config}"></aurora-media-card>
+      `;
+        }
+        if (cardType === 'pop-up') {
+            return html `
+        <style>${dynamicCss} ${registryCss}</style>
+        <aurora-pop-up-card .hass="${this.hass}" .config="${this._config}"></aurora-pop-up-card>
+      `;
+        }
+        if (cardType === 'separator') {
+            return html `
+        <style>${dynamicCss} ${registryCss}</style>
+        <aurora-separator-card .hass="${this.hass}" .config="${this._config}"></aurora-separator-card>
+      `;
+        }
+        // 3. Default 'button' or 'sub-buttons' card type renders the advanced Aurora surface
         const entityId = this._config.entity ?? '';
         const isOn = this._isEntityActive(entityId);
-        const dynamicCss = AuroraModuleManager.generateDynamicStyles(this.hass, this._config);
         const hideDefault = AuroraModuleManager.shouldHideDefaultContent(this._config);
         const isSlider = this._config.button_type === 'slider';
         const sliderPct = isSlider ? this._resolveNumericSliderPercent(entityId) : 0;
         return html `
       <style>
         ${dynamicCss}
+        ${registryCss}
       </style>
       <div
-        class="aurora-card-surface"
+        class="aurora-card-surface aurora-card"
         ?data-state-on="${isOn}"
         @pointerdown="${this._handlePointerDown}"
         @pointerup="${this._handlePointerUp}"
@@ -266,10 +345,10 @@ let AuroraCard = class AuroraCard extends LitElement {
         const activeModIds = AuroraModuleManager.getActiveModuleIds(this._config);
         const collapsibleSubs = activeModIds.includes('collapsible_sub_button_groups');
         return html `
-      <div class="aurora-foreground-row">
+      <div class="aurora-foreground-row aurora-card-content">
         ${showIcon
             ? html `
-              <div class="aurora-main-icon-wrap" @click="${this._handleIconClick}">
+              <div class="aurora-main-icon-wrap aurora-icon-container" @click="${this._handleIconClick}">
                 ${AuroraModuleManager.renderIconProgressRing(this.hass, this._config)}${usePicture
                 ? html `<img class="entity-avatar-img" src="${entityPic}" alt="" />`
                 : html `<ha-icon .icon="${icon}"></ha-icon>`}
@@ -324,10 +403,45 @@ let AuroraCard = class AuroraCard extends LitElement {
         type="button"
         class="aurora-sub-pill"
         ?data-sub-active="${subActive}"
+        @pointerdown="${(e) => {
+            e.stopPropagation();
+            this._subHoldTriggered = false;
+            this._subHoldTimer = window.setTimeout(() => {
+                this._subHoldTriggered = true;
+                if (this._config && this.hass) {
+                    executeAuroraAction(this, this.hass, this._config, sub.hold_action ?? { action: 'more-info' }, subEnt);
+                }
+            }, 520);
+        }}"
+        @pointerup="${(e) => {
+            e.stopPropagation();
+            if (this._subHoldTimer !== null) {
+                clearTimeout(this._subHoldTimer);
+                this._subHoldTimer = null;
+            }
+        }}"
+        @pointercancel="${(e) => {
+            e.stopPropagation();
+            if (this._subHoldTimer !== null) {
+                clearTimeout(this._subHoldTimer);
+                this._subHoldTimer = null;
+            }
+        }}"
         @click="${(e) => {
             e.stopPropagation();
+            if (this._subHoldTriggered) {
+                this._subHoldTriggered = false;
+                return;
+            }
             if (this._config && this.hass) {
                 executeAuroraAction(this, this.hass, this._config, sub.tap_action ?? { action: 'toggle' }, subEnt);
+            }
+        }}"
+        @dblclick="${(e) => {
+            e.stopPropagation();
+            const dblAct = sub.double_tap_action;
+            if (this._config && this.hass && dblAct && dblAct.action !== 'none') {
+                executeAuroraAction(this, this.hass, this._config, dblAct, subEnt);
             }
         }}"
       >
@@ -600,8 +714,8 @@ AuroraCard = __decorate([
 export { AuroraCard };
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: "aurora-card",
-    name: "Aurora Card",
-    description: "A high-performance modular card inspired by Bubble Card.",
-    preview: true, // Optional: enables visual preview in the card picker
+    type: 'aurora-card',
+    name: 'Aurora Card',
+    description: 'A high-performance modular card inspired by Bubble Card.',
+    preview: true,
 });

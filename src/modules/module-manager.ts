@@ -1,7 +1,7 @@
 import { html, TemplateResult } from 'lit';
 import { HomeAssistant } from 'custom-card-helpers';
 import { AuroraCardConfig, executeAuroraAction, fireEvent } from '../utils/hass-connect';
-import { AuroraModuleDefinition } from '../editor/editor-base';
+import { AuroraModuleDefinition } from './module.interface';
 
 const GLOBAL_MODULES_STORAGE_KEY = 'aurora_global_modules_state_v1';
 const CUSTOM_MODULES_STORAGE_KEY = 'aurora_custom_modules_v1';
