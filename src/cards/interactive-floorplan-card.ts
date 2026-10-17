@@ -42,6 +42,7 @@ export class AuroraInteractiveFloorplanCard extends LitElement {
             : ''}
 
           ${hotspots.map((spot) => {
+            if (!spot.entity) return;
             const stateObj = this.hass.states[spot.entity];
             const isActive = stateObj && ['on', 'open', 'playing', 'detected'].includes(stateObj.state);
             const icon = spot.icon || stateObj?.attributes.icon || 'mdi:radiobox-marked';

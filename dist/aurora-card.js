@@ -3,208 +3,208 @@
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const G = globalThis, bt = G.ShadowRoot && (G.ShadyCSS === void 0 || G.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, vt = Symbol(), Mt = /* @__PURE__ */ new WeakMap();
-let Vt = class {
-  constructor(t, e, a) {
-    if (this._$cssResult$ = !0, a !== vt) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
-    this.cssText = t, this.t = e;
+const Y = globalThis, K = Y.ShadowRoot && (Y.ShadyCSS === void 0 || Y.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, Q = Symbol(), ie = /* @__PURE__ */ new WeakMap();
+let be = class {
+  constructor(e, t, o) {
+    if (this._$cssResult$ = !0, o !== Q) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
+    this.cssText = e, this.t = t;
   }
   get styleSheet() {
-    let t = this.o;
-    const e = this.t;
-    if (bt && t === void 0) {
-      const a = e !== void 0 && e.length === 1;
-      a && (t = Mt.get(e)), t === void 0 && ((this.o = t = new CSSStyleSheet()).replaceSync(this.cssText), a && Mt.set(e, t));
+    let e = this.o;
+    const t = this.t;
+    if (K && e === void 0) {
+      const o = t !== void 0 && t.length === 1;
+      o && (e = ie.get(t)), e === void 0 && ((this.o = e = new CSSStyleSheet()).replaceSync(this.cssText), o && ie.set(t, e));
     }
-    return t;
+    return e;
   }
   toString() {
     return this.cssText;
   }
 };
-const Qt = (o) => new Vt(typeof o == "string" ? o : o + "", void 0, vt), g = (o, ...t) => {
-  const e = o.length === 1 ? o[0] : t.reduce((a, r, i) => a + ((s) => {
-    if (s._$cssResult$ === !0) return s.cssText;
-    if (typeof s == "number") return s;
-    throw Error("Value passed to 'css' function must be a 'css' function result: " + s + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
-  })(r) + o[i + 1], o[0]);
-  return new Vt(e, o, vt);
-}, Yt = (o, t) => {
-  if (bt) o.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
-  else for (const e of t) {
-    const a = document.createElement("style"), r = G.litNonce;
-    r !== void 0 && a.setAttribute("nonce", r), a.textContent = e.cssText, o.appendChild(a);
+const we = (a) => new be(typeof a == "string" ? a : a + "", void 0, Q), me = (a, ...e) => {
+  const t = a.length === 1 ? a[0] : e.reduce((o, i, s) => o + ((n) => {
+    if (n._$cssResult$ === !0) return n.cssText;
+    if (typeof n == "number") return n;
+    throw Error("Value passed to 'css' function must be a 'css' function result: " + n + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
+  })(i) + a[s + 1], a[0]);
+  return new be(t, a, Q);
+}, Se = (a, e) => {
+  if (K) a.adoptedStyleSheets = e.map((t) => t instanceof CSSStyleSheet ? t : t.styleSheet);
+  else for (const t of e) {
+    const o = document.createElement("style"), i = Y.litNonce;
+    i !== void 0 && o.setAttribute("nonce", i), o.textContent = t.cssText, a.appendChild(o);
   }
-}, Rt = bt ? (o) => o : (o) => o instanceof CSSStyleSheet ? ((t) => {
-  let e = "";
-  for (const a of t.cssRules) e += a.cssText;
-  return Qt(e);
-})(o) : o;
+}, se = K ? (a) => a : (a) => a instanceof CSSStyleSheet ? ((e) => {
+  let t = "";
+  for (const o of e.cssRules) t += o.cssText;
+  return we(t);
+})(a) : a;
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: Kt, defineProperty: Xt, getOwnPropertyDescriptor: te, getOwnPropertyNames: ee, getOwnPropertySymbols: ae, getPrototypeOf: re } = Object, ct = globalThis, Tt = ct.trustedTypes, ie = Tt ? Tt.emptyScript : "", oe = ct.reactiveElementPolyfillSupport, T = (o, t) => o, J = { toAttribute(o, t) {
-  switch (t) {
+const { is: ke, defineProperty: Ce, getOwnPropertyDescriptor: Me, getOwnPropertyNames: Ae, getOwnPropertySymbols: Ee, getPrototypeOf: Te } = Object, H = globalThis, ae = H.trustedTypes, Pe = ae ? ae.emptyScript : "", Oe = H.reactiveElementPolyfillSupport, D = (a, e) => a, U = { toAttribute(a, e) {
+  switch (e) {
     case Boolean:
-      o = o ? ie : null;
+      a = a ? Pe : null;
       break;
     case Object:
     case Array:
-      o = o == null ? o : JSON.stringify(o);
+      a = a == null ? a : JSON.stringify(a);
   }
-  return o;
-}, fromAttribute(o, t) {
-  let e = o;
-  switch (t) {
+  return a;
+}, fromAttribute(a, e) {
+  let t = a;
+  switch (e) {
     case Boolean:
-      e = o !== null;
+      t = a !== null;
       break;
     case Number:
-      e = o === null ? null : Number(o);
+      t = a === null ? null : Number(a);
       break;
     case Object:
     case Array:
       try {
-        e = JSON.parse(o);
+        t = JSON.parse(a);
       } catch {
-        e = null;
+        t = null;
       }
   }
-  return e;
-} }, mt = (o, t) => !Kt(o, t), Nt = { attribute: !0, type: String, converter: J, reflect: !1, useDefault: !1, hasChanged: mt };
-Symbol.metadata ??= Symbol("metadata"), ct.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
-let z = class extends HTMLElement {
-  static addInitializer(t) {
-    this._$Ei(), (this.l ??= []).push(t);
+  return t;
+} }, Z = (a, e) => !ke(a, e), re = { attribute: !0, type: String, converter: U, reflect: !1, useDefault: !1, hasChanged: Z };
+Symbol.metadata ??= Symbol("metadata"), H.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
+let E = class extends HTMLElement {
+  static addInitializer(e) {
+    this._$Ei(), (this.l ??= []).push(e);
   }
   static get observedAttributes() {
     return this.finalize(), this._$Eh && [...this._$Eh.keys()];
   }
-  static createProperty(t, e = Nt) {
-    if (e.state && (e.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(t) && ((e = Object.create(e)).wrapped = !0), this.elementProperties.set(t, e), !e.noAccessor) {
-      const a = Symbol(), r = this.getPropertyDescriptor(t, a, e);
-      r !== void 0 && Xt(this.prototype, t, r);
+  static createProperty(e, t = re) {
+    if (t.state && (t.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(e) && ((t = Object.create(t)).wrapped = !0), this.elementProperties.set(e, t), !t.noAccessor) {
+      const o = Symbol(), i = this.getPropertyDescriptor(e, o, t);
+      i !== void 0 && Ce(this.prototype, e, i);
     }
   }
-  static getPropertyDescriptor(t, e, a) {
-    const { get: r, set: i } = te(this.prototype, t) ?? { get() {
-      return this[e];
-    }, set(s) {
-      this[e] = s;
+  static getPropertyDescriptor(e, t, o) {
+    const { get: i, set: s } = Me(this.prototype, e) ?? { get() {
+      return this[t];
+    }, set(n) {
+      this[t] = n;
     } };
-    return { get: r, set(s) {
-      const n = r?.call(this);
-      i?.call(this, s), this.requestUpdate(t, n, a);
+    return { get: i, set(n) {
+      const c = i?.call(this);
+      s?.call(this, n), this.requestUpdate(e, c, o);
     }, configurable: !0, enumerable: !0 };
   }
-  static getPropertyOptions(t) {
-    return this.elementProperties.get(t) ?? Nt;
+  static getPropertyOptions(e) {
+    return this.elementProperties.get(e) ?? re;
   }
   static _$Ei() {
-    if (this.hasOwnProperty(T("elementProperties"))) return;
-    const t = re(this);
-    t.finalize(), t.l !== void 0 && (this.l = [...t.l]), this.elementProperties = new Map(t.elementProperties);
+    if (this.hasOwnProperty(D("elementProperties"))) return;
+    const e = Te(this);
+    e.finalize(), e.l !== void 0 && (this.l = [...e.l]), this.elementProperties = new Map(e.elementProperties);
   }
   static finalize() {
-    if (this.hasOwnProperty(T("finalized"))) return;
-    if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(T("properties"))) {
-      const e = this.properties, a = [...ee(e), ...ae(e)];
-      for (const r of a) this.createProperty(r, e[r]);
+    if (this.hasOwnProperty(D("finalized"))) return;
+    if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(D("properties"))) {
+      const t = this.properties, o = [...Ae(t), ...Ee(t)];
+      for (const i of o) this.createProperty(i, t[i]);
     }
-    const t = this[Symbol.metadata];
-    if (t !== null) {
-      const e = litPropertyMetadata.get(t);
-      if (e !== void 0) for (const [a, r] of e) this.elementProperties.set(a, r);
+    const e = this[Symbol.metadata];
+    if (e !== null) {
+      const t = litPropertyMetadata.get(e);
+      if (t !== void 0) for (const [o, i] of t) this.elementProperties.set(o, i);
     }
     this._$Eh = /* @__PURE__ */ new Map();
-    for (const [e, a] of this.elementProperties) {
-      const r = this._$Eu(e, a);
-      r !== void 0 && this._$Eh.set(r, e);
+    for (const [t, o] of this.elementProperties) {
+      const i = this._$Eu(t, o);
+      i !== void 0 && this._$Eh.set(i, t);
     }
     this.elementStyles = this.finalizeStyles(this.styles);
   }
-  static finalizeStyles(t) {
-    const e = [];
-    if (Array.isArray(t)) {
-      const a = new Set(t.flat(1 / 0).reverse());
-      for (const r of a) e.unshift(Rt(r));
-    } else t !== void 0 && e.push(Rt(t));
-    return e;
+  static finalizeStyles(e) {
+    const t = [];
+    if (Array.isArray(e)) {
+      const o = new Set(e.flat(1 / 0).reverse());
+      for (const i of o) t.unshift(se(i));
+    } else e !== void 0 && t.push(se(e));
+    return t;
   }
-  static _$Eu(t, e) {
-    const a = e.attribute;
-    return a === !1 ? void 0 : typeof a == "string" ? a : typeof t == "string" ? t.toLowerCase() : void 0;
+  static _$Eu(e, t) {
+    const o = t.attribute;
+    return o === !1 ? void 0 : typeof o == "string" ? o : typeof e == "string" ? e.toLowerCase() : void 0;
   }
   constructor() {
     super(), this._$Ep = void 0, this.isUpdatePending = !1, this.hasUpdated = !1, this._$Em = null, this._$Ev();
   }
   _$Ev() {
-    this._$ES = new Promise((t) => this.enableUpdating = t), this._$AL = /* @__PURE__ */ new Map(), this._$E_(), this.requestUpdate(), this.constructor.l?.forEach((t) => t(this));
+    this._$ES = new Promise((e) => this.enableUpdating = e), this._$AL = /* @__PURE__ */ new Map(), this._$E_(), this.requestUpdate(), this.constructor.l?.forEach((e) => e(this));
   }
-  addController(t) {
-    (this._$EO ??= /* @__PURE__ */ new Set()).add(t), this.renderRoot !== void 0 && this.isConnected && t.hostConnected?.();
+  addController(e) {
+    (this._$EO ??= /* @__PURE__ */ new Set()).add(e), this.renderRoot !== void 0 && this.isConnected && e.hostConnected?.();
   }
-  removeController(t) {
-    this._$EO?.delete(t);
+  removeController(e) {
+    this._$EO?.delete(e);
   }
   _$E_() {
-    const t = /* @__PURE__ */ new Map(), e = this.constructor.elementProperties;
-    for (const a of e.keys()) this.hasOwnProperty(a) && (t.set(a, this[a]), delete this[a]);
-    t.size > 0 && (this._$Ep = t);
+    const e = /* @__PURE__ */ new Map(), t = this.constructor.elementProperties;
+    for (const o of t.keys()) this.hasOwnProperty(o) && (e.set(o, this[o]), delete this[o]);
+    e.size > 0 && (this._$Ep = e);
   }
   createRenderRoot() {
-    const t = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
-    return Yt(t, this.constructor.elementStyles), t;
+    const e = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
+    return Se(e, this.constructor.elementStyles), e;
   }
   connectedCallback() {
-    this.renderRoot ??= this.createRenderRoot(), this.enableUpdating(!0), this._$EO?.forEach((t) => t.hostConnected?.());
+    this.renderRoot ??= this.createRenderRoot(), this.enableUpdating(!0), this._$EO?.forEach((e) => e.hostConnected?.());
   }
-  enableUpdating(t) {
+  enableUpdating(e) {
   }
   disconnectedCallback() {
-    this._$EO?.forEach((t) => t.hostDisconnected?.());
+    this._$EO?.forEach((e) => e.hostDisconnected?.());
   }
-  attributeChangedCallback(t, e, a) {
-    this._$AK(t, a);
+  attributeChangedCallback(e, t, o) {
+    this._$AK(e, o);
   }
-  _$ET(t, e) {
-    const a = this.constructor.elementProperties.get(t), r = this.constructor._$Eu(t, a);
-    if (r !== void 0 && a.reflect === !0) {
-      const i = (a.converter?.toAttribute !== void 0 ? a.converter : J).toAttribute(e, a.type);
-      this._$Em = t, i == null ? this.removeAttribute(r) : this.setAttribute(r, i), this._$Em = null;
+  _$ET(e, t) {
+    const o = this.constructor.elementProperties.get(e), i = this.constructor._$Eu(e, o);
+    if (i !== void 0 && o.reflect === !0) {
+      const s = (o.converter?.toAttribute !== void 0 ? o.converter : U).toAttribute(t, o.type);
+      this._$Em = e, s == null ? this.removeAttribute(i) : this.setAttribute(i, s), this._$Em = null;
     }
   }
-  _$AK(t, e) {
-    const a = this.constructor, r = a._$Eh.get(t);
-    if (r !== void 0 && this._$Em !== r) {
-      const i = a.getPropertyOptions(r), s = typeof i.converter == "function" ? { fromAttribute: i.converter } : i.converter?.fromAttribute !== void 0 ? i.converter : J;
-      this._$Em = r;
-      const n = s.fromAttribute(e, i.type);
-      this[r] = n ?? this._$Ej?.get(r) ?? n, this._$Em = null;
+  _$AK(e, t) {
+    const o = this.constructor, i = o._$Eh.get(e);
+    if (i !== void 0 && this._$Em !== i) {
+      const s = o.getPropertyOptions(i), n = typeof s.converter == "function" ? { fromAttribute: s.converter } : s.converter?.fromAttribute !== void 0 ? s.converter : U;
+      this._$Em = i;
+      const c = n.fromAttribute(t, s.type);
+      this[i] = c ?? this._$Ej?.get(i) ?? c, this._$Em = null;
     }
   }
-  requestUpdate(t, e, a, r = !1, i) {
-    if (t !== void 0) {
-      const s = this.constructor;
-      if (r === !1 && (i = this[t]), a ??= s.getPropertyOptions(t), !((a.hasChanged ?? mt)(i, e) || a.useDefault && a.reflect && i === this._$Ej?.get(t) && !this.hasAttribute(s._$Eu(t, a)))) return;
-      this.C(t, e, a);
+  requestUpdate(e, t, o, i = !1, s) {
+    if (e !== void 0) {
+      const n = this.constructor;
+      if (i === !1 && (s = this[e]), o ??= n.getPropertyOptions(e), !((o.hasChanged ?? Z)(s, t) || o.useDefault && o.reflect && s === this._$Ej?.get(e) && !this.hasAttribute(n._$Eu(e, o)))) return;
+      this.C(e, t, o);
     }
     this.isUpdatePending === !1 && (this._$ES = this._$EP());
   }
-  C(t, e, { useDefault: a, reflect: r, wrapped: i }, s) {
-    a && !(this._$Ej ??= /* @__PURE__ */ new Map()).has(t) && (this._$Ej.set(t, s ?? e ?? this[t]), i !== !0 || s !== void 0) || (this._$AL.has(t) || (this.hasUpdated || a || (e = void 0), this._$AL.set(t, e)), r === !0 && this._$Em !== t && (this._$Eq ??= /* @__PURE__ */ new Set()).add(t));
+  C(e, t, { useDefault: o, reflect: i, wrapped: s }, n) {
+    o && !(this._$Ej ??= /* @__PURE__ */ new Map()).has(e) && (this._$Ej.set(e, n ?? t ?? this[e]), s !== !0 || n !== void 0) || (this._$AL.has(e) || (this.hasUpdated || o || (t = void 0), this._$AL.set(e, t)), i === !0 && this._$Em !== e && (this._$Eq ??= /* @__PURE__ */ new Set()).add(e));
   }
   async _$EP() {
     this.isUpdatePending = !0;
     try {
       await this._$ES;
-    } catch (e) {
-      Promise.reject(e);
+    } catch (t) {
+      Promise.reject(t);
     }
-    const t = this.scheduleUpdate();
-    return t != null && await t, !this.isUpdatePending;
+    const e = this.scheduleUpdate();
+    return e != null && await e, !this.isUpdatePending;
   }
   scheduleUpdate() {
     return this.performUpdate();
@@ -213,28 +213,28 @@ let z = class extends HTMLElement {
     if (!this.isUpdatePending) return;
     if (!this.hasUpdated) {
       if (this.renderRoot ??= this.createRenderRoot(), this._$Ep) {
-        for (const [r, i] of this._$Ep) this[r] = i;
+        for (const [i, s] of this._$Ep) this[i] = s;
         this._$Ep = void 0;
       }
-      const a = this.constructor.elementProperties;
-      if (a.size > 0) for (const [r, i] of a) {
-        const { wrapped: s } = i, n = this[r];
-        s !== !0 || this._$AL.has(r) || n === void 0 || this.C(r, void 0, i, n);
+      const o = this.constructor.elementProperties;
+      if (o.size > 0) for (const [i, s] of o) {
+        const { wrapped: n } = s, c = this[i];
+        n !== !0 || this._$AL.has(i) || c === void 0 || this.C(i, void 0, s, c);
       }
     }
-    let t = !1;
-    const e = this._$AL;
+    let e = !1;
+    const t = this._$AL;
     try {
-      t = this.shouldUpdate(e), t ? (this.willUpdate(e), this._$EO?.forEach((a) => a.hostUpdate?.()), this.update(e)) : this._$EM();
-    } catch (a) {
-      throw t = !1, this._$EM(), a;
+      e = this.shouldUpdate(t), e ? (this.willUpdate(t), this._$EO?.forEach((o) => o.hostUpdate?.()), this.update(t)) : this._$EM();
+    } catch (o) {
+      throw e = !1, this._$EM(), o;
     }
-    t && this._$AE(e);
+    e && this._$AE(t);
   }
-  willUpdate(t) {
+  willUpdate(e) {
   }
-  _$AE(t) {
-    this._$EO?.forEach((e) => e.hostUpdated?.()), this.hasUpdated || (this.hasUpdated = !0, this.firstUpdated(t)), this.updated(t);
+  _$AE(e) {
+    this._$EO?.forEach((t) => t.hostUpdated?.()), this.hasUpdated || (this.hasUpdated = !0, this.firstUpdated(e)), this.updated(e);
   }
   _$EM() {
     this._$AL = /* @__PURE__ */ new Map(), this.isUpdatePending = !1;
@@ -245,88 +245,88 @@ let z = class extends HTMLElement {
   getUpdateComplete() {
     return this._$ES;
   }
-  shouldUpdate(t) {
+  shouldUpdate(e) {
     return !0;
   }
-  update(t) {
-    this._$Eq &&= this._$Eq.forEach((e) => this._$ET(e, this[e])), this._$EM();
+  update(e) {
+    this._$Eq &&= this._$Eq.forEach((t) => this._$ET(t, this[t])), this._$EM();
   }
-  updated(t) {
+  updated(e) {
   }
-  firstUpdated(t) {
+  firstUpdated(e) {
   }
 };
-z.elementStyles = [], z.shadowRootOptions = { mode: "open" }, z[T("elementProperties")] = /* @__PURE__ */ new Map(), z[T("finalized")] = /* @__PURE__ */ new Map(), oe?.({ ReactiveElement: z }), (ct.reactiveElementVersions ??= []).push("2.1.2");
+E.elementStyles = [], E.shadowRootOptions = { mode: "open" }, E[D("elementProperties")] = /* @__PURE__ */ new Map(), E[D("finalized")] = /* @__PURE__ */ new Map(), Oe?.({ ReactiveElement: E }), (H.reactiveElementVersions ??= []).push("2.1.2");
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const xt = globalThis, Ht = (o) => o, Q = xt.trustedTypes, Dt = Q ? Q.createPolicy("lit-html", { createHTML: (o) => o }) : void 0, Wt = "$lit$", k = `lit$${Math.random().toFixed(9).slice(2)}$`, Ft = "?" + k, se = `<${Ft}>`, S = document, N = () => S.createComment(""), H = (o) => o === null || typeof o != "object" && typeof o != "function", yt = Array.isArray, ne = (o) => yt(o) || typeof o?.[Symbol.iterator] == "function", ft = `[ 	
-\f\r]`, R = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Ut = /-->/g, qt = />/g, A = RegExp(`>|${ft}(?:([^\\s"'>=/]+)(${ft}*=${ft}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), It = /'/g, Lt = /"/g, Zt = /^(?:script|style|textarea|title)$/i, ce = (o) => (t, ...e) => ({ _$litType$: o, strings: t, values: e }), c = ce(1), P = Symbol.for("lit-noChange"), v = Symbol.for("lit-nothing"), Bt = /* @__PURE__ */ new WeakMap(), C = S.createTreeWalker(S, 129);
-function Gt(o, t) {
-  if (!yt(o) || !o.hasOwnProperty("raw")) throw Error("invalid template strings array");
-  return Dt !== void 0 ? Dt.createHTML(t) : t;
+const X = globalThis, ne = (a) => a, j = X.trustedTypes, le = j ? j.createPolicy("lit-html", { createHTML: (a) => a }) : void 0, fe = "$lit$", $ = `lit$${Math.random().toFixed(9).slice(2)}$`, _e = "?" + $, ze = `<${_e}>`, M = document, B = () => M.createComment(""), I = (a) => a === null || typeof a != "object" && typeof a != "function", ee = Array.isArray, De = (a) => ee(a) || typeof a?.[Symbol.iterator] == "function", J = `[ 	
+\f\r]`, z = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, ce = /-->/g, de = />/g, S = RegExp(`>|${J}(?:([^\\s"'>=/]+)(${J}*=${J}*(?:[^ 	
+\f\r"'\`<>=]|("|')|))|$)`, "g"), pe = /'/g, ue = /"/g, ve = /^(?:script|style|textarea|title)$/i, Be = (a) => (e, ...t) => ({ _$litType$: a, strings: e, values: t }), r = Be(1), P = Symbol.for("lit-noChange"), y = Symbol.for("lit-nothing"), he = /* @__PURE__ */ new WeakMap(), C = M.createTreeWalker(M, 129);
+function ye(a, e) {
+  if (!ee(a) || !a.hasOwnProperty("raw")) throw Error("invalid template strings array");
+  return le !== void 0 ? le.createHTML(e) : e;
 }
-const le = (o, t) => {
-  const e = o.length - 1, a = [];
-  let r, i = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", s = R;
-  for (let n = 0; n < e; n++) {
-    const l = o[n];
-    let d, p, h = -1, _ = 0;
-    for (; _ < l.length && (s.lastIndex = _, p = s.exec(l), p !== null); ) _ = s.lastIndex, s === R ? p[1] === "!--" ? s = Ut : p[1] !== void 0 ? s = qt : p[2] !== void 0 ? (Zt.test(p[2]) && (r = RegExp("</" + p[2], "g")), s = A) : p[3] !== void 0 && (s = A) : s === A ? p[0] === ">" ? (s = r ?? R, h = -1) : p[1] === void 0 ? h = -2 : (h = s.lastIndex - p[2].length, d = p[1], s = p[3] === void 0 ? A : p[3] === '"' ? Lt : It) : s === Lt || s === It ? s = A : s === Ut || s === qt ? s = R : (s = A, r = void 0);
-    const $ = s === A && o[n + 1].startsWith("/>") ? " " : "";
-    i += s === R ? l + se : h >= 0 ? (a.push(d), l.slice(0, h) + Wt + l.slice(h) + k + $) : l + k + (h === -2 ? n : $);
+const Ie = (a, e) => {
+  const t = a.length - 1, o = [];
+  let i, s = e === 2 ? "<svg>" : e === 3 ? "<math>" : "", n = z;
+  for (let c = 0; c < t; c++) {
+    const l = a[c];
+    let d, u, p = -1, h = 0;
+    for (; h < l.length && (n.lastIndex = h, u = n.exec(l), u !== null); ) h = n.lastIndex, n === z ? u[1] === "!--" ? n = ce : u[1] !== void 0 ? n = de : u[2] !== void 0 ? (ve.test(u[2]) && (i = RegExp("</" + u[2], "g")), n = S) : u[3] !== void 0 && (n = S) : n === S ? u[0] === ">" ? (n = i ?? z, p = -1) : u[1] === void 0 ? p = -2 : (p = n.lastIndex - u[2].length, d = u[1], n = u[3] === void 0 ? S : u[3] === '"' ? ue : pe) : n === ue || n === pe ? n = S : n === ce || n === de ? n = z : (n = S, i = void 0);
+    const g = n === S && a[c + 1].startsWith("/>") ? " " : "";
+    s += n === z ? l + ze : p >= 0 ? (o.push(d), l.slice(0, p) + fe + l.slice(p) + $ + g) : l + $ + (p === -2 ? c : g);
   }
-  return [Gt(o, i + (o[e] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), a];
+  return [ye(a, s + (a[t] || "<?>") + (e === 2 ? "</svg>" : e === 3 ? "</math>" : "")), o];
 };
-class D {
-  constructor({ strings: t, _$litType$: e }, a) {
-    let r;
+class N {
+  constructor({ strings: e, _$litType$: t }, o) {
+    let i;
     this.parts = [];
-    let i = 0, s = 0;
-    const n = t.length - 1, l = this.parts, [d, p] = le(t, e);
-    if (this.el = D.createElement(d, a), C.currentNode = this.el.content, e === 2 || e === 3) {
-      const h = this.el.content.firstChild;
-      h.replaceWith(...h.childNodes);
+    let s = 0, n = 0;
+    const c = e.length - 1, l = this.parts, [d, u] = Ie(e, t);
+    if (this.el = N.createElement(d, o), C.currentNode = this.el.content, t === 2 || t === 3) {
+      const p = this.el.content.firstChild;
+      p.replaceWith(...p.childNodes);
     }
-    for (; (r = C.nextNode()) !== null && l.length < n; ) {
-      if (r.nodeType === 1) {
-        if (r.hasAttributes()) for (const h of r.getAttributeNames()) if (h.endsWith(Wt)) {
-          const _ = p[s++], $ = r.getAttribute(h).split(k), Z = /([.?@])?(.*)/.exec(_);
-          l.push({ type: 1, index: i, name: Z[2], strings: $, ctor: Z[1] === "." ? pe : Z[1] === "?" ? ue : Z[1] === "@" ? he : lt }), r.removeAttribute(h);
-        } else h.startsWith(k) && (l.push({ type: 6, index: i }), r.removeAttribute(h));
-        if (Zt.test(r.tagName)) {
-          const h = r.textContent.split(k), _ = h.length - 1;
-          if (_ > 0) {
-            r.textContent = Q ? Q.emptyScript : "";
-            for (let $ = 0; $ < _; $++) r.append(h[$], N()), C.nextNode(), l.push({ type: 2, index: ++i });
-            r.append(h[_], N());
+    for (; (i = C.nextNode()) !== null && l.length < c; ) {
+      if (i.nodeType === 1) {
+        if (i.hasAttributes()) for (const p of i.getAttributeNames()) if (p.endsWith(fe)) {
+          const h = u[n++], g = i.getAttribute(p).split($), v = /([.?@])?(.*)/.exec(h);
+          l.push({ type: 1, index: s, name: v[2], strings: g, ctor: v[1] === "." ? Fe : v[1] === "?" ? Ve : v[1] === "@" ? Le : G }), i.removeAttribute(p);
+        } else p.startsWith($) && (l.push({ type: 6, index: s }), i.removeAttribute(p));
+        if (ve.test(i.tagName)) {
+          const p = i.textContent.split($), h = p.length - 1;
+          if (h > 0) {
+            i.textContent = j ? j.emptyScript : "";
+            for (let g = 0; g < h; g++) i.append(p[g], B()), C.nextNode(), l.push({ type: 2, index: ++s });
+            i.append(p[h], B());
           }
         }
-      } else if (r.nodeType === 8) if (r.data === Ft) l.push({ type: 2, index: i });
+      } else if (i.nodeType === 8) if (i.data === _e) l.push({ type: 2, index: s });
       else {
-        let h = -1;
-        for (; (h = r.data.indexOf(k, h + 1)) !== -1; ) l.push({ type: 7, index: i }), h += k.length - 1;
+        let p = -1;
+        for (; (p = i.data.indexOf($, p + 1)) !== -1; ) l.push({ type: 7, index: s }), p += $.length - 1;
       }
-      i++;
+      s++;
     }
   }
-  static createElement(t, e) {
-    const a = S.createElement("template");
-    return a.innerHTML = t, a;
+  static createElement(e, t) {
+    const o = M.createElement("template");
+    return o.innerHTML = e, o;
   }
 }
-function j(o, t, e = o, a) {
-  if (t === P) return t;
-  let r = a !== void 0 ? e._$Co?.[a] : e._$Cl;
-  const i = H(t) ? void 0 : t._$litDirective$;
-  return r?.constructor !== i && (r?._$AO?.(!1), i === void 0 ? r = void 0 : (r = new i(o), r._$AT(o, e, a)), a !== void 0 ? (e._$Co ??= [])[a] = r : e._$Cl = r), r !== void 0 && (t = j(o, r._$AS(o, t.values), r, a)), t;
+function O(a, e, t = a, o) {
+  if (e === P) return e;
+  let i = o !== void 0 ? t._$Co?.[o] : t._$Cl;
+  const s = I(e) ? void 0 : e._$litDirective$;
+  return i?.constructor !== s && (i?._$AO?.(!1), s === void 0 ? i = void 0 : (i = new s(a), i._$AT(a, t, o)), o !== void 0 ? (t._$Co ??= [])[o] = i : t._$Cl = i), i !== void 0 && (e = O(a, i._$AS(a, e.values), i, o)), e;
 }
-class de {
-  constructor(t, e) {
-    this._$AV = [], this._$AN = void 0, this._$AD = t, this._$AM = e;
+class Ne {
+  constructor(e, t) {
+    this._$AV = [], this._$AN = void 0, this._$AD = e, this._$AM = t;
   }
   get parentNode() {
     return this._$AM.parentNode;
@@ -334,35 +334,35 @@ class de {
   get _$AU() {
     return this._$AM._$AU;
   }
-  u(t) {
-    const { el: { content: e }, parts: a } = this._$AD, r = (t?.creationScope ?? S).importNode(e, !0);
-    C.currentNode = r;
-    let i = C.nextNode(), s = 0, n = 0, l = a[0];
+  u(e) {
+    const { el: { content: t }, parts: o } = this._$AD, i = (e?.creationScope ?? M).importNode(t, !0);
+    C.currentNode = i;
+    let s = C.nextNode(), n = 0, c = 0, l = o[0];
     for (; l !== void 0; ) {
-      if (s === l.index) {
+      if (n === l.index) {
         let d;
-        l.type === 2 ? d = new B(i, i.nextSibling, this, t) : l.type === 1 ? d = new l.ctor(i, l.name, l.strings, this, t) : l.type === 6 && (d = new fe(i, this, t)), this._$AV.push(d), l = a[++n];
+        l.type === 2 ? d = new V(s, s.nextSibling, this, e) : l.type === 1 ? d = new l.ctor(s, l.name, l.strings, this, e) : l.type === 6 && (d = new Re(s, this, e)), this._$AV.push(d), l = o[++c];
       }
-      s !== l?.index && (i = C.nextNode(), s++);
+      n !== l?.index && (s = C.nextNode(), n++);
     }
-    return C.currentNode = S, r;
+    return C.currentNode = M, i;
   }
-  p(t) {
-    let e = 0;
-    for (const a of this._$AV) a !== void 0 && (a.strings !== void 0 ? (a._$AI(t, a, e), e += a.strings.length - 2) : a._$AI(t[e])), e++;
+  p(e) {
+    let t = 0;
+    for (const o of this._$AV) o !== void 0 && (o.strings !== void 0 ? (o._$AI(e, o, t), t += o.strings.length - 2) : o._$AI(e[t])), t++;
   }
 }
-class B {
+class V {
   get _$AU() {
     return this._$AM?._$AU ?? this._$Cv;
   }
-  constructor(t, e, a, r) {
-    this.type = 2, this._$AH = v, this._$AN = void 0, this._$AA = t, this._$AB = e, this._$AM = a, this.options = r, this._$Cv = r?.isConnected ?? !0;
+  constructor(e, t, o, i) {
+    this.type = 2, this._$AH = y, this._$AN = void 0, this._$AA = e, this._$AB = t, this._$AM = o, this.options = i, this._$Cv = i?.isConnected ?? !0;
   }
   get parentNode() {
-    let t = this._$AA.parentNode;
-    const e = this._$AM;
-    return e !== void 0 && t?.nodeType === 11 && (t = e.parentNode), t;
+    let e = this._$AA.parentNode;
+    const t = this._$AM;
+    return t !== void 0 && e?.nodeType === 11 && (e = t.parentNode), e;
   }
   get startNode() {
     return this._$AA;
@@ -370,140 +370,140 @@ class B {
   get endNode() {
     return this._$AB;
   }
-  _$AI(t, e = this) {
-    t = j(this, t, e), H(t) ? t === v || t == null || t === "" ? (this._$AH !== v && this._$AR(), this._$AH = v) : t !== this._$AH && t !== P && this._(t) : t._$litType$ !== void 0 ? this.$(t) : t.nodeType !== void 0 ? this.T(t) : ne(t) ? this.k(t) : this._(t);
+  _$AI(e, t = this) {
+    e = O(this, e, t), I(e) ? e === y || e == null || e === "" ? (this._$AH !== y && this._$AR(), this._$AH = y) : e !== this._$AH && e !== P && this._(e) : e._$litType$ !== void 0 ? this.$(e) : e.nodeType !== void 0 ? this.T(e) : De(e) ? this.k(e) : this._(e);
   }
-  O(t) {
-    return this._$AA.parentNode.insertBefore(t, this._$AB);
+  O(e) {
+    return this._$AA.parentNode.insertBefore(e, this._$AB);
   }
-  T(t) {
-    this._$AH !== t && (this._$AR(), this._$AH = this.O(t));
+  T(e) {
+    this._$AH !== e && (this._$AR(), this._$AH = this.O(e));
   }
-  _(t) {
-    this._$AH !== v && H(this._$AH) ? this._$AA.nextSibling.data = t : this.T(S.createTextNode(t)), this._$AH = t;
+  _(e) {
+    this._$AH !== y && I(this._$AH) ? this._$AA.nextSibling.data = e : this.T(M.createTextNode(e)), this._$AH = e;
   }
-  $(t) {
-    const { values: e, _$litType$: a } = t, r = typeof a == "number" ? this._$AC(t) : (a.el === void 0 && (a.el = D.createElement(Gt(a.h, a.h[0]), this.options)), a);
-    if (this._$AH?._$AD === r) this._$AH.p(e);
+  $(e) {
+    const { values: t, _$litType$: o } = e, i = typeof o == "number" ? this._$AC(e) : (o.el === void 0 && (o.el = N.createElement(ye(o.h, o.h[0]), this.options)), o);
+    if (this._$AH?._$AD === i) this._$AH.p(t);
     else {
-      const i = new de(r, this), s = i.u(this.options);
-      i.p(e), this.T(s), this._$AH = i;
+      const s = new Ne(i, this), n = s.u(this.options);
+      s.p(t), this.T(n), this._$AH = s;
     }
   }
-  _$AC(t) {
-    let e = Bt.get(t.strings);
-    return e === void 0 && Bt.set(t.strings, e = new D(t)), e;
+  _$AC(e) {
+    let t = he.get(e.strings);
+    return t === void 0 && he.set(e.strings, t = new N(e)), t;
   }
-  k(t) {
-    yt(this._$AH) || (this._$AH = [], this._$AR());
-    const e = this._$AH;
-    let a, r = 0;
-    for (const i of t) r === e.length ? e.push(a = new B(this.O(N()), this.O(N()), this, this.options)) : a = e[r], a._$AI(i), r++;
-    r < e.length && (this._$AR(a && a._$AB.nextSibling, r), e.length = r);
+  k(e) {
+    ee(this._$AH) || (this._$AH = [], this._$AR());
+    const t = this._$AH;
+    let o, i = 0;
+    for (const s of e) i === t.length ? t.push(o = new V(this.O(B()), this.O(B()), this, this.options)) : o = t[i], o._$AI(s), i++;
+    i < t.length && (this._$AR(o && o._$AB.nextSibling, i), t.length = i);
   }
-  _$AR(t = this._$AA.nextSibling, e) {
-    for (this._$AP?.(!1, !0, e); t !== this._$AB; ) {
-      const a = Ht(t).nextSibling;
-      Ht(t).remove(), t = a;
+  _$AR(e = this._$AA.nextSibling, t) {
+    for (this._$AP?.(!1, !0, t); e !== this._$AB; ) {
+      const o = ne(e).nextSibling;
+      ne(e).remove(), e = o;
     }
   }
-  setConnected(t) {
-    this._$AM === void 0 && (this._$Cv = t, this._$AP?.(t));
+  setConnected(e) {
+    this._$AM === void 0 && (this._$Cv = e, this._$AP?.(e));
   }
 }
-class lt {
+class G {
   get tagName() {
     return this.element.tagName;
   }
   get _$AU() {
     return this._$AM._$AU;
   }
-  constructor(t, e, a, r, i) {
-    this.type = 1, this._$AH = v, this._$AN = void 0, this.element = t, this.name = e, this._$AM = r, this.options = i, a.length > 2 || a[0] !== "" || a[1] !== "" ? (this._$AH = Array(a.length - 1).fill(new String()), this.strings = a) : this._$AH = v;
+  constructor(e, t, o, i, s) {
+    this.type = 1, this._$AH = y, this._$AN = void 0, this.element = e, this.name = t, this._$AM = i, this.options = s, o.length > 2 || o[0] !== "" || o[1] !== "" ? (this._$AH = Array(o.length - 1).fill(new String()), this.strings = o) : this._$AH = y;
   }
-  _$AI(t, e = this, a, r) {
-    const i = this.strings;
-    let s = !1;
-    if (i === void 0) t = j(this, t, e, 0), s = !H(t) || t !== this._$AH && t !== P, s && (this._$AH = t);
+  _$AI(e, t = this, o, i) {
+    const s = this.strings;
+    let n = !1;
+    if (s === void 0) e = O(this, e, t, 0), n = !I(e) || e !== this._$AH && e !== P, n && (this._$AH = e);
     else {
-      const n = t;
+      const c = e;
       let l, d;
-      for (t = i[0], l = 0; l < i.length - 1; l++) d = j(this, n[a + l], e, l), d === P && (d = this._$AH[l]), s ||= !H(d) || d !== this._$AH[l], d === v ? t = v : t !== v && (t += (d ?? "") + i[l + 1]), this._$AH[l] = d;
+      for (e = s[0], l = 0; l < s.length - 1; l++) d = O(this, c[o + l], t, l), d === P && (d = this._$AH[l]), n ||= !I(d) || d !== this._$AH[l], d === y ? e = y : e !== y && (e += (d ?? "") + s[l + 1]), this._$AH[l] = d;
     }
-    s && !r && this.j(t);
+    n && !i && this.j(e);
   }
-  j(t) {
-    t === v ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, t ?? "");
+  j(e) {
+    e === y ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
   }
 }
-class pe extends lt {
+class Fe extends G {
   constructor() {
     super(...arguments), this.type = 3;
   }
-  j(t) {
-    this.element[this.name] = t === v ? void 0 : t;
+  j(e) {
+    this.element[this.name] = e === y ? void 0 : e;
   }
 }
-class ue extends lt {
+class Ve extends G {
   constructor() {
     super(...arguments), this.type = 4;
   }
-  j(t) {
-    this.element.toggleAttribute(this.name, !!t && t !== v);
+  j(e) {
+    this.element.toggleAttribute(this.name, !!e && e !== y);
   }
 }
-class he extends lt {
-  constructor(t, e, a, r, i) {
-    super(t, e, a, r, i), this.type = 5;
+class Le extends G {
+  constructor(e, t, o, i, s) {
+    super(e, t, o, i, s), this.type = 5;
   }
-  _$AI(t, e = this) {
-    if ((t = j(this, t, e, 0) ?? v) === P) return;
-    const a = this._$AH, r = t === v && a !== v || t.capture !== a.capture || t.once !== a.once || t.passive !== a.passive, i = t !== v && (a === v || r);
-    r && this.element.removeEventListener(this.name, this, a), i && this.element.addEventListener(this.name, this, t), this._$AH = t;
+  _$AI(e, t = this) {
+    if ((e = O(this, e, t, 0) ?? y) === P) return;
+    const o = this._$AH, i = e === y && o !== y || e.capture !== o.capture || e.once !== o.once || e.passive !== o.passive, s = e !== y && (o === y || i);
+    i && this.element.removeEventListener(this.name, this, o), s && this.element.addEventListener(this.name, this, e), this._$AH = e;
   }
-  handleEvent(t) {
-    typeof this._$AH == "function" ? this._$AH.call(this.options?.host ?? this.element, t) : this._$AH.handleEvent(t);
+  handleEvent(e) {
+    typeof this._$AH == "function" ? this._$AH.call(this.options?.host ?? this.element, e) : this._$AH.handleEvent(e);
   }
 }
-class fe {
-  constructor(t, e, a) {
-    this.element = t, this.type = 6, this._$AN = void 0, this._$AM = e, this.options = a;
+class Re {
+  constructor(e, t, o) {
+    this.element = e, this.type = 6, this._$AN = void 0, this._$AM = t, this.options = o;
   }
   get _$AU() {
     return this._$AM._$AU;
   }
-  _$AI(t) {
-    j(this, t);
+  _$AI(e) {
+    O(this, e);
   }
 }
-const ge = xt.litHtmlPolyfillSupport;
-ge?.(D, B), (xt.litHtmlVersions ??= []).push("3.3.3");
-const be = (o, t, e) => {
-  const a = e?.renderBefore ?? t;
-  let r = a._$litPart$;
-  if (r === void 0) {
-    const i = e?.renderBefore ?? null;
-    a._$litPart$ = r = new B(t.insertBefore(N(), i), i, void 0, e ?? {});
+const Ye = X.litHtmlPolyfillSupport;
+Ye?.(N, V), (X.litHtmlVersions ??= []).push("3.3.3");
+const Ue = (a, e, t) => {
+  const o = t?.renderBefore ?? e;
+  let i = o._$litPart$;
+  if (i === void 0) {
+    const s = t?.renderBefore ?? null;
+    o._$litPart$ = i = new V(e.insertBefore(B(), s), s, void 0, t ?? {});
   }
-  return r._$AI(o), r;
+  return i._$AI(a), i;
 };
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const _t = globalThis;
-class f extends z {
+const te = globalThis;
+class T extends E {
   constructor() {
     super(...arguments), this.renderOptions = { host: this }, this._$Do = void 0;
   }
   createRenderRoot() {
-    const t = super.createRenderRoot();
-    return this.renderOptions.renderBefore ??= t.firstChild, t;
+    const e = super.createRenderRoot();
+    return this.renderOptions.renderBefore ??= e.firstChild, e;
   }
-  update(t) {
-    const e = this.render();
-    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(t), this._$Do = be(e, this.renderRoot, this.renderOptions);
+  update(e) {
+    const t = this.render();
+    this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(e), this._$Do = Ue(t, this.renderRoot, this.renderOptions);
   }
   connectedCallback() {
     super.connectedCallback(), this._$Do?.setConnected(!0);
@@ -515,3667 +515,4089 @@ class f extends z {
     return P;
   }
 }
-f._$litElement$ = !0, f.finalized = !0, _t.litElementHydrateSupport?.({ LitElement: f });
-const ve = _t.litElementPolyfillSupport;
-ve?.({ LitElement: f });
-(_t.litElementVersions ??= []).push("4.2.2");
+T._$litElement$ = !0, T.finalized = !0, te.litElementHydrateSupport?.({ LitElement: T });
+const je = te.litElementPolyfillSupport;
+je?.({ LitElement: T });
+(te.litElementVersions ??= []).push("4.2.2");
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const b = (o) => (t, e) => {
-  e !== void 0 ? e.addInitializer(() => {
-    customElements.define(o, t);
-  }) : customElements.define(o, t);
+const xe = (a) => (e, t) => {
+  t !== void 0 ? t.addInitializer(() => {
+    customElements.define(a, e);
+  }) : customElements.define(a, e);
 };
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const me = { attribute: !0, type: String, converter: J, reflect: !1, hasChanged: mt }, xe = (o = me, t, e) => {
-  const { kind: a, metadata: r } = e;
-  let i = globalThis.litPropertyMetadata.get(r);
-  if (i === void 0 && globalThis.litPropertyMetadata.set(r, i = /* @__PURE__ */ new Map()), a === "setter" && ((o = Object.create(o)).wrapped = !0), i.set(e.name, o), a === "accessor") {
-    const { name: s } = e;
-    return { set(n) {
-      const l = t.get.call(this);
-      t.set.call(this, n), this.requestUpdate(s, l, o, !0, n);
-    }, init(n) {
-      return n !== void 0 && this.C(s, void 0, o, n), n;
+const He = { attribute: !0, type: String, converter: U, reflect: !1, hasChanged: Z }, Ge = (a = He, e, t) => {
+  const { kind: o, metadata: i } = t;
+  let s = globalThis.litPropertyMetadata.get(i);
+  if (s === void 0 && globalThis.litPropertyMetadata.set(i, s = /* @__PURE__ */ new Map()), o === "setter" && ((a = Object.create(a)).wrapped = !0), s.set(t.name, a), o === "accessor") {
+    const { name: n } = t;
+    return { set(c) {
+      const l = e.get.call(this);
+      e.set.call(this, c), this.requestUpdate(n, l, a, !0, c);
+    }, init(c) {
+      return c !== void 0 && this.C(n, void 0, a, c), c;
     } };
   }
-  if (a === "setter") {
-    const { name: s } = e;
-    return function(n) {
-      const l = this[s];
-      t.call(this, n), this.requestUpdate(s, l, o, !0, n);
+  if (o === "setter") {
+    const { name: n } = t;
+    return function(c) {
+      const l = this[n];
+      e.call(this, c), this.requestUpdate(n, l, a, !0, c);
     };
   }
-  throw Error("Unsupported decorator location: " + a);
+  throw Error("Unsupported decorator location: " + o);
 };
-function u(o) {
-  return (t, e) => typeof e == "object" ? xe(o, t, e) : ((a, r, i) => {
-    const s = r.hasOwnProperty(i);
-    return r.constructor.createProperty(i, a), s ? Object.getOwnPropertyDescriptor(r, i) : void 0;
-  })(o, t, e);
+function oe(a) {
+  return (e, t) => typeof t == "object" ? Ge(a, e, t) : ((o, i, s) => {
+    const n = i.hasOwnProperty(s);
+    return i.constructor.createProperty(s, o), n ? Object.getOwnPropertyDescriptor(i, s) : void 0;
+  })(a, e, t);
 }
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-function y(o) {
-  return u({ ...o, state: !0, attribute: !1 });
+function f(a) {
+  return oe({ ...a, state: !0, attribute: !1 });
 }
-function ye(o, t) {
-  return !t || t.length === 0 ? !0 : t.every((e) => {
-    const a = o.states[e.entity];
-    if (!a)
-      return !1;
-    const r = a.state;
-    if (e.condition === "state")
-      return Array.isArray(e.state) ? e.state.includes(r) : r === e.state;
-    if (e.condition === "numeric_state") {
-      const i = parseFloat(r);
-      return !(isNaN(i) || e.above !== void 0 && i <= e.above || e.below !== void 0 && i >= e.below);
+const F = (a, e, t, o) => {
+  const i = {}, s = new CustomEvent(e, {
+    bubbles: i.bubbles === void 0 ? !0 : i.bubbles,
+    cancelable: !!i.cancelable,
+    composed: i.composed === void 0 ? !0 : i.composed,
+    detail: t ?? {}
+  });
+  return a.dispatchEvent(s), s;
+}, R = (a, e, t, o, i) => {
+  if (!e)
+    return;
+  const s = i ?? t.entity ?? "", n = typeof o == "string" ? { action: "toggle" } : o ?? t.tap_action ?? { action: "toggle" }, c = n.action ?? "toggle";
+  if (c !== "none") {
+    if (c === "more-info") {
+      s && a instanceof HTMLElement && F(a, "hass-more-info", { entityId: s });
+      return;
     }
-    return !0;
-  });
-}
-const _e = {
-  "Aurora Lumina": {
-    "primary-color": "#818cf8",
-    "accent-color": "#38bdf8",
-    "primary-background-color": "#090d16",
-    "secondary-background-color": "#0f172a",
-    "card-background-color": "rgba(15, 23, 42, 0.68)",
-    "ha-card-background": "rgba(15, 23, 42, 0.68)",
-    "ha-card-border-radius": "20px",
-    "ha-card-border-width": "1px",
-    "ha-card-border-color": "rgba(255, 255, 255, 0.09)",
-    "primary-text-color": "#f8fafc",
-    "secondary-text-color": "#94a3b8",
-    "aurora-card-background": "rgba(15, 23, 42, 0.68)",
-    "aurora-card-backdrop-filter": "blur(22px) saturate(190%)",
-    "aurora-card-border": "1px solid rgba(255, 255, 255, 0.1)",
-    "aurora-card-border-radius": "20px",
-    "aurora-card-shadow": "0 12px 34px 0 rgba(0, 0, 0, 0.5)",
-    "aurora-surface-subtle": "rgba(255, 255, 255, 0.04)",
-    "aurora-surface-hover": "rgba(255, 255, 255, 0.09)",
-    "aurora-text-primary": "#f8fafc",
-    "aurora-text-secondary": "#94a3b8",
-    "aurora-accent-color": "#818cf8",
-    "aurora-accent-glow": "rgba(129, 140, 248, 0.32)",
-    "aurora-success-color": "#34d399",
-    "aurora-warning-color": "#fbbf24",
-    "aurora-danger-color": "#f87171"
+    if (c === "navigate") {
+      const l = n.navigation_path ?? t.hash ?? "#aurora-popup";
+      l.startsWith("#") ? (window.location.hash = l, window.dispatchEvent(new HashChangeEvent("hashchange"))) : (window.history.pushState(null, "", l), window instanceof Window && F(window, "location-changed", { replace: !1 }));
+      return;
+    }
+    if (c === "call-service" && n.service) {
+      const [l, d] = n.service.split(".");
+      l && d && e.callService(l, d, n.service_data ?? { entity_id: s });
+      return;
+    }
+    if (s) {
+      const l = s.split(".")[0];
+      l === "scene" || l === "script" ? e.callService(l, "turn_on", { entity_id: s }) : e.callService("homeassistant", "toggle", { entity_id: s });
+    }
   }
-};
-function $e(o) {
-  !o || window.__auroraThemeRegistered || (o.connection?.sendMessage({
-    type: "frontend/set_themes",
-    themes: _e,
-    default_theme: "Aurora Lumina"
-  }).catch(() => {
-  }), window.__auroraThemeRegistered = !0);
-}
-function w(o, t, e = {}, a = {}) {
-  const r = new CustomEvent(t, {
-    bubbles: a.bubbles ?? !0,
-    composed: a.composed ?? !0,
-    detail: e
-  });
-  return o.dispatchEvent(r), r;
-}
-function m(o, t, e, a) {
-  const r = e.tap_action;
-  switch (r?.action || "toggle") {
-    case "toggle":
-      e.entity && t.callService("homeassistant", "toggle", { entity_id: e.entity });
-      break;
-    case "navigate":
-      r?.navigation_path && (r.navigation_path.startsWith("#") ? (window.location.hash = r.navigation_path, w(window, "location-changed", {})) : (history.pushState(null, "", r.navigation_path), w(window, "location-changed", {})));
-      break;
-    case "call-service":
-      if (r?.service) {
-        const [s, n] = r.service.split("."), l = { ...r.service_data || {} };
-        e.entity && !l.entity_id && (l.entity_id = e.entity), t.callService(s, n, l);
+}, ge = "aurora_global_modules_state_v1", Je = "aurora_custom_modules_v1";
+class k {
+  /**
+   * Synchronizes "All cards" (global_modules) and their settings across the dashboard
+   */
+  static syncGlobalConfigFromCard(e) {
+    try {
+      if (Array.isArray(e.global_modules)) {
+        const o = {
+          ...this.getGlobalPayload().moduleConfigs,
+          ...e.module_configs ?? {}
+        }, i = {
+          globalModules: e.global_modules,
+          moduleConfigs: o
+        };
+        localStorage.setItem(ge, JSON.stringify(i));
       }
-      break;
-    case "more-info":
-      e.entity && w(o, "hass-more-info", { entityId: e.entity });
-      break;
+    } catch {
+    }
   }
-}
-var V = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let E = class extends f {
-  constructor() {
-    super(...arguments), this._activeTab = "general", this._entitySearchFilter = "";
+  static getGlobalPayload() {
+    try {
+      const e = localStorage.getItem(ge);
+      if (e) {
+        const t = JSON.parse(e);
+        return {
+          globalModules: Array.isArray(t.globalModules) ? t.globalModules : [],
+          moduleConfigs: t.moduleConfigs ?? {}
+        };
+      }
+    } catch {
+    }
+    return { globalModules: [], moduleConfigs: {} };
   }
-  setConfig(t) {
-    this._config = {
-      card_type: "button",
-      button_type: "switch",
-      ...t
+  static getCustomModules() {
+    try {
+      const e = localStorage.getItem(Je);
+      if (e) {
+        const t = JSON.parse(e);
+        if (Array.isArray(t))
+          return t;
+      }
+    } catch {
+    }
+    return [];
+  }
+  /**
+   * Returns a deduplicated list of active module IDs for a given card
+   */
+  static getActiveModuleIds(e) {
+    this.syncGlobalConfigFromCard(e);
+    const t = e.active_modules ?? [], o = e.global_modules ?? [], i = this.getGlobalPayload().globalModules, s = /* @__PURE__ */ new Set([
+      ...t,
+      ...o,
+      ...i
+    ]);
+    return Array.from(s);
+  }
+  /**
+   * Retrieves merged configuration for a specific module ID
+   */
+  static getModuleConfig(e, t) {
+    const o = this.getGlobalPayload().moduleConfigs[t] ?? {}, i = e.module_configs?.[t] ?? {};
+    return {
+      ...o,
+      ...i
     };
   }
-  render() {
-    if (!this._config || !this.hass)
-      return c``;
-    const t = this._config.card_type || "button";
-    this._config.button_type;
-    const e = this._config.entity || "", a = this._config.name || "", r = this._config.icon || "";
-    this._config.tap_action?.action;
-    const i = this._config.sub_button || [], s = Object.keys(this.hass.states).sort(), n = s.filter((l) => {
-      const d = (this.hass.states[l]?.attributes.friendly_name || "").toLowerCase(), p = this._entitySearchFilter.toLowerCase();
-      return l.toLowerCase().includes(p) || d.includes(p);
+  /**
+   * Evaluates ${state}, ${entity}, ${module.xyz} and inline JS template strings safely
+   */
+  static evaluateTemplateString(e, t, o, i) {
+    if (!e)
+      return "";
+    const s = o.entity ?? "", n = s && t?.states ? t.states[s] : void 0, c = n ? n.state : "unknown", l = Number.isNaN(Number(c)) ? c : Number(c);
+    return e.replace(/\$\{([^}]+)\}/g, (d, u) => {
+      const p = u.trim();
+      if (p === "state")
+        return String(c);
+      if (p === "entity")
+        return s;
+      if (p.startsWith("module.")) {
+        const h = p.slice(7), g = i[h];
+        return g !== void 0 ? String(g) : "";
+      }
+      try {
+        const g = new Function("hass", "entity", "state", "stateObj", "module", "return (" + p + ");")(t, s, l, n, i);
+        return g != null ? String(g) : "";
+      } catch {
+        return "";
+      }
     });
-    return c`
-      <div class="card-config-container">
-        <div class="editor-header">
-          <div class="header-titles">
-            <h3>Aurora Card Studio</h3>
-            <p>Modular glassmorphism card suite & module store</p>
-          </div>
-          <div class="editor-tabs">
-            <button
-              class="tab-btn ${this._activeTab === "general" ? "active" : ""}"
-              @click="${() => this._activeTab = "general"}"
-            >
-              General
-            </button>
-            <button
-              class="tab-btn ${this._activeTab === "subbuttons" ? "active" : ""}"
-              @click="${() => this._activeTab = "subbuttons"}"
-            >
-              Sub-Buttons (${i.length})
-            </button>
-            <button
-              class="tab-btn ${this._activeTab === "styles" ? "active" : ""}"
-              @click="${() => this._activeTab = "styles"}"
-            >
-              Styles
-            </button>
-            <button
-              class="tab-btn ${this._activeTab === "modules" ? "active" : ""}"
-              @click="${() => this._activeTab = "modules"}"
-            >
-              Module Store 📦
-            </button>
-          </div>
-        </div>
-
-        ${this._activeTab === "general" ? c`
-              <div class="tab-content">
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Card Architecture</label>
-                    <select
-                      .value="${t}"
-                      @change="${(l) => this._valueChanged(l, "card_type")}"
-                    >
-                      <option value="button">Button / Slider</option>
-                      <option value="pop-up">Pop-up Container</option>
-                      <option value="separator">Separator / Header</option>
-                      <option value="cover">Cover / Shutter</option>
-                      <option value="climate">Climate / HVAC</option>
-                      <option value="media-player">Media Player</option>
-                      <option value="energy-flow">Energy Flow Matrix</option>
-                      <option value="security-matrix">Security & Camera Hub</option>
-                      <option value="hvac-zoning">HVAC & Storage Heating</option>
-                      <option value="mesh-topology">Zigbee / Matter Mesh</option>
-                      <option value="floorplan">Interactive Floorplan</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label>Primary Entity Search</label>
-                    <input
-                      type="text"
-                      placeholder="Filter entities..."
-                      .value="${this._entitySearchFilter}"
-                      @input="${(l) => this._entitySearchFilter = l.target.value}"
-                    />
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label>Primary Entity</label>
-                  <select
-                    .value="${e}"
-                    @change="${(l) => this._valueChanged(l, "entity")}"
-                  >
-                    <option value="">-- Select Entity --</option>
-                    ${n.map((l) => c`
-                        <option value="${l}" ?selected="${l === e}">
-                          ${this.hass.states[l]?.attributes.friendly_name || l} (${l})
-                        </option>
-                      `)}
-                  </select>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Custom Title</label>
-                    <input
-                      type="text"
-                      .value="${a}"
-                      placeholder="Auto"
-                      @input="${(l) => this._valueChanged(l, "name")}"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Custom Icon</label>
-                    <input
-                      type="text"
-                      .value="${r}"
-                      placeholder="mdi:lightbulb"
-                      @input="${(l) => this._valueChanged(l, "icon")}"
-                    />
-                  </div>
-                </div>
-              </div>
-            ` : ""}
-
-        ${this._activeTab === "subbuttons" ? c`
-              <div class="tab-content">
-                <div class="sub-header-row">
-                  <span>Sub-Button Stack (${i.length})</span>
-                  <button class="primary-action-btn" @click="${this._addSubButton}">+ Add</button>
-                </div>
-                <div class="sub-list">
-                  ${i.map((l, d) => c`
-                      <div class="sub-item-card">
-                        <select
-                          .value="${l.entity || ""}"
-                          @change="${(p) => this._updateSubButton(d, "entity", p.target.value)}"
-                        >
-                          <option value="">-- Entity --</option>
-                          ${s.map((p) => c`<option value="${p}" ?selected="${p === l.entity}">${p}</option>`)}
-                        </select>
-                        <input
-                          type="text"
-                          placeholder="Icon"
-                          .value="${l.icon || ""}"
-                          @input="${(p) => this._updateSubButton(d, "icon", p.target.value)}"
-                        />
-                        <button class="danger-btn" @click="${() => this._removeSubButton(d)}">✕</button>
-                      </div>
-                    `)}
-                </div>
-              </div>
-            ` : ""}
-
-        ${this._activeTab === "styles" ? c`
-              <div class="tab-content">
-                <div class="form-group">
-                  <label>Backdrop Blur & Card Mod</label>
-                  <input
-                    type="text"
-                    placeholder="blur(20px) saturate(180%)"
-                    @input="${(l) => this._valueChanged(l, "backdrop_blur")}"
-                  />
-                </div>
-              </div>
-            ` : ""}
-
-        ${this._activeTab === "modules" ? c`
-              <div class="tab-content">
-                <div class="module-store-header">
-                  <h4>Aurora Module Store 📦</h4>
-                  <p>Discover and install community modules & macro packs.</p>
-                </div>
-                <div class="module-grid">
-                  <div class="module-card-item">
-                    <div class="m-info">
-                      <span class="m-title">Advanced Energy Flow Pack</span>
-                      <span class="m-desc">Animated battery and solar particle streams.</span>
-                    </div>
-                    <button class="install-btn" @click="${() => alert("Installed!")}">Install</button>
-                  </div>
-                </div>
-              </div>
-            ` : ""}
+  }
+  /**
+   * Checks whether default card content should be hidden (e.g. Multi Section Card)
+   */
+  static shouldHideDefaultContent(e) {
+    return this.getActiveModuleIds(e).includes("multi_section_card") ? this.getModuleConfig(e, "multi_section_card").hide_default_content !== !1 : !1;
+  }
+  /**
+   * Generates dynamic <style> rules for Vibe Presets, Active Modules, and Custom Styles
+   */
+  static generateDynamicStyles(e, t) {
+    const o = [], i = this.getActiveModuleIds(t), s = t.vibe_preset ?? "aurora_lumina";
+    if (s === "crimson_midnight" ? o.push(`
+        .aurora-card-surface {
+          background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(136, 19, 55, 0.45)) !important;
+          border: 1px solid rgba(212, 175, 55, 0.38) !important;
+          box-shadow: 0 8px 28px rgba(136, 19, 55, 0.28) !important;
+        }
+      `) : s === "obsidian_minimal" ? o.push(`
+        .aurora-card-surface {
+          background: #111315 !important;
+          border: 1px solid rgba(255, 255, 255, 0.07) !important;
+          backdrop-filter: none !important;
+        }
+      `) : s === "ha_native" && o.push(`
+        .aurora-card-surface {
+          background: var(--ha-card-background, var(--card-background-color, #1c1c1c)) !important;
+          border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12)) !important;
+          backdrop-filter: none !important;
+        }
+      `), i.includes("bubble_chips")) {
+      const c = this.getModuleConfig(t, "bubble_chips"), l = Number(c.chip_height ?? 42);
+      o.push(`
+        .aurora-card-surface {
+          border-radius: 999px !important;
+          min-height: ${l}px !important;
+          padding: 6px 14px !important;
+        }
+      `);
+    }
+    if (i.includes("accent_color_picker")) {
+      const c = this.getModuleConfig(t, "accent_color_picker"), l = String(c.accent_color ?? c.custom_param ?? "#e11d48");
+      o.push(`
+        :host {
+          --aurora-accent: ${l} !important;
+        }
+        .aurora-card-surface[data-state-on] {
+          border-color: ${l} !important;
+          box-shadow: 0 0 20px ${l}40 !important;
+        }
+        .aurora-card-surface[data-state-on] .aurora-main-icon-wrap {
+          background: ${l}33 !important;
+          color: ${l} !important;
+        }
+      `);
+    }
+    if (i.includes("multi_section_card")) {
+      const c = this.getModuleConfig(t, "multi_section_card");
+      if (c.bg_color) {
+        const l = String(c.bg_color).trim(), d = l === "accent" ? "var(--accent-color)" : l === "primary" ? "var(--primary-color)" : l;
+        o.push(`
+          .aurora-card-surface {
+            background: ${d} !important;
+          }
+        `);
+      }
+    }
+    if (i.includes("conditional_slider_coloring")) {
+      const c = this.getModuleConfig(t, "conditional_slider_coloring"), l = String(c.default_color ?? "var(--primary-color, #38bdf8)"), d = String(c.condition_rule ?? "").trim();
+      let u = l;
+      const p = t.entity ?? "", h = p && e?.states ? e.states[p] : void 0, g = h ? parseFloat(h.state) : NaN;
+      if (d && !Number.isNaN(g)) {
+        const v = d.match(/^([^\s]+)\s+when\s*([><=]+)\s*(-?\d+(?:\.\d+)?)/i);
+        if (v) {
+          const x = v[1], b = v[2], w = parseFloat(v[3]);
+          b === ">" && g > w && (u = x), b === ">=" && g >= w && (u = x), b === "<" && g < w && (u = x), b === "<=" && g <= w && (u = x), b === "==" && g === w && (u = x);
+        }
+      }
+      o.push(`
+        .aurora-slider-fill {
+          background: ${u} !important;
+        }
+      `);
+    }
+    const n = this.getCustomModules();
+    for (const c of n)
+      if (i.includes(c.id) && c.codeTemplate) {
+        const l = this.getModuleConfig(t, c.id), d = this.evaluateTemplateString(c.codeTemplate, e, t, l);
+        o.push(d);
+      }
+    if (t.custom_styles) {
+      const c = this.evaluateTemplateString(t.custom_styles, e, t, {});
+      o.push(c);
+    }
+    return o.join(`
+`);
+  }
+  /**
+   * Renders the Card Backdrop Image layer if enabled
+   */
+  static renderBackdropLayer(e) {
+    if (!this.getActiveModuleIds(e).includes("card_backdrop_image"))
+      return r``;
+    const o = this.getModuleConfig(e, "card_backdrop_image"), i = String(o.image_url ?? "");
+    if (!i)
+      return r``;
+    const s = String(o.size ?? "cover"), n = String(o.repeat ?? "no-repeat"), c = !!o.custom_position, l = Number(o.pos_x ?? 50), d = Number(o.pos_y ?? 50), u = Number(o.image_opacity ?? 100) / 100, p = Number(o.blur ?? 0), h = Number(o.scale ?? 100) / 100, g = String(o.overlay_color ?? "#000000"), v = c ? `${l}%${d}%` : "center center", x = [
+      `background-image: url('${i}')`,
+      `background-size: ${s}`,
+      `background-repeat: ${n}`,
+      `background-position: ${v}`,
+      `opacity: ${u}`,
+      `filter: blur(${p}px)`,
+      `transform: scale(${h})`
+    ].join("; ");
+    return r`
+      <div class="aurora-backdrop-container">
+        <div class="aurora-backdrop-image" style="${x}"></div>
+        <div
+          class="aurora-backdrop-overlay"
+          style="background-color: ${g}; opacity: 0.32;"
+        ></div>
       </div>
     `;
   }
-  _valueChanged(t, e) {
+  /**
+   * Renders the SVG Circular Progress Ring around the main icon if Icon Border Progress is enabled
+   */
+  static renderIconProgressRing(e, t) {
+    if (!this.getActiveModuleIds(t).includes("icon_border_progress"))
+      return r``;
+    const i = this.getModuleConfig(t, "icon_border_progress"), s = String(i.progress_entity ?? t.entity ?? ""), n = s && e?.states ? e.states[s] : void 0;
+    let c = 65;
+    if (n) {
+      const p = parseFloat(n.state);
+      Number.isNaN(p) ? n.attributes.brightness !== void 0 ? c = Math.round(Number(n.attributes.brightness) / 255 * 100) : n.attributes.battery_level !== void 0 ? c = Number(n.attributes.battery_level) : n.state === "on" || n.state === "heat" ? c = 100 : c = 0 : c = Math.max(0, Math.min(100, p));
+    }
+    const l = 19, d = 2 * Math.PI * l, u = d - c / 100 * d;
+    return r`
+      <svg class="aurora-icon-progress-svg" viewBox="0 0 44 44">
+        <circle
+          class="ring-track"
+          cx="22"
+          cy="22"
+          r="${l}"
+          fill="none"
+          stroke-width="2.5"
+        ></circle>
+        <circle
+          class="ring-fill"
+          cx="22"
+          cy="22"
+          r="${l}"
+          fill="none"
+          stroke-width="2.5"
+          stroke-dasharray="${d}"
+          stroke-dashoffset="${u}"
+        ></circle>
+      </svg>
+    `;
+  }
+  /**
+   * Renders the 2, 3, or 4 column Multi Section Card extension
+   */
+  static renderMultiSectionExtension(e, t, o, i, s, n) {
+    if (!this.getActiveModuleIds(o).includes("multi_section_card"))
+      return r``;
+    const l = this.getModuleConfig(o, "multi_section_card"), d = Math.min(4, Math.max(2, Number(l.section_count ?? 3))), u = Array.from({ length: d }, (p, h) => h + 1);
+    return r`
+      <div
+        class="aurora-multi-section-grid"
+        style="grid-template-columns: repeat(${d}, minmax(0, 1fr));"
+      >
+        ${u.map((p) => {
+      const h = String(l["entity_" + p] ?? o.entity ?? ""), g = String(l["icon_" + p] ?? ""), v = String(l["name_" + p] ?? ""), x = i(h, g), b = s(h, v), w = n(h);
+      return r`
+            <div
+              class="aurora-multi-sec-cell"
+              @click="${($e) => {
+        $e.stopPropagation(), h && t && F(e, "hass-more-info", { entityId: h });
+      }}"
+            >
+              <div class="sec-cell-icon">
+                <ha-icon .icon="${x}"></ha-icon>
+              </div>
+              <div class="sec-cell-text">
+                <span class="sec-cell-name">${b}</span>
+                <span class="sec-cell-state">${w}</span>
+              </div>
+            </div>
+          `;
+    })}
+      </div>
+    `;
+  }
+}
+var _ = function(a, e, t, o) {
+  var i = arguments.length, s = i < 3 ? e : o === null ? o = Object.getOwnPropertyDescriptor(e, t) : o, n;
+  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") s = Reflect.decorate(a, e, t, o);
+  else for (var c = a.length - 1; c >= 0; c--) (n = a[c]) && (s = (i < 3 ? n(s) : i > 3 ? n(e, t, s) : n(e, t)) || s);
+  return i > 3 && s && Object.defineProperty(e, t, s), s;
+};
+const W = [
+  { id: "button", label: "Button" },
+  { id: "calendar", label: "Calendar" },
+  { id: "climate", label: "Thermostat" },
+  { id: "cover", label: "Cover" },
+  { id: "horizontal-buttons-stack", label: "Horizontal buttons stack" },
+  { id: "media-player", label: "Media player" },
+  { id: "pop-up", label: "Pop-up" },
+  { id: "select", label: "Select" },
+  { id: "separator", label: "Separator" },
+  { id: "sub-buttons", label: "Sub-buttons" },
+  { id: "energy-flow", label: "Energy Flow Matrix" },
+  { id: "security-matrix", label: "Security & Camera Hub" },
+  { id: "hvac-zoning", label: "HVAC & Storage Heating" },
+  { id: "mesh-topology", label: "Zigbee / Matter Mesh" }
+], q = [
+  {
+    id: "card_backdrop_image",
+    name: "Card Backdrop Image",
+    version: "v1.2.0",
+    creator: "Aurora Studio",
+    description: "Add a configurable image backdrop to an individual card or all cards. Pick an image from Home Assistant media, enter a direct URL, and fine-tune layout, blur, scale, and overlay opacity.",
+    supportedCards: ["button", "climate", "media-player", "pop-up", "cover"],
+    allCards: !0,
+    codeTemplate: '.aurora-card {\n  background-image: url("${module.image_url}");\n  background-size: ${module.size};\n  background-position: ${module.pos_x}% ${module.pos_y}%;\n}',
+    editorSchemaYaml: `image_url:
+  type: string
+size:
+  type: select
+  options: [cover, contain]
+image_opacity:
+  type: number
+  default: 100`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `card_backdrop_image:
+  background_image:
+    media_content_id: media-source://media_source/local/bg.jpg
+    media_content_type: image/jpeg
+  size: cover
+  position: center
+  repeat: no-repeat
+  image_opacity: 100
+  overlay_enabled: true
+  overlay_color: "#000000"
+  overlay_opacity: 35
+  blur: 0
+  scale: 100`,
+    builtIn: !0
+  },
+  {
+    id: "multi_section_card",
+    name: "Multi Section Card",
+    version: "v1.1.0",
+    creator: "dksnbx",
+    description: "Splits the card into 2, 3, or 4 sections, each showing an entity with a circular icon, optional name and state - matching the default card button look. Each section is tappable: opens more-info by default, or navigates to a pop-up hash.",
+    supportedCards: ["button", "separator"],
+    allCards: !1,
+    codeTemplate: `/* Multi-section flex layout injection */
+.aurora-multi-section {
+  display: grid;
+  grid-template-columns: repeat(\${module.section_count}, 1fr);
+  gap: 8px;
+}`,
+    editorSchemaYaml: `section_count:
+  type: select
+  options: ["2", "3", "4"]
+hide_default_content:
+  type: boolean`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `multi_section_card:
+  section_count: "3"
+  entity_1: sensor.temperature
+  icon_1: mdi:thermometer
+  show_name_1: true
+  name_1: "Temperature"
+  show_state_1: true
+  entity_2: sensor.pressure
+  icon_2: mdi:gauge
+  show_state_2: true
+  entity_3: sensor.humidity
+  icon_3: mdi:water-percent
+  show_state_3: true`,
+    builtIn: !0
+  },
+  {
+    id: "conditional_slider_coloring",
+    name: "Conditional slider button coloring",
+    version: "v1.0.4",
+    creator: "Clooos / Aurora",
+    description: "Allows you to change slider colors dynamically based on entity states, numeric thresholds, or attribute conditions. Settings can be applied to this card or across all cards.",
+    supportedCards: ["button", "climate", "cover", "media-player"],
+    allCards: !1,
+    codeTemplate: `.aurora-slider-fill {
+  background: \${state > 22 ? "#ef4444" : "#38bdf8"} !important;
+}`,
+    editorSchemaYaml: `default_slider_color:
+  type: string
+conditions:
+  type: list`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `conditional_slider_coloring:
+  default_color: "var(--primary-color)"
+  conditions:
+    - condition: numeric_state
+      above: 21
+      color: "#ff5733"`,
+    builtIn: !0
+  },
+  {
+    id: "bubble_chips",
+    name: "Bubble Chips",
+    version: "v1.3.0",
+    creator: "Aurora Community",
+    description: "Transforms compact button and sub-button cards into floating pill-shaped status chips with customizable icon borders and compact padding.",
+    supportedCards: ["button", "sub-buttons"],
+    allCards: !1,
+    codeTemplate: `.aurora-card {
+  border-radius: 999px !important;
+  min-height: 36px !important;
+  padding: 4px 12px !important;
+}`,
+    editorSchemaYaml: `chip_height:
+  type: number
+  default: 36`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `bubble_chips:
+  chip_height: 36
+  compact_mode: true`,
+    builtIn: !0
+  },
+  {
+    id: "accent_color_picker",
+    name: "Accent Color Picker",
+    version: "v1.1.2",
+    creator: "Aurora Studio",
+    description: "Override the active glow, icon tint, and glassmorphism border accent color for individual cards using hex, RGB, or theme color tokens.",
+    supportedCards: ["button", "climate", "cover", "media-player", "energy-flow"],
+    allCards: !0,
+    codeTemplate: `:host {
+  --aurora-accent-color: \${module.accent_color};
+}`,
+    editorSchemaYaml: `accent_color:
+  type: string
+  default: "#38bdf8"`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `accent_color_picker:
+  accent_color: "#e11d48"
+  glow_intensity: 45`,
+    builtIn: !0
+  },
+  {
+    id: "icon_border_progress",
+    name: "Icon Border Progress",
+    version: "v1.0.8",
+    creator: "Aurora Community",
+    description: "Renders a circular SVG radial progress ring around the main card icon or sub-button icon bound to battery level, brightness, or humidity.",
+    supportedCards: ["button", "climate", "sensor", "sub-buttons"],
+    allCards: !1,
+    codeTemplate: `.entity-icon-badge {
+  box-shadow: inset 0 0 0 2px var(--primary-color);
+}`,
+    editorSchemaYaml: `progress_entity:
+  type: entity
+stroke_width:
+  type: number`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `icon_border_progress:
+  progress_entity: sensor.livingroom_humidity
+  stroke_width: 3`,
+    builtIn: !0
+  },
+  {
+    id: "collapsible_sub_button_groups",
+    name: "Collapsible Sub Button Groups",
+    version: "v1.2.1",
+    creator: "Aurora Studio",
+    description: "Groups multiple sub-buttons into an expandable drawer badge that unfolds smoothly when tapped, saving horizontal space on mobile dashboards.",
+    supportedCards: ["button", "climate", "media-player", "sub-buttons"],
+    allCards: !0,
+    codeTemplate: `.sub-button-group {
+  transition: max-width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}`,
+    editorSchemaYaml: `group_icon:
+  type: icon
+auto_collapse_seconds:
+  type: number`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `collapsible_sub_button_groups:
+  group_icon: mdi:dots-horizontal
+  auto_collapse_seconds: 10`,
+    builtIn: !0
+  }
+], We = [
+  {
+    id: "animated_weather_icons",
+    name: "Animated Weather Icon",
+    version: "v1.4.0",
+    creator: "MeteoUX",
+    description: "Replaces static weather and temperature icons with smooth keyframe-animated SVG rain, snow, sunbeams, and wind effects.",
+    supportedCards: ["button", "weather-radar", "climate"],
+    allCards: !0,
+    codeTemplate: `@keyframes auroraPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.entity-icon-badge ha-icon { animation: auroraPulse 3s infinite ease-in-out; }`,
+    editorSchemaYaml: `animation_speed:
+  type: string
+  default: "3s"`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `animated_weather_icons:
+  animation_speed: "3s"`
+  },
+  {
+    id: "crimson_gothic_glass",
+    name: "Crimson Midnight Gothic Shader",
+    version: "v2.0.0",
+    creator: "Aurora Lumina",
+    description: "Applies deep midnight-blue and crimson-undertone frosted glass with metallic gold and silver border highlights.",
+    supportedCards: ["button", "pop-up", "media-player", "climate"],
+    allCards: !0,
+    codeTemplate: `.aurora-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(136, 19, 55, 0.42)) !important;
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+}`,
+    editorSchemaYaml: `crimson_intensity:
+  type: number
+  default: 42`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `crimson_gothic_glass:
+  crimson_intensity: 42
+  metallic_accent: gold`
+  },
+  {
+    id: "timer_progress_bar",
+    name: "Timer Progress Bar",
+    version: "v1.1.5",
+    creator: "ChronoHA",
+    description: "Displays a live countdown bar along the bottom edge of any card linked to a timer, washing machine cycle, or off-peak charging window.",
+    supportedCards: ["button", "hvac-zoning", "ev-charger"],
+    allCards: !1,
+    codeTemplate: `.aurora-timer-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--primary-color);
+}`,
+    editorSchemaYaml: `timer_entity:
+  type: entity`,
+    suggestionRulesYaml: "",
+    computedSuggestionsJs: "",
+    yamlExample: `timer_progress_bar:
+  timer_entity: timer.octopus_go_window`
+  }
+];
+let m = class extends T {
+  constructor() {
+    super(...arguments), this._activeCategory = "all", this._moduleSubTab = "my_modules", this._moduleSearchFilter = "", this._pickerOpen = !1, this._pickerTarget = { type: "main" }, this._pickerSearchQuery = "", this._pickerDomainFilter = "all", this._installedModules = [...q], this._expandedModules = {}, this._moduleInnerAccordions = {
+      backdrop_image: !0,
+      backdrop_layout: !0,
+      backdrop_appearance: !0,
+      backdrop_overlay: !1,
+      multi_sec_1: !1,
+      multi_sec_2: !1,
+      multi_sec_3: !1,
+      multi_sec_4: !1,
+      cond_default: !1,
+      cond_list: !1
+    }, this._creatorOpen = !1, this._importYamlOpen = !1, this._importYamlText = "", this._statusToast = "", this._creatorDraft = {
+      id: "my_module",
+      name: "My Module",
+      version: "1.0",
+      creator: "",
+      description: "",
+      supportedCards: ["button", "climate", "cover", "media-player", "pop-up", "separator", "sub-buttons"],
+      allCards: !0,
+      codeTemplate: "",
+      editorSchemaYaml: "",
+      suggestionRulesYaml: "",
+      computedSuggestionsJs: "",
+      yamlExample: ""
+    }, this._creatorPreviewMode = !1, this._creatorPreviewEntity = "", this._creatorSections = {
+      supported_cards: !0,
+      description: !1,
+      code_template: !0,
+      editor_schema: !0,
+      entity_suggestions: !0,
+      export_module: !0
+    }, this._openSections = {
+      card_settings: !0,
+      tap_icon: !1,
+      tap_card: !1,
+      hold_card: !1,
+      sub_buttons: !1,
+      sub_top: !0,
+      sub_bottom: !1,
+      styling: !1,
+      style_layout: !0,
+      style_custom: !1,
+      modules: !1
+    };
+  }
+  connectedCallback() {
+    super.connectedCallback(), this._loadStoredCustomModules();
+  }
+  _loadStoredCustomModules() {
+    try {
+      const e = localStorage.getItem("aurora_custom_modules_v1");
+      if (e) {
+        const t = JSON.parse(e);
+        if (Array.isArray(t) && t.length > 0) {
+          const o = new Set(q.map((s) => s.id)), i = [
+            ...q,
+            ...t.filter((s) => !o.has(s.id))
+          ];
+          this._installedModules = i;
+        }
+      }
+    } catch {
+    }
+  }
+  _persistCustomModules() {
+    try {
+      const e = this._installedModules.filter((t) => !t.builtIn);
+      localStorage.setItem("aurora_custom_modules_v1", JSON.stringify(e));
+    } catch {
+    }
+  }
+  setConfig(e) {
+    this._config = {
+      card_type: "button",
+      button_type: "switch",
+      scrolling_effect: !0,
+      show_icon: !0,
+      prioritise_icon: !1,
+      show_name: !0,
+      state_content: ["state", "preset_mode", "hvac_action"],
+      active_modules: [],
+      global_modules: [],
+      module_configs: {},
+      ...e
+    }, !this._creatorPreviewEntity && e.entity && (this._creatorPreviewEntity = e.entity);
+  }
+  _showToast(e) {
+    this._statusToast = e, setTimeout(() => {
+      this._statusToast = "";
+    }, 2800);
+  }
+  _toggleSection(e) {
+    const t = !!this._openSections[e];
+    this._openSections = {
+      ...this._openSections,
+      [e]: !t
+    };
+  }
+  _toggleModuleAccordion(e) {
+    const t = !!this._expandedModules[e];
+    this._expandedModules = {
+      ...this._expandedModules,
+      [e]: !t
+    };
+  }
+  _toggleModuleInner(e) {
+    const t = !!this._moduleInnerAccordions[e];
+    this._moduleInnerAccordions = {
+      ...this._moduleInnerAccordions,
+      [e]: !t
+    };
+  }
+  _toggleCreatorSection(e) {
+    const t = !!this._creatorSections[e];
+    this._creatorSections = {
+      ...this._creatorSections,
+      [e]: !t
+    };
+  }
+  _openEntityPicker(e) {
+    this._pickerTarget = e, this._pickerSearchQuery = "", this._pickerDomainFilter = "all", this._pickerOpen = !0;
+  }
+  _closeEntityPicker() {
+    this._pickerOpen = !1;
+  }
+  _getCurrentTargetEntity() {
+    return this._config ? this._pickerTarget.type === "main" ? this._config.entity ?? "" : this._pickerTarget.type === "sub" ? (this._config.sub_button ?? [])[this._pickerTarget.index]?.entity ?? "" : this._pickerTarget.type === "module_field" ? String(this._getModuleFieldVal(this._pickerTarget.moduleId, this._pickerTarget.fieldKey, "")) : this._pickerTarget.type === "creator_preview" ? this._creatorPreviewEntity : "" : "";
+  }
+  _selectEntityFromModal(e) {
+    this._config && (this._pickerTarget.type === "main" ? this._setDirectValue("entity", e) : this._pickerTarget.type === "sub" ? this._updateSubButton(this._pickerTarget.index, "entity", e) : this._pickerTarget.type === "module_field" ? this._setModuleFieldVal(this._pickerTarget.moduleId, this._pickerTarget.fieldKey, e) : this._pickerTarget.type === "creator_preview" && (this._creatorPreviewEntity = e), this._pickerOpen = !1);
+  }
+  _getEntityFriendlyName(e) {
+    if (!e)
+      return "Select an entity";
+    if (!this.hass || !this.hass.states[e])
+      return e;
+    const t = this.hass.states[e].attributes.friendly_name;
+    return t ? String(t) : e;
+  }
+  _getEntitySecondary(e) {
+    if (!e)
+      return "Tap to search entities";
+    if (this.hass && this.hass.states[e]) {
+      const t = this.hass.states[e].attributes;
+      if (t.area_name)
+        return String(t.area_name);
+      if (t.device_class) {
+        const o = String(t.device_class).replace(/_/g, " ");
+        return o.charAt(0).toUpperCase() + o.slice(1) + " • " + e;
+      }
+    }
+    return e;
+  }
+  _getEntityDomainBadge(e) {
+    if (!e)
+      return "";
+    const o = (e.split(".")[0] ?? "").replace(/_/g, " ");
+    return o.charAt(0).toUpperCase() + o.slice(1);
+  }
+  _getEntityIcon(e) {
+    if (!e || !this.hass || !this.hass.states[e])
+      return "mdi:help-circle-outline";
+    const t = this.hass.states[e], o = t.attributes.icon;
+    if (o)
+      return String(o);
+    const i = e.split(".")[0], s = t.attributes.device_class;
+    if (i === "sensor")
+      return s === "temperature" ? "mdi:thermometer" : s === "humidity" ? "mdi:water-percent" : s === "power" || s === "energy" ? "mdi:flash" : s === "battery" ? "mdi:battery" : "mdi:eye-outline";
+    const n = {
+      light: "mdi:lightbulb",
+      switch: "mdi:toggle-switch",
+      climate: "mdi:thermostat",
+      binary_sensor: "mdi:radiobox-marked",
+      media_player: "mdi:cast-audio",
+      remote: "mdi:remote",
+      cover: "mdi:window-shutter",
+      fan: "mdi:fan",
+      lock: "mdi:lock",
+      camera: "mdi:video",
+      weather: "mdi:weather-partly-cloudy",
+      update: "mdi:package-up",
+      select: "mdi:format-list-bulleted",
+      input_select: "mdi:tune-vertical",
+      input_number: "mdi:thermometer-lines",
+      input_boolean: "mdi:toggle-switch-outline",
+      person: "mdi:account",
+      scene: "mdi:palette-outline",
+      script: "mdi:script-text-outline",
+      automation: "mdi:robot"
+    };
+    return n[i] ? n[i] : "mdi:bookmark-outline";
+  }
+  _getModalFilteredEntities() {
+    if (!this.hass || !this.hass.states)
+      return [];
+    const e = Object.keys(this.hass.states).sort((i, s) => {
+      const n = this._getEntityFriendlyName(i).toLowerCase(), c = this._getEntityFriendlyName(s).toLowerCase();
+      return n.localeCompare(c);
+    }), t = this._pickerSearchQuery.trim().toLowerCase(), o = this._pickerDomainFilter;
+    return e.filter((i) => {
+      const s = i.split(".")[0];
+      if (o !== "all" && s !== o)
+        return !1;
+      if (!t)
+        return !0;
+      const n = this._getEntityFriendlyName(i).toLowerCase(), c = this._getEntityDomainBadge(i).toLowerCase();
+      return i.toLowerCase().includes(t) || n.includes(t) || c.includes(t);
+    });
+  }
+  // Phase 3 Helper Methods for Module Compatibility & Config
+  _isModuleCompatible(e) {
+    if (e.allCards)
+      return !0;
+    const t = this._config?.card_type ?? "button";
+    return e.supportedCards.includes(t);
+  }
+  _isModuleAppliedToThisCard(e) {
+    return (this._config?.active_modules ?? []).includes(e);
+  }
+  _isModuleAppliedToAllCards(e) {
+    return (this._config?.global_modules ?? []).includes(e);
+  }
+  _toggleModuleApplyThisCard(e) {
+    const t = [...this._config?.active_modules ?? []], o = t.includes(e) ? t.filter((i) => i !== e) : [...t, e];
+    this._setDirectValue("active_modules", o);
+  }
+  _toggleModuleApplyAllCards(e) {
+    const t = [...this._config?.global_modules ?? []], o = t.includes(e) ? t.filter((i) => i !== e) : [...t, e];
+    this._setDirectValue("global_modules", o);
+  }
+  _getModuleFieldVal(e, t, o) {
+    const s = (this._config?.module_configs ?? {})[e] ?? {};
+    return s[t] !== void 0 ? s[t] : o;
+  }
+  _setModuleFieldVal(e, t, o) {
     if (!this._config)
       return;
-    const a = t.target;
-    this._config = { ...this._config, [e]: a.value || void 0 }, w(this, "config-changed", { config: this._config });
+    const i = { ...this._config.module_configs ?? {} }, s = { ...i[e] ?? {}, [t]: o };
+    i[e] = s, this._setDirectValue("module_configs", i);
+  }
+  _openNewModuleCreator() {
+    this._creatorDraft = {
+      id: "my_module",
+      name: "My Module",
+      version: "1.0",
+      creator: "Przemysław",
+      description: "Custom style and behavior extension for Aurora Card.",
+      supportedCards: [
+        "button",
+        "calendar",
+        "climate",
+        "cover",
+        "horizontal-buttons-stack",
+        "media-player",
+        "pop-up",
+        "select",
+        "separator",
+        "sub-buttons"
+      ],
+      allCards: !0,
+      codeTemplate: `/* Access card state via \${state} or \${entity} */
+.aurora-card {
+  
+}`,
+      editorSchemaYaml: `# Define visual editor inputs for this module:
+accent_override:
+  name: Accent Override
+  type: string`,
+      suggestionRulesYaml: `domain: climate
+name_includes: heater`,
+      computedSuggestionsJs: 'return Object.keys(hass.states).filter(id => id.startsWith("climate."));',
+      yamlExample: `my_module:
+  accent_override: "#38bdf8"`
+    }, this._creatorOpen = !0;
+  }
+  _openEditModuleInCreator(e) {
+    this._creatorDraft = {
+      ...e,
+      supportedCards: [...e.supportedCards]
+    }, this._creatorOpen = !0;
+  }
+  _deleteInstalledModule(e) {
+    this._installedModules = this._installedModules.filter((t) => t.id !== e), this._persistCustomModules(), this._showToast("Module removed.");
+  }
+  _saveCreatorModule() {
+    const e = this._creatorDraft.id.trim().replace(/\s+/g, "_").toLowerCase();
+    if (!e)
+      return;
+    const t = {
+      ...this._creatorDraft,
+      id: e,
+      yamlExample: this._creatorDraft.yamlExample || e + `:
+  enabled: true
+  version: "` + this._creatorDraft.version + '"'
+    }, o = this._installedModules.findIndex((i) => i.id === e);
+    if (o >= 0) {
+      const i = [...this._installedModules];
+      i[o] = t, this._installedModules = i;
+    } else
+      this._installedModules = [t, ...this._installedModules];
+    this._persistCustomModules(), this._creatorOpen = !1, this._expandedModules = { ...this._expandedModules, [e]: !0 }, this._showToast('Module "' + t.name + '" saved!');
+  }
+  _buildModuleExportYaml(e) {
+    const t = [
+      "# Aurora Card Module Definition",
+      "id: " + e.id,
+      'name: "' + e.name + '"',
+      'version: "' + e.version + '"',
+      'creator: "' + e.creator + '"',
+      "supported_cards: [" + (e.allCards ? "all" : e.supportedCards.join(", ")) + "]",
+      "description: |",
+      "  " + (e.description || "Custom Aurora module"),
+      "code: |",
+      ...e.codeTemplate.split(`
+`).map((o) => "  " + o)
+    ];
+    return e.editorSchemaYaml && (t.push("schema: |"), t.push(...e.editorSchemaYaml.split(`
+`).map((o) => "  " + o))), t.join(`
+`);
+  }
+  _copyModuleYaml(e) {
+    const t = this._buildModuleExportYaml(this._creatorDraft), o = e ? "### " + this._creatorDraft.name + " (" + this._creatorDraft.version + `)
+Created by **` + (this._creatorDraft.creator || "Community") + "**\n\n```yaml\n" + t + "\n```" : t;
+    navigator.clipboard && navigator.clipboard.writeText(o), this._showToast(e ? "Copied Markdown for GitHub!" : "Copied Module YAML!");
+  }
+  _downloadModuleYaml() {
+    const e = this._buildModuleExportYaml(this._creatorDraft), t = new Blob([e], { type: "text/yaml;charset=utf-8" }), o = URL.createObjectURL(t), i = document.createElement("a");
+    i.href = o, i.download = (this._creatorDraft.id || "aurora_module") + ".yaml", i.click(), URL.revokeObjectURL(o), this._showToast("Downloaded " + i.download);
+  }
+  _handleImportYamlConfirm() {
+    const e = this._importYamlText.trim();
+    if (!e)
+      return;
+    const t = e.match(/^id:\s*([^\n\r]+)/m), o = e.match(/^name:\s*["']?([^"'\n\r]+)["']?/m), i = e.match(/^version:\s*["']?([^"'\n\r]+)["']?/m), s = e.match(/^creator:\s*["']?([^"'\n\r]+)["']?/m), n = t ? t[1].trim() : "imported_" + Date.now(), c = o ? o[1].trim() : "Imported YAML Module", l = i ? i[1].trim() : "v1.0.0", d = s ? s[1].trim() : "YAML Import", u = {
+      id: n,
+      name: c,
+      version: l,
+      creator: d,
+      description: "Imported from YAML configuration.",
+      supportedCards: ["button", "climate", "media-player"],
+      allCards: !0,
+      codeTemplate: e,
+      editorSchemaYaml: "",
+      suggestionRulesYaml: "",
+      computedSuggestionsJs: "",
+      yamlExample: e
+    };
+    this._installedModules = [u, ...this._installedModules], this._persistCustomModules(), this._importYamlText = "", this._importYamlOpen = !1, this._expandedModules = { ...this._expandedModules, [n]: !0 }, this._showToast('Imported "' + c + '"!');
+  }
+  _installFromStore(e) {
+    this._installedModules.some((o) => o.id === e.id) || (this._installedModules = [e, ...this._installedModules], this._persistCustomModules()), this._moduleSubTab = "my_modules", this._expandedModules = { ...this._expandedModules, [e.id]: !0 }, this._showToast('Installed "' + e.name + '" to My Modules!');
+  }
+  render() {
+    if (!this._config || !this.hass)
+      return r``;
+    const e = this._activeCategory === "all" || this._activeCategory === "general", t = this._activeCategory === "all" || this._activeCategory === "subbuttons", o = this._activeCategory === "all" || this._activeCategory === "styles", i = this._activeCategory === "all" || this._activeCategory === "modules";
+    return r`
+      <div class="aurora-editor-root">
+        ${this._statusToast ? r`<div class="aurora-toast">${this._statusToast}</div>` : r``}
+        ${this._renderCategoryTabs()}
+        ${e ? this._renderTopSelectors() : r``}
+        <div class="accordions-stack">
+          ${e ? this._renderCardSettingsAccordion() : r``}
+          ${e ? this._renderTapIconAccordion() : r``}
+          ${e ? this._renderTapCardAccordion() : r``}
+          ${e ? this._renderHoldAccordion() : r``}
+          ${t ? this._renderSubButtonsAccordion() : r``}
+          ${o ? this._renderStylingAccordion() : r``}
+          ${i ? this._renderModulesAccordion() : r``}
+        </div>
+        ${this._pickerOpen ? this._renderEntityPickerModal() : r``}
+      </div>
+    `;
+  }
+  _renderEntityPickerModal() {
+    const e = this._getModalFilteredEntities(), t = e.slice(0, 100), o = this._getCurrentTargetEntity(), i = [
+      { id: "all", label: "All" },
+      { id: "climate", label: "Climate" },
+      { id: "light", label: "Lights" },
+      { id: "switch", label: "Switches" },
+      { id: "media_player", label: "Media" },
+      { id: "sensor", label: "Sensors" },
+      { id: "binary_sensor", label: "Binary" },
+      { id: "input_select", label: "Inputs" }
+    ];
+    return r`
+      <div class="picker-backdrop" @click="${this._closeEntityPicker}">
+        <div class="picker-sheet" @click="${(s) => s.stopPropagation()}">
+          <div class="picker-handle-bar">
+            <span class="sheet-grip"></span>
+          </div>
+
+          <div class="picker-header">
+            <div class="picker-search-Input-wrap">
+              <ha-icon icon="mdi:magnify" class="search-icon"></ha-icon>
+              <input
+                type="text"
+                class="picker-search-input"
+                placeholder="Search"
+                autofocus
+                .value="${this._pickerSearchQuery}"
+                @input="${(s) => this._pickerSearchQuery = s.target.value}"
+              />
+              ${this._pickerSearchQuery ? r`
+                    <button
+                      class="clear-btn"
+                      @click="${() => this._pickerSearchQuery = ""}"
+                    >
+                      ✕
+                    </button>
+                  ` : r``}
+            </div>
+            <button class="modal-close-btn" @click="${this._closeEntityPicker}">
+              Cancel
+            </button>
+          </div>
+
+          <div class="picker-domain-bar">
+            ${i.map((s) => r`
+                <button
+                  class="dom-chip"
+                  ?data-active="${this._pickerDomainFilter === s.id}"
+                  @click="${() => this._pickerDomainFilter = s.id}"
+                >
+                  ${s.label}
+                </button>
+              `)}
+          </div>
+
+          <div class="picker-list">
+            ${t.map((s) => r`
+                <div
+                  class="picker-row"
+                  ?data-selected="${s === o}"
+                  @click="${() => this._selectEntityFromModal(s)}"
+                >
+                  <div class="picker-row-icon">
+                    <ha-icon .icon="${this._getEntityIcon(s)}"></ha-icon>
+                  </div>
+                  <div class="picker-row-main">
+                    <span class="picker-row-title">${this._getEntityFriendlyName(s)}</span>
+                    <span class="picker-row-sub">${this._getEntitySecondary(s)}</span>
+                  </div>
+                  <div class="picker-row-domain">
+                    ${this._getEntityDomainBadge(s)}
+                  </div>
+                </div>
+              `)}
+
+            ${e.length === 0 ? r`
+                  <div class="picker-empty">
+                    No matching entities found.
+                  </div>
+                ` : r``}
+
+            ${e.length > 100 ? r`
+                  <div class="picker-more-hint">
+                    Showing top 100 of ${e.length} entities. Type above to refine.
+                  </div>
+                ` : r``}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  _renderCategoryTabs() {
+    const e = (this._config?.sub_button ?? []).length, t = (this._config?.active_modules ?? []).length + (this._config?.global_modules ?? []).length;
+    return r`
+      <div class="category-bar">
+        <button
+          class="cat-pill"
+          ?data-active="${this._activeCategory === "all"}"
+          @click="${() => this._activeCategory = "all"}"
+        >
+          All
+        </button>
+        <button
+          class="cat-pill"
+          ?data-active="${this._activeCategory === "general"}"
+          @click="${() => this._activeCategory = "general"}"
+        >
+          General
+        </button>
+        <button
+          class="cat-pill"
+          ?data-active="${this._activeCategory === "subbuttons"}"
+          @click="${() => this._activeCategory = "subbuttons"}"
+        >
+          Sub-buttons (${e})
+        </button>
+        <button
+          class="cat-pill"
+          ?data-active="${this._activeCategory === "styles"}"
+          @click="${() => this._activeCategory = "styles"}"
+        >
+          Styling
+        </button>
+        <button
+          class="cat-pill"
+          ?data-active="${this._activeCategory === "modules"}"
+          @click="${() => {
+      this._activeCategory = "modules", this._openSections = { ...this._openSections, modules: !0 };
+    }}"
+        >
+          Modules (${t})
+        </button>
+      </div>
+    `;
+  }
+  _renderTopSelectors() {
+    const e = this._config?.card_type ?? "button", t = this._config?.button_type ?? "switch", o = this._config?.entity ?? "";
+    return r`
+      <div class="top-selectors">
+        <div class="ha-filled-box">
+          <div class="box-content">
+            <span class="floating-label">Card type</span>
+            <select
+              class="native-select"
+              .value="${e}"
+              @change="${(i) => this._valueChanged(i, "card_type")}"
+            >
+              <optgroup label="Core Bubble Parity">
+                <option value="button">Button (Switch, slider, ...)</option>
+                <option value="pop-up">Pop-up</option>
+                <option value="separator">Separator</option>
+                <option value="cover">Cover</option>
+                <option value="climate">Climate</option>
+                <option value="media-player">Media player</option>
+                <option value="empty-column">Empty column</option>
+              </optgroup>
+              <optgroup label="Aurora Enterprise Suite">
+                <option value="routine-macro">Routine Macro Launcher</option>
+                <option value="energy-flow">Energy Flow Matrix</option>
+                <option value="security-matrix">Security & Camera Hub</option>
+                <option value="weather-radar">Weather & Microclimate</option>
+                <option value="multi-room-audio">Multi-Room Audio (MA)</option>
+                <option value="hvac-zoning">HVAC & Storage Heating</option>
+                <option value="mesh-topology">Zigbee / Matter Mesh</option>
+                <option value="ev-charger">EV & Solar Charger</option>
+                <option value="air-quality">Air Quality Matrix</option>
+                <option value="floorplan">Interactive Floorplan</option>
+              </optgroup>
+            </select>
+          </div>
+          <button
+            class="clear-btn"
+            title="Reset to button"
+            @click="${() => this._setDirectValue("card_type", "button")}"
+          >
+            ✕
+          </button>
+        </div>
+
+        ${e === "button" ? r`
+              <div class="ha-filled-box">
+                <div class="box-content">
+                  <span class="floating-label">Button type</span>
+                  <select
+                    class="native-select"
+                    .value="${t}"
+                    @change="${(i) => this._valueChanged(i, "button_type")}"
+                  >
+                    <option value="switch">Switch</option>
+                    <option value="slider">Slider</option>
+                    <option value="state">State</option>
+                    <option value="name">Name / Text</option>
+                  </select>
+                </div>
+                <button
+                  class="clear-btn"
+                  title="Reset"
+                  @click="${() => this._setDirectValue("button_type", "switch")}"
+                >
+                  ✕
+                </button>
+              </div>
+            ` : r``}
+
+        ${e !== "empty-column" ? r`
+              <div class="section-caption">Entity (toggle)</div>
+              <div
+                class="ha-entity-box"
+                @click="${() => this._openEntityPicker({ type: "main" })}"
+              >
+                <div class="entity-icon-badge">
+                  <ha-icon .icon="${this._getEntityIcon(o)}"></ha-icon>
+                </div>
+                <div class="entity-text-col">
+                  <span class="entity-primary">${this._getEntityFriendlyName(o)}</span>
+                  <span class="entity-secondary">${this._getEntitySecondary(o)}</span>
+                </div>
+                ${o ? r`
+                      <button
+                        class="clear-btn"
+                        title="Clear entity"
+                        @click="${(i) => {
+      i.stopPropagation(), this._setDirectValue("entity", void 0);
+    }}"
+                      >
+                        ✕
+                      </button>
+                    ` : r``}
+                <span class="dropdown-caret">▼</span>
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderCardSettingsAccordion() {
+    const e = !!this._openSections.card_settings, t = this._config?.name ?? "", o = this._config?.icon ?? "", i = this._config?.scrolling_effect !== !1, s = this._config?.show_icon !== !1, n = !!this._config?.prioritise_icon, c = this._config?.show_name !== !1, l = this._config?.state_content ?? ["state"];
+    return r`
+      <div class="ha-accordion" ?data-open="${e}">
+        <div class="ha-accordion-header" @click="${() => this._toggleSection("card_settings")}">
+          <div class="header-left">
+            <ha-icon icon="mdi:cog"></ha-icon>
+            <span>Card settings</span>
+          </div>
+          <span class="chevron">${e ? "▲" : "▼"}</span>
+        </div>
+
+        ${e ? r`
+              <div class="ha-accordion-body">
+                <div class="ha-filled-box">
+                  <div class="box-content">
+                    <span class="floating-label">Optional - Name</span>
+                    <input
+                      type="text"
+                      class="native-input"
+                      .value="${t}"
+                      placeholder=" "
+                      @input="${(d) => this._valueChanged(d, "name")}"
+                    />
+                  </div>
+                </div>
+
+                <div class="ha-filled-box">
+                  <div class="box-content">
+                    <span class="floating-label">Optional - Icon</span>
+                    <input
+                      type="text"
+                      class="native-input"
+                      .value="${o}"
+                      placeholder="e.g. mdi:thermometer"
+                      @input="${(d) => this._valueChanged(d, "icon")}"
+                    />
+                  </div>
+                </div>
+
+                <div class="toggle-list">
+                  ${this._renderToggleRow("Text scrolling effect", i, (d) => this._setDirectValue("scrolling_effect", d))}
+                  ${this._renderToggleRow("Show icon", s, (d) => this._setDirectValue("show_icon", d))}
+                  ${this._renderToggleRow("Prioritise icon over entity picture", n, (d) => this._setDirectValue("prioritise_icon", d))}
+                  ${this._renderToggleRow("Show name", c, (d) => this._setDirectValue("show_name", d))}
+                </div>
+
+                <div class="state-content-block">
+                  <span class="block-label">State content</span>
+                  <div class="chips-well">
+                    <div class="chips-list">
+                      ${l.map((d, u) => r`
+                          <div class="ha-chip">
+                            <span class="chip-drag">＝</span>
+                            <span class="chip-text">${this._formatChipLabel(d)}</span>
+                            <button
+                              class="chip-remove"
+                              @click="${() => this._removeStateChip(u)}"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        `)}
+                    </div>
+                    <button class="chip-add-btn" @click="${this._addStateChip}">
+                      <span>＋</span>
+                      <span>Add</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderTapIconAccordion() {
+    const e = !!this._openSections.tap_icon, t = this._config?.icon_tap_action?.action ?? "toggle";
+    return r`
+      <div class="ha-accordion" ?data-open="${e}">
+        <div class="ha-accordion-header" @click="${() => this._toggleSection("tap_icon")}">
+          <div class="header-left">
+            <ha-icon icon="mdi:gesture-tap"></ha-icon>
+            <span>Tap action on icon</span>
+          </div>
+          <span class="chevron">${e ? "▲" : "▼"}</span>
+        </div>
+        ${e ? r`
+              <div class="ha-accordion-body">
+                ${this._renderActionSelector("icon_tap_action", t)}
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderTapCardAccordion() {
+    const e = !!this._openSections.tap_card, t = this._config?.tap_action?.action ?? "toggle";
+    return r`
+      <div class="ha-accordion" ?data-open="${e}">
+        <div class="ha-accordion-header" @click="${() => this._toggleSection("tap_card")}">
+          <div class="header-left">
+            <ha-icon icon="mdi:gesture-tap-button"></ha-icon>
+            <span>Tap action on card</span>
+          </div>
+          <span class="chevron">${e ? "▲" : "▼"}</span>
+        </div>
+        ${e ? r`
+              <div class="ha-accordion-body">
+                ${this._renderActionSelector("tap_action", t)}
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderHoldAccordion() {
+    const e = !!this._openSections.hold_card, t = this._config?.hold_action?.action ?? "more-info";
+    return r`
+      <div class="ha-accordion" ?data-open="${e}">
+        <div class="ha-accordion-header" @click="${() => this._toggleSection("hold_card")}">
+          <div class="header-left">
+            <ha-icon icon="mdi:gesture-tap-hold"></ha-icon>
+            <span>Hold behaviour</span>
+          </div>
+          <span class="chevron">${e ? "▲" : "▼"}</span>
+        </div>
+        ${e ? r`
+              <div class="ha-accordion-body">
+                ${this._renderActionSelector("hold_action", t)}
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderSubButtonsAccordion() {
+    const e = !!this._openSections.sub_buttons, t = !!this._openSections.sub_top, o = !!this._openSections.sub_bottom, i = this._config?.sub_button ?? [];
+    return r`
+      <div class="ha-accordion" ?data-open="${e}">
+        <div class="ha-accordion-header" @click="${() => this._toggleSection("sub_buttons")}">
+          <div class="header-left">
+            <ha-icon icon="mdi:shape-square-plus"></ha-icon>
+            <span>Sub-buttons editor</span>
+          </div>
+          <span class="chevron">${e ? "▲" : "▼"}</span>
+        </div>
+
+        ${e ? r`
+              <div class="ha-accordion-body">
+                <div class="ha-nested-accordion">
+                  <div
+                    class="ha-nested-header"
+                    @click="${() => this._toggleSection("sub_top")}"
+                  >
+                    <div class="header-left">
+                      <ha-icon icon="mdi:arrow-up-circle-outline"></ha-icon>
+                      <span>Main sub-buttons (top)</span>
+                    </div>
+                    <span class="chevron">${t ? "▲" : "▼"}</span>
+                  </div>
+                  ${t ? r`
+                        <div class="ha-nested-body">
+                          ${i.map((s, n) => {
+      const c = s.entity ?? "";
+      return r`
+                              <div class="sub-button-row">
+                                <button
+                                  type="button"
+                                  class="sub-entity-picker-btn"
+                                  @click="${() => this._openEntityPicker({ type: "sub", index: n })}"
+                                >
+                                  <ha-icon .icon="${this._getEntityIcon(c)}"></ha-icon>
+                                  <span class="sub-ent-label">
+                                    ${this._getEntityFriendlyName(c)}
+                                  </span>
+                                  <span class="dropdown-caret">▼</span>
+                                </button>
+                                <input
+                                  type="text"
+                                  class="native-input sub-icon-input"
+                                  placeholder="mdi:power"
+                                  .value="${s.icon ?? ""}"
+                                  @input="${(l) => this._updateSubButton(n, "icon", l.target.value)}"
+                                />
+                                <button
+                                  class="danger-icon-btn"
+                                  @click="${() => this._removeSubButton(n)}"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            `;
+    })}
+                          <button class="chip-add-btn" @click="${this._addSubButton}">
+                            <span>＋</span>
+                            <span>Add sub-button</span>
+                          </button>
+                        </div>
+                      ` : r``}
+                </div>
+
+                <div class="ha-nested-accordion">
+                  <div
+                    class="ha-nested-header"
+                    @click="${() => this._toggleSection("sub_bottom")}"
+                  >
+                    <div class="header-left">
+                      <ha-icon icon="mdi:arrow-down-circle-outline"></ha-icon>
+                      <span>Bottom sub-buttons</span>
+                    </div>
+                    <span class="chevron">${o ? "▲" : "▼"}</span>
+                  </div>
+                  ${o ? r`
+                        <div class="ha-nested-body">
+                          <p class="muted-note">
+                            Configure bottom-aligned bar sub-buttons or group stacks.
+                          </p>
+                          <button class="chip-add-btn" @click="${this._addSubButton}">
+                            <span>＋</span>
+                            <span>Add bottom sub-button</span>
+                          </button>
+                        </div>
+                      ` : r``}
+                </div>
+
+                <div class="ha-info-callout">
+                  <div class="callout-title">
+                    <ha-icon icon="mdi:information-outline"></ha-icon>
+                    <span>Sub-buttons</span>
+                  </div>
+                  <p>
+                    This editor allows you to add customised sub-buttons to your card.
+                    Sub-buttons support three types:
+                  </p>
+                  <ul class="callout-list">
+                    <li>
+                      <strong>Default (button)</strong> - Standard button with tap actions
+                    </li>
+                    <li>
+                      <strong>Slider</strong> - Control or display numeric values (brightness,
+                      volume, temperature, etc.)
+                    </li>
+                    <li>
+                      <strong>Dropdown / Select</strong> - Dropdown menu for selectable entities
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderStylingAccordion() {
+    const e = !!this._openSections.styling, t = !!this._openSections.style_layout, o = !!this._openSections.style_custom, i = this._config?.vibe_preset ?? "aurora_lumina", s = this._config?.custom_styles ?? "";
+    return r`
+      <div class="ha-accordion" ?data-open="${e}">
+        <div class="ha-accordion-header" @click="${() => this._toggleSection("styling")}">
+          <div class="header-left">
+            <ha-icon icon="mdi:palette"></ha-icon>
+            <span>Styling and layout options</span>
+          </div>
+          <span class="chevron">${e ? "▲" : "▼"}</span>
+        </div>
+
+        ${e ? r`
+              <div class="ha-accordion-body">
+                <div class="ha-nested-accordion">
+                  <div
+                    class="ha-nested-header"
+                    @click="${() => this._toggleSection("style_layout")}"
+                  >
+                    <div class="header-left">
+                      <ha-icon icon="mdi:view-grid"></ha-icon>
+                      <span>Layout</span>
+                    </div>
+                    <span class="chevron">${t ? "▲" : "▼"}</span>
+                  </div>
+                  ${t ? r`
+                        <div class="ha-nested-body">
+                          <div class="ha-filled-box">
+                            <div class="box-content">
+                              <span class="floating-label">Aurora Aesthetic Vibe Preset</span>
+                              <select
+                                class="native-select"
+                                .value="${i}"
+                                @change="${(n) => this._valueChanged(n, "vibe_preset")}"
+                              >
+                                <option value="aurora_lumina">Aurora Lumina (Frosted Glass)</option>
+                                <option value="crimson_midnight">Crimson Midnight (Gothic Dark)</option>
+                                <option value="obsidian_minimal">Obsidian Minimal</option>
+                                <option value="ha_native">Home Assistant Native Surface</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      ` : r``}
+                </div>
+
+                <div class="ha-nested-accordion">
+                  <div
+                    class="ha-nested-header"
+                    @click="${() => this._toggleSection("style_custom")}"
+                  >
+                    <div class="header-left">
+                      <ha-icon icon="mdi:code-braces"></ha-icon>
+                      <span>Custom styles & templates</span>
+                    </div>
+                    <span class="chevron">${o ? "▲" : "▼"}</span>
+                  </div>
+                  ${o ? r`
+                        <div class="ha-nested-body">
+                          <textarea
+                            class="code-textarea"
+                            rows="4"
+                            placeholder=".aurora-card { --aurora-blur: 24px; }"
+                            .value="${s}"
+                            @input="${(n) => this._valueChanged(n, "custom_styles")}"
+                          ></textarea>
+                        </div>
+                      ` : r``}
+                </div>
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  // ============================================================================
+  // PHASE 3: MODULES ACCORDION, MODULE STUDIO & MODULE CREATOR
+  // ============================================================================
+  _renderModulesAccordion() {
+    const e = !!this._openSections.modules;
+    return r`
+      <div class="ha-accordion" ?data-open="${e}">
+        <div class="ha-accordion-header" @click="${() => this._toggleSection("modules")}">
+          <div class="header-left">
+            <ha-icon icon="mdi:puzzle"></ha-icon>
+            <span>Modules</span>
+          </div>
+          <span class="chevron">${e ? "▲" : "▼"}</span>
+        </div>
+
+        ${e ? r`
+              <div class="ha-accordion-body">
+                <!-- Top Sub-Tabs: My Modules | Module Store (Screenshots 4, 5, 8) -->
+                <div class="module-subtabs">
+                  <button
+                    class="mod-tab"
+                    ?data-active="${this._moduleSubTab === "my_modules"}"
+                    @click="${() => {
+      this._moduleSubTab = "my_modules", this._creatorOpen = !1;
+    }}"
+                  >
+                    <ha-icon icon="mdi:puzzle-heart-outline"></ha-icon>
+                    <span>My Modules</span>
+                  </button>
+                  <button
+                    class="mod-tab"
+                    ?data-active="${this._moduleSubTab === "store"}"
+                    @click="${() => {
+      this._moduleSubTab = "store", this._creatorOpen = !1;
+    }}"
+                  >
+                    <ha-icon icon="mdi:puzzle-plus-outline"></ha-icon>
+                    <span>Module Store</span>
+                  </button>
+                </div>
+
+                ${this._creatorOpen ? this._renderModuleCreatorStudio() : this._moduleSubTab === "my_modules" ? this._renderMyModulesView() : this._renderModuleStoreView()}
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderMyModulesView() {
+    const e = !!this._config?.enable_unsupported_modules, t = this._moduleSearchFilter.trim().toLowerCase(), o = this._installedModules.filter((i) => {
+      const s = this._isModuleCompatible(i);
+      return !e && !s ? !1 : t ? i.name.toLowerCase().includes(t) || i.id.toLowerCase().includes(t) || i.description.toLowerCase().includes(t) : !0;
+    });
+    return r`
+      <!-- Search Bar & Sort Row (Screenshot 8) -->
+      <div class="module-search-row">
+        <div class="module-search-bar">
+          <ha-icon icon="mdi:magnify"></ha-icon>
+          <input
+            type="text"
+            placeholder="Search modules"
+            .value="${this._moduleSearchFilter}"
+            @input="${(i) => this._moduleSearchFilter = i.target.value}"
+          />
+        </div>
+        <button
+          class="sort-icon-btn"
+          title="Sort compatible first"
+          @click="${() => {
+      this._installedModules = [...this._installedModules].reverse();
+    }}"
+        >
+          <ha-icon icon="mdi:sort"></ha-icon>
+        </button>
+      </div>
+
+      ${this._renderToggleRow("Enable unsupported modules", e, (i) => this._setDirectValue("enable_unsupported_modules", i))}
+
+      <!-- Installed Modules Accordion List (Screenshots 6, 7, 11, 12) -->
+      <div class="modules-accordion-list">
+        ${o.map((i) => this._renderSingleInstalledModule(i))}
+      </div>
+
+      <!-- Create New Module & Import From YAML Action Pills (Screenshot 6, 11) -->
+      <div class="module-action-pills-row">
+        <button class="teal-action-pill" @click="${this._openNewModuleCreator}">
+          <ha-icon icon="mdi:puzzle-plus"></ha-icon>
+          <span>Create new Module</span>
+        </button>
+        <button
+          class="teal-action-pill"
+          @click="${() => this._importYamlOpen = !this._importYamlOpen}"
+        >
+          <ha-icon icon="mdi:code-braces"></ha-icon>
+          <span>Import from YAML</span>
+        </button>
+      </div>
+
+      ${this._importYamlOpen ? r`
+            <div class="import-yaml-drawer">
+              <span class="block-label">Paste Module YAML</span>
+              <textarea
+                class="code-textarea"
+                rows="6"
+                placeholder="id: custom_glow\nname: Custom Glow\nversion: 1.0\ncode: |\n  .aurora-card { box-shadow: 0 0 18px #38bdf8; }"
+                .value="${this._importYamlText}"
+                @input="${(i) => this._importYamlText = i.target.value}"
+              ></textarea>
+              <div class="creator-bottom-actions">
+                <button
+                  class="teal-action-pill secondary-pill"
+                  @click="${() => this._importYamlOpen = !1}"
+                >
+                  ✕ Cancel
+                </button>
+                <button class="teal-action-pill" @click="${this._handleImportYamlConfirm}">
+                  ＋ Import Module
+                </button>
+              </div>
+            </div>
+          ` : r``}
+
+      <!-- Informational Callout Box (Screenshot 6, 11) -->
+      <div class="ha-info-callout">
+        <div class="callout-title">
+          <ha-icon icon="mdi:information-outline"></ha-icon>
+          <span>Modules</span>
+        </div>
+        <p>
+          Modules are really powerful and the best way to apply
+          <u>custom styles</u> and/or <u>JS templates</u> to your cards, without having to
+          copy/paste the same code over and over again.
+        </p>
+        <p>
+          This makes it easy to change things like the styles of all your cards, and for
+          advanced users, to modify or add features with a real editor.
+        </p>
+        <p>
+          <strong>If coding isn't your thing</strong>, you can also find and install modules
+          made by the community in the <strong>Module Store</strong>.
+        </p>
+      </div>
+    `;
+  }
+  _renderSingleInstalledModule(e) {
+    const t = !!this._expandedModules[e.id], o = this._isModuleCompatible(e), i = this._isModuleAppliedToThisCard(e.id), s = this._isModuleAppliedToAllCards(e.id), n = i || s;
+    return r`
+      <div
+        class="module-item-accordion"
+        ?data-compatible="${o}"
+        ?data-active="${n}"
+        ?data-expanded="${t}"
+      >
+        <div
+          class="module-item-header"
+          @click="${() => this._toggleModuleAccordion(e.id)}"
+        >
+          <div class="header-left">
+            <ha-icon
+              .icon="${n ? "mdi:puzzle-check-outline" : "mdi:puzzle-outline"}"
+              class="mod-puzzle-icon"
+            ></ha-icon>
+            <span class="mod-item-title">${e.name}</span>
+            ${o ? r`` : r`<span class="unsupported-tag">Unsupported</span>`}
+          </div>
+          <span class="chevron">${t ? "▲" : "▼"}</span>
+        </div>
+
+        ${t ? r`
+              <div class="module-item-body">
+                <!-- APPLY TO Bar + Edit/Delete Controls (Screenshots 7, 11, 12) -->
+                <div class="apply-to-section">
+                  <span class="apply-to-caption">APPLY TO</span>
+                  <div class="apply-to-bar">
+                    <div class="apply-pills-left">
+                      <button
+                        type="button"
+                        class="apply-pill"
+                        ?data-selected="${i}"
+                        @click="${() => this._toggleModuleApplyThisCard(e.id)}"
+                      >
+                        <ha-icon icon="mdi:card-text-outline"></ha-icon>
+                        <span>This card</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="apply-pill"
+                        ?data-selected="${s}"
+                        @click="${() => this._toggleModuleApplyAllCards(e.id)}"
+                      >
+                        <ha-icon icon="mdi:cards-outline"></ha-icon>
+                        <span>All cards</span>
+                      </button>
+                      <button
+                        type="button"
+                        class="circle-help-btn"
+                        title="Module compatibility & scope info"
+                      >
+                        ?
+                      </button>
+                    </div>
+                    <div class="apply-actions-right">
+                      <button
+                        type="button"
+                        class="icon-tool-btn"
+                        title="Edit module in Module Studio"
+                        @click="${() => this._openEditModuleInCreator(e)}"
+                      >
+                        <ha-icon icon="mdi:pencil"></ha-icon>
+                      </button>
+                      <button
+                        type="button"
+                        class="icon-tool-btn"
+                        title="Delete module"
+                        @click="${() => this._deleteInstalledModule(e.id)}"
+                      >
+                        <ha-icon icon="mdi:delete"></ha-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Module Configuration Header (Screenshots 7, 11, 12) -->
+                <div class="mod-config-title-row">
+                  <ha-icon icon="mdi:cog"></ha-icon>
+                  <span>Configuration</span>
+                </div>
+
+                <!-- Specialized or Generic Module Configuration Controls -->
+                ${this._renderModuleSpecificControls(e)}
+
+                <!-- About this module Box with YAML Example & Version Badge (Screenshots 7, 11, 12) -->
+                <div class="ha-info-callout mod-about-box">
+                  <div class="callout-title">
+                    <ha-icon icon="mdi:information-outline"></ha-icon>
+                    <span>About this module</span>
+                  </div>
+                  <p>${e.description}</p>
+                  <pre class="yaml-code-preview"><code>${e.yamlExample}</code></pre>
+                  <div class="mod-about-footer">
+                    <span class="mod-creator-credit">Created by ${e.creator}</span>
+                    <span class="mod-version-badge">Module info • ${e.version}</span>
+                  </div>
+                </div>
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderModuleSpecificControls(e) {
+    if (e.id === "card_backdrop_image") {
+      const o = !!this._moduleInnerAccordions.backdrop_image, i = !!this._moduleInnerAccordions.backdrop_layout, s = !!this._moduleInnerAccordions.backdrop_appearance, n = !!this._moduleInnerAccordions.backdrop_overlay, c = String(this._getModuleFieldVal(e.id, "image_url", "")), l = String(this._getModuleFieldVal(e.id, "size", "cover")), d = String(this._getModuleFieldVal(e.id, "repeat", "no-repeat")), u = !!this._getModuleFieldVal(e.id, "custom_position", !1), p = Number(this._getModuleFieldVal(e.id, "pos_x", 50)), h = Number(this._getModuleFieldVal(e.id, "pos_y", 50)), g = Number(this._getModuleFieldVal(e.id, "image_opacity", 100)), v = Number(this._getModuleFieldVal(e.id, "blur", 0)), x = Number(this._getModuleFieldVal(e.id, "scale", 100));
+      return r`
+        <div class="mod-controls-stack">
+          <!-- Image Sub-Accordion -->
+          <div class="ha-nested-accordion">
+            <div
+              class="ha-nested-header"
+              @click="${() => this._toggleModuleInner("backdrop_image")}"
+            >
+              <div class="header-left">
+                <ha-icon icon="mdi:image-outline"></ha-icon>
+                <span>Image</span>
+              </div>
+              <span class="chevron">${o ? "▲" : "▼"}</span>
+            </div>
+            ${o ? r`
+                  <div class="ha-nested-body">
+                    <span class="floating-label">Background image</span>
+                    <div class="media-dropzone">
+                      <button
+                        type="button"
+                        class="media-pick-btn"
+                        @click="${() => this._setModuleFieldVal(e.id, "image_url", "/local/aurora_backdrop.jpg")}"
+                      >
+                        <ha-icon icon="mdi:image-plus"></ha-icon>
+                        <span>Pick media</span>
+                      </button>
+                      <span class="muted-note">
+                        Drop file here or click to choose from Media Browser
+                      </span>
+                    </div>
+                    <div class="ha-filled-box">
+                      <div class="box-content">
+                        <span class="floating-label">Direct Image URL</span>
+                        <input
+                          type="text"
+                          class="native-input"
+                          placeholder="/local/bg.jpg or https://..."
+                          .value="${c}"
+                          @input="${(b) => this._setModuleFieldVal(e.id, "image_url", b.target.value)}"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ` : r``}
+          </div>
+
+          <!-- Image Layout Sub-Accordion -->
+          <div class="ha-nested-accordion">
+            <div
+              class="ha-nested-header"
+              @click="${() => this._toggleModuleInner("backdrop_layout")}"
+            >
+              <div class="header-left">
+                <ha-icon icon="mdi:crop-free"></ha-icon>
+                <span>Image layout</span>
+              </div>
+              <span class="chevron">${i ? "▲" : "▼"}</span>
+            </div>
+            ${i ? r`
+                  <div class="ha-nested-body">
+                    <div class="ha-filled-box">
+                      <div class="box-content">
+                        <span class="floating-label">Size</span>
+                        <select
+                          class="native-select"
+                          .value="${l}"
+                          @change="${(b) => this._setModuleFieldVal(e.id, "size", b.target.value)}"
+                        >
+                          <option value="cover">Cover</option>
+                          <option value="contain">Contain</option>
+                          <option value="auto">Auto</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="ha-filled-box">
+                      <div class="box-content">
+                        <span class="floating-label">Repeat</span>
+                        <select
+                          class="native-select"
+                          .value="${d}"
+                          @change="${(b) => this._setModuleFieldVal(e.id, "repeat", b.target.value)}"
+                        >
+                          <option value="no-repeat">No repeat</option>
+                          <option value="repeat">Repeat</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    ${this._renderToggleRow("Use custom position", u, (b) => this._setModuleFieldVal(e.id, "custom_position", b))}
+
+                    ${this._renderSliderControl("Horizontal position", p, 0, 100, (b) => this._setModuleFieldVal(e.id, "pos_x", b))}${this._renderSliderControl("Vertical position", h, 0, 100, (b) => this._setModuleFieldVal(e.id, "pos_y", b))}
+                  </div>
+                ` : r``}
+          </div>
+
+          <!-- Appearance Sub-Accordion -->
+          <div class="ha-nested-accordion">
+            <div
+              class="ha-nested-header"
+              @click="${() => this._toggleModuleInner("backdrop_appearance")}"
+            >
+              <div class="header-left">
+                <ha-icon icon="mdi:tune"></ha-icon>
+                <span>Appearance</span>
+              </div>
+              <span class="chevron">${s ? "▲" : "▼"}</span>
+            </div>
+            ${s ? r`
+                  <div class="ha-nested-body">
+                    ${this._renderSliderControl("Image opacity", g, 0, 100, (b) => this._setModuleFieldVal(e.id, "image_opacity", b))}
+                    ${this._renderSliderControl("Background blur", v, 0, 30, (b) => this._setModuleFieldVal(e.id, "blur", b))}${this._renderSliderControl("Image scale", x, 50, 200, (b) => this._setModuleFieldVal(e.id, "scale", b))}
+                  </div>
+                ` : r``}
+          </div>
+
+          <!-- Overlay Sub-Accordion -->
+          <div class="ha-nested-accordion">
+            <div
+              class="ha-nested-header"
+              @click="${() => this._toggleModuleInner("backdrop_overlay")}"
+            >
+              <div class="header-left">
+                <ha-icon icon="mdi:layers-outline"></ha-icon>
+                <span>Overlay</span>
+              </div>
+              <span class="chevron">${n ? "▲" : "▼"}</span>
+            </div>
+            ${n ? r`
+                  <div class="ha-nested-body">
+                    <div class="ha-filled-box">
+                      <div class="box-content">
+                        <span class="floating-label">Overlay Hex Color</span>
+                        <input
+                          type="text"
+                          class="native-input"
+                          .value="${String(this._getModuleFieldVal(e.id, "overlay_color", "#000000"))}"
+                          @input="${(b) => this._setModuleFieldVal(e.id, "overlay_color", b.target.value)}"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ` : r``}
+          </div>
+        </div>
+      `;
+    }
+    if (e.id === "multi_section_card") {
+      const o = String(this._getModuleFieldVal(e.id, "section_count", "4")), i = !!this._getModuleFieldVal(e.id, "hide_default_content", !0), s = String(this._getModuleFieldVal(e.id, "bg_color", ""));
+      return r`
+        <div class="mod-controls-stack">
+          <div class="ha-filled-box">
+            <div class="box-content">
+              <span class="floating-label">Section count</span>
+              <select
+                class="native-select"
+                .value="${o}"
+                @change="${(c) => this._setModuleFieldVal(e.id, "section_count", c.target.value)}"
+              >
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+          </div>
+
+          ${[1, 2, 3, 4].map((c) => {
+        const l = "multi_sec_" + c, d = !!this._moduleInnerAccordions[l], u = "entity_" + c, p = "icon_" + c, h = String(this._getModuleFieldVal(e.id, u, "")), g = String(this._getModuleFieldVal(e.id, p, ""));
+        return r`
+              <div class="ha-nested-accordion">
+                <div
+                  class="ha-nested-header"
+                  @click="${() => this._toggleModuleInner(l)}"
+                >
+                  <div class="header-left">
+                    <span class="num-circle-badge">${c}</span>
+                    <span>Section ${c}</span>
+                  </div>
+                  <span class="chevron">${d ? "▲" : "▼"}</span>
+                </div>
+                ${d ? r`
+                      <div class="ha-nested-body">
+                        <div
+                          class="ha-entity-box"
+                          @click="${() => this._openEntityPicker({
+          type: "module_field",
+          moduleId: e.id,
+          fieldKey: u
+        })}"
+                        >
+                          <div class="entity-icon-badge">
+                            <ha-icon .icon="${this._getEntityIcon(h)}"></ha-icon>
+                          </div>
+                          <div class="entity-text-col">
+                            <span class="entity-primary">
+                              ${this._getEntityFriendlyName(h)}
+                            </span>
+                            <span class="entity-secondary">
+                              ${this._getEntitySecondary(h)}
+                            </span>
+                          </div>
+                          <span class="dropdown-caret">▼</span>
+                        </div>
+
+                        <div class="ha-filled-box">
+                          <div class="box-content">
+                            <span class="floating-label">Section ${c} Icon</span>
+                            <input
+                              type="text"
+                              class="native-input"
+                              placeholder="mdi:thermometer"
+                              .value="${g}"
+                              @input="${(v) => this._setModuleFieldVal(e.id, p, v.target.value)}"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ` : r``}
+              </div>
+            `;
+      })}
+
+          ${this._renderToggleRow("Hide default card content", i, (c) => this._setModuleFieldVal(e.id, "hide_default_content", c))}
+
+          <div class="ha-filled-box">
+            <div class="box-content">
+              <span class="floating-label">Card Background Color (name, hex, or rgb)</span>
+              <input
+                type="text"
+                class="native-input"
+                placeholder="e.g. #ff5733 or accent"
+                .value="${s}"
+                @input="${(c) => this._setModuleFieldVal(e.id, "bg_color", c.target.value)}"
+              />
+            </div>
+          </div>
+          <span class="field-caption-note">
+            Accepts: color name (red, blue), hex (#ff5733), rgb(255,87,51), or HA theme color
+            name (accent, primary)
+          </span>
+        </div>
+      `;
+    }
+    if (e.id === "conditional_slider_coloring") {
+      const o = !!this._moduleInnerAccordions.cond_default, i = !!this._moduleInnerAccordions.cond_list;
+      return r`
+        <div class="mod-controls-stack">
+          <div class="ha-nested-accordion">
+            <div
+              class="ha-nested-header"
+              @click="${() => this._toggleModuleInner("cond_default")}"
+            >
+              <div class="header-left">
+                <ha-icon icon="mdi:palette-outline"></ha-icon>
+                <span>Default slider color</span>
+              </div>
+              <span class="chevron">${o ? "▲" : "▼"}</span>
+            </div>
+            ${o ? r`
+                  <div class="ha-nested-body">
+                    <div class="ha-filled-box">
+                      <div class="box-content">
+                        <span class="floating-label">Default CSS Color</span>
+                        <input
+                          type="text"
+                          class="native-input"
+                          .value="${String(this._getModuleFieldVal(e.id, "default_color", "var(--primary-color)"))}"
+                          @input="${(s) => this._setModuleFieldVal(e.id, "default_color", s.target.value)}"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ` : r``}
+          </div>
+
+          <div class="ha-nested-accordion">
+            <div
+              class="ha-nested-header"
+              @click="${() => this._toggleModuleInner("cond_list")}"
+            >
+              <div class="header-left">
+                <ha-icon icon="mdi:format-list-checks"></ha-icon>
+                <span>Conditions list</span>
+              </div>
+              <span class="chevron">${i ? "▲" : "▼"}</span>
+            </div>
+            ${i ? r`
+                  <div class="ha-nested-body">
+                    <div class="ha-filled-box">
+                      <div class="box-content">
+                        <span class="floating-label">Threshold Color Override</span>
+                        <input
+                          type="text"
+                          class="native-input"
+                          placeholder="#ef4444 when > 22"
+                          .value="${String(this._getModuleFieldVal(e.id, "condition_rule", ""))}"
+                          @input="${(s) => this._setModuleFieldVal(e.id, "condition_rule", s.target.value)}"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ` : r``}
+          </div>
+        </div>
+      `;
+    }
+    const t = String(this._getModuleFieldVal(e.id, "custom_param", ""));
+    return r`
+      <div class="mod-controls-stack">
+        <div class="ha-filled-box">
+          <div class="box-content">
+            <span class="floating-label">Module Custom Parameter / Override</span>
+            <input
+              type="text"
+              class="native-input"
+              placeholder="Enter value or CSS token..."
+              .value="${t}"
+              @input="${(o) => this._setModuleFieldVal(e.id, "custom_param", o.target.value)}"
+            />
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  _renderSliderControl(e, t, o, i, s) {
+    return r`
+      <div class="slider-control-block">
+        <span class="slider-label">${e}</span>
+        <div class="slider-input-row">
+          <input
+            type="range"
+            class="ha-range-slider"
+            min="${o}"
+            max="${i}"
+            .value="${String(t)}"
+            @input="${(n) => s(Number(n.target.value))}"
+          />
+          <input
+            type="number"
+            class="slider-num-box"
+            min="${o}"
+            max="${i}"
+            .value="${String(t)}"
+            @input="${(n) => s(Number(n.target.value))}"
+          />
+        </div>
+      </div>
+    `;
+  }
+  // ============================================================================
+  // PHASE 3: CREATE NEW MODULE STUDIO (Screenshots 3, 4, 5)
+  // ============================================================================
+  _renderModuleCreatorStudio() {
+    const e = this._creatorDraft, t = !!this._creatorSections.supported_cards, o = !!this._creatorSections.description, i = !!this._creatorSections.code_template, s = !!this._creatorSections.editor_schema, n = !!this._creatorSections.entity_suggestions, c = !!this._creatorSections.export_module;
+    return r`
+      <div class="creator-studio-container">
+        <div class="creator-title-row">
+          <ha-icon icon="mdi:puzzle-plus-outline"></ha-icon>
+          <span>Create new Module</span>
+        </div>
+
+        <!-- Module ID -->
+        <div class="ha-filled-box">
+          <div class="box-content">
+            <span class="floating-label">Module ID</span>
+            <input
+              type="text"
+              class="native-input"
+              .value="${e.id}"
+              @input="${(l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        id: l.target.value
+      };
+    }}"
+            />
+          </div>
+        </div>
+        <span class="field-caption-note">
+          Must be unique and cannot be changed after the Module is created.
+        </span>
+
+        <!-- Module Name -->
+        <div class="ha-filled-box">
+          <div class="box-content">
+            <span class="floating-label">Module Name</span>
+            <input
+              type="text"
+              class="native-input"
+              .value="${e.name}"
+              @input="${(l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        name: l.target.value
+      };
+    }}"
+            />
+          </div>
+        </div>
+
+        <!-- Version -->
+        <div class="ha-filled-box">
+          <div class="box-content">
+            <span class="floating-label">Version</span>
+            <input
+              type="text"
+              class="native-input"
+              .value="${e.version}"
+              @input="${(l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        version: l.target.value
+      };
+    }}"
+            />
+          </div>
+        </div>
+
+        <!-- Creator -->
+        <div class="ha-filled-box">
+          <div class="box-content">
+            <span class="floating-label">Creator</span>
+            <input
+              type="text"
+              class="native-input"
+              placeholder="Your name or handle"
+              .value="${e.creator}"
+              @input="${(l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        creator: l.target.value
+      };
+    }}"
+            />
+          </div>
+        </div>
+
+        <!-- 1. Supported Cards Accordion (Screenshots 4 & 5) -->
+        <div class="creator-sub-section">
+          <div
+            class="creator-sub-header"
+            @click="${() => this._toggleCreatorSection("supported_cards")}"
+          >
+            <div class="header-left">
+              <ha-icon icon="mdi:filter-check-outline"></ha-icon>
+              <span>Supported cards</span>
+            </div>
+            <span class="chevron">${t ? "▲" : "▼"}</span>
+          </div>
+          ${t ? r`
+                <div class="creator-sub-body">
+                  <label class="ha-checkbox-item master-checkbox">
+                    <input
+                      type="checkbox"
+                      .checked="${e.allCards}"
+                      @change="${(l) => {
+      const d = l.target.checked;
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        allCards: d,
+        supportedCards: d ? W.map((u) => u.id) : []
+      };
+    }}"
+                    />
+                    <span>All cards</span>
+                  </label>
+
+                  <div class="checkbox-two-col-grid">
+                    ${W.map((l) => {
+      const d = e.allCards || e.supportedCards.includes(l.id);
+      return r`
+                        <label class="ha-checkbox-item">
+                          <input
+                            type="checkbox"
+                            .checked="${d}"
+                            @change="${(u) => {
+        const p = u.target.checked, h = new Set(this._creatorDraft.supportedCards);
+        p ? h.add(l.id) : h.delete(l.id), this._creatorDraft = {
+          ...this._creatorDraft,
+          allCards: h.size === W.length,
+          supportedCards: Array.from(h)
+        };
+      }}"
+                          />
+                          <span>${l.label}</span>
+                        </label>
+                      `;
+    })}
+                  </div>
+                  <span class="field-caption-note">
+                    Select the card types that this module supports.
+                  </span>
+                </div>
+              ` : r``}
+        </div>
+
+        <!-- 2. Description Accordion (Screenshots 3, 4, 5) -->
+        <div class="creator-sub-section">
+          <div
+            class="creator-sub-header"
+            @click="${() => this._toggleCreatorSection("description")}"
+          >
+            <div class="header-left">
+              <ha-icon icon="mdi:file-document-outline"></ha-icon>
+              <span>Description</span>
+            </div>
+            <span class="chevron">${o ? "▲" : "▼"}</span>
+          </div>
+          ${o ? r`
+                <div class="creator-sub-body">
+                  <textarea
+                    class="code-textarea"
+                    rows="3"
+                    placeholder="Describe what this module styles or extends..."
+                    .value="${e.description}"
+                    @input="${(l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        description: l.target.value
+      };
+    }}"
+                  ></textarea>
+                </div>
+              ` : r``}
+        </div>
+
+        <!-- 3. Code (CSS/JS template) Accordion (Screenshots 3, 4, 5) -->
+        <div class="creator-sub-section">
+          <div
+            class="creator-sub-header"
+            @click="${() => this._toggleCreatorSection("code_template")}"
+          >
+            <div class="header-left">
+              <ha-icon icon="mdi:code-braces"></ha-icon>
+              <span>Code (CSS/JS template)</span>
+            </div>
+            <span class="chevron">${i ? "▲" : "▼"}</span>
+          </div>
+          ${i ? r`
+                <div class="creator-sub-body">
+                  ${this._renderCodeEditorWidget(e.codeTemplate, (l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        codeTemplate: l
+      };
+    }, !0)}
+                  <span class="field-caption-note">
+                    More information and examples about the CSS and JS template possibilities
+                    can be found in the <u>Styling and Templates documentation</u>.
+                  </span>
+                </div>
+              ` : r``}
+        </div>
+
+        <!-- 4. Optional: Editor schema (YAML) Accordion (Screenshots 3, 4, 5) -->
+        <div class="creator-sub-section">
+          <div
+            class="creator-sub-header"
+            @click="${() => this._toggleCreatorSection("editor_schema")}"
+          >
+            <div class="header-left">
+              <ha-icon icon="mdi:view-list-outline"></ha-icon>
+              <span>Optional: Editor schema (YAML)</span>
+            </div>
+            <span class="chevron">${s ? "▲" : "▼"}</span>
+          </div>
+          ${s ? r`
+                <div class="creator-sub-body">
+                  ${this._renderCodeEditorWidget(e.editorSchemaYaml, (l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        editorSchemaYaml: l
+      };
+    }, !1)}
+                  <span class="field-caption-note">
+                    This allows you to add a visual editor to your module. Learn about all
+                    available editor schema options in the <u>editor schema documentation</u>.
+                  </span>
+                </div>
+              ` : r``}
+        </div>
+
+        <!-- 5. Optional: Entity suggestions Accordion (Screenshots 3, 4) -->
+        <div class="creator-sub-section">
+          <div
+            class="creator-sub-header"
+            @click="${() => this._toggleCreatorSection("entity_suggestions")}"
+          >
+            <div class="header-left">
+              <ha-icon icon="mdi:lightbulb-question-outline"></ha-icon>
+              <span>Optional: Entity suggestions</span>
+            </div>
+            <span class="chevron">${n ? "▲" : "▼"}</span>
+          </div>
+          ${n ? r`
+                <div class="creator-sub-body">
+                  <span class="sub-block-heading">Suggestion rules (YAML)</span>
+                  ${this._renderCodeEditorWidget(e.suggestionRulesYaml, (l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        suggestionRulesYaml: l
+      };
+    }, !1)}
+                  <span class="field-caption-note">
+                    This allows your Module to be offered in the entity card picker of Home
+                    Assistant, as a list of rules.
+                  </span>
+
+                  <span class="sub-block-heading">Computed suggestions (JavaScript)</span>
+                  ${this._renderCodeEditorWidget(e.computedSuggestionsJs, (l) => {
+      this._creatorDraft = {
+        ...this._creatorDraft,
+        computedSuggestionsJs: l
+      };
+    }, !1)}
+                  <span class="field-caption-note">
+                    When a configuration has to be computed instead of being known in advance,
+                    write a function body called with
+                    <code>(hass, entity, stateObj, helpers, module)</code>.
+                  </span>
+
+                  <!-- Live Preview Sandbox Card (Screenshot 4) -->
+                  <div class="creator-preview-card">
+                    <span class="sub-block-heading">Preview</span>
+                    ${this._renderToggleRow("Show the suggestions instead of the card", this._creatorPreviewMode, (l) => this._creatorPreviewMode = l)}
+                    <span class="section-caption">Entity</span>
+                    <div
+                      class="ha-entity-box"
+                      @click="${() => this._openEntityPicker({ type: "creator_preview" })}"
+                    >
+                      <div class="entity-icon-badge">
+                        <ha-icon
+                          .icon="${this._getEntityIcon(this._creatorPreviewEntity)}"
+                        ></ha-icon>
+                      </div>
+                      <div class="entity-text-col">
+                        <span class="entity-primary">
+                          ${this._getEntityFriendlyName(this._creatorPreviewEntity)}
+                        </span>
+                        <span class="entity-secondary">
+                          ${this._getEntitySecondary(this._creatorPreviewEntity)}
+                        </span>
+                      </div>
+                      <span class="dropdown-caret">▼</span>
+                    </div>
+                  </div>
+                </div>
+              ` : r``}
+        </div>
+
+        <!-- 6. Export Module Accordion (Screenshot 3, 4) -->
+        <div class="creator-sub-section">
+          <div
+            class="creator-sub-header"
+            @click="${() => this._toggleCreatorSection("export_module")}"
+          >
+            <div class="header-left">
+              <ha-icon icon="mdi:export"></ha-icon>
+              <span>Export Module</span>
+            </div>
+            <span class="chevron">${c ? "▲" : "▼"}</span>
+          </div>
+          ${c ? r`
+                <div class="creator-sub-body export-pills-stack">
+                  <button
+                    type="button"
+                    class="export-full-pill"
+                    @click="${() => this._copyModuleYaml(!1)}"
+                  >
+                    <ha-icon icon="mdi:content-copy"></ha-icon>
+                    <span>Copy YAML</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="export-full-pill"
+                    @click="${() => this._copyModuleYaml(!0)}"
+                  >
+                    <ha-icon icon="mdi:content-duplicate"></ha-icon>
+                    <span>Copy for GitHub</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="export-full-pill"
+                    @click="${this._downloadModuleYaml}"
+                  >
+                    <ha-icon icon="mdi:file-download-outline"></ha-icon>
+                    <span>Download YAML</span>
+                  </button>
+                </div>
+              ` : r``}
+        </div>
+
+        <!-- Bottom Cancel & Save Module Bar (Screenshot 4) -->
+        <div class="creator-bottom-actions">
+          <button
+            type="button"
+            class="teal-action-pill secondary-pill"
+            @click="${() => this._creatorOpen = !1}"
+          >
+            <span>✕</span>
+            <span>Cancel</span>
+          </button>
+          <button
+            type="button"
+            class="teal-action-pill"
+            @click="${this._saveCreatorModule}"
+          >
+            <ha-icon icon="mdi:content-save-outline"></ha-icon>
+            <span>Save Module</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+  _renderCodeEditorWidget(e, t, o) {
+    return r`
+      <div class="aurora-code-widget">
+        <div class="code-widget-toolbar">
+          <div class="snippet-chips-row">
+            ${o ? r`
+                  <button
+                    type="button"
+                    class="snippet-chip"
+                    @click="${() => t(e + `
+/* State check */
+\${state === "on" ? "" : ""}`)}"
+                  >
+                    + state
+                  </button>
+                  <button
+                    type="button"
+                    class="snippet-chip"
+                    @click="${() => t(e + `
+.aurora-card {
+  backdrop-filter: blur(22px);
+}`)}"
+                  >
+                    + glass
+                  </button>
+                ` : r``}
+          </div>
+          <div class="toolbar-icons-right">
+            <button
+              type="button"
+              class="code-tool-btn"
+              title="Copy code"
+              @click="${() => {
+      navigator.clipboard && navigator.clipboard.writeText(e), this._showToast("Code copied");
+    }}"
+            >
+              <ha-icon icon="mdi:content-copy"></ha-icon>
+            </button>
+          </div>
+        </div>
+        <div class="code-gutter-body">
+          <div class="line-num-gutter">1</div>
+          <textarea
+            class="gutter-textarea"
+            rows="4"
+            .value="${e}"
+            @input="${(i) => t(i.target.value)}"
+          ></textarea>
+        </div>
+      </div>
+    `;
+  }
+  _renderModuleStoreView() {
+    const e = this._moduleSearchFilter.trim().toLowerCase(), t = We.filter((o) => e ? o.name.toLowerCase().includes(e) || o.description.toLowerCase().includes(e) : !0);
+    return r`
+      <div class="module-search-row">
+        <div class="module-search-bar">
+          <ha-icon icon="mdi:magnify"></ha-icon>
+          <input
+            type="text"
+            placeholder="Search community store..."
+            .value="${this._moduleSearchFilter}"
+            @input="${(o) => this._moduleSearchFilter = o.target.value}"
+          />
+        </div>
+      </div>
+
+      <div class="store-cards-list">
+        ${t.map((o) => {
+      const i = this._installedModules.some((s) => s.id === o.id);
+      return r`
+            <div class="store-module-card">
+              <div class="store-mod-top">
+                <div class="header-left">
+                  <ha-icon icon="mdi:puzzle-star-outline"></ha-icon>
+                  <span class="mod-item-title">${o.name}</span>
+                </div>
+                <span class="mod-version-badge">${o.version}</span>
+              </div>
+              <p class="store-mod-desc">${o.description}</p>
+              <div class="store-mod-footer">
+                <span class="mod-creator-credit">By ${o.creator}</span>
+                <button
+                  type="button"
+                  class="teal-action-pill store-install-btn"
+                  @click="${() => this._installFromStore(o)}"
+                >
+                  <ha-icon
+                    .icon="${i ? "mdi:check" : "mdi:download"}"
+                  ></ha-icon>
+                  <span>${i ? "Installed (Open)" : "Install Module"}</span>
+                </button>
+              </div>
+            </div>
+          `;
+    })}
+      </div>
+    `;
+  }
+  _renderToggleRow(e, t, o) {
+    return r`
+      <label class="ha-toggle-row">
+        <button
+          type="button"
+          role="switch"
+          aria-checked="${t ? "true" : "false"}"
+          class="ha-pill-switch"
+          ?data-checked="${t}"
+          @click="${() => o(!t)}"
+        >
+          <span class="switch-thumb"></span>
+        </button>
+        <span class="toggle-label">${e}</span>
+      </label>
+    `;
+  }
+  _renderActionSelector(e, t) {
+    return r`
+      <div class="ha-filled-box">
+        <div class="box-content">
+          <span class="floating-label">Action</span>
+          <select
+            class="native-select"
+            .value="${t}"
+            @change="${(o) => this._actionChanged(o, e)}"
+          >
+            <option value="toggle">Toggle</option>
+            <option value="more-info">More info</option>
+            <option value="navigate">Navigate / Pop-up (#hash)</option>
+            <option value="call-service">Perform action (Call service)</option>
+            <option value="none">No action</option>
+          </select>
+        </div>
+      </div>
+    `;
+  }
+  _formatChipLabel(e) {
+    const t = {
+      state: "State",
+      preset_mode: "Preset",
+      hvac_action: "Current action",
+      last_changed: "Last changed",
+      brightness: "Brightness"
+    };
+    return t[e] ? t[e] : e;
+  }
+  _addStateChip() {
+    if (!this._config)
+      return;
+    const e = ["state", "preset_mode", "hvac_action", "last_changed", "brightness"], t = [...this._config.state_content ?? ["state"]], o = e.find((i) => !t.includes(i)) ?? "state";
+    t.push(o), this._setDirectValue("state_content", t);
+  }
+  _removeStateChip(e) {
+    if (!this._config)
+      return;
+    const o = [...this._config.state_content ?? []].filter((i, s) => s !== e);
+    this._setDirectValue("state_content", o);
+  }
+  _valueChanged(e, t) {
+    if (!this._config)
+      return;
+    const i = e.target.value;
+    this._setDirectValue(t, i === "" ? void 0 : i);
+  }
+  _setDirectValue(e, t) {
+    this._config && (this._config = {
+      ...this._config,
+      [e]: t
+    }, F(this, "config-changed", { config: this._config }));
+  }
+  _actionChanged(e, t) {
+    if (!this._config)
+      return;
+    const o = e.target, i = this._config[t] ?? {};
+    this._config = {
+      ...this._config,
+      [t]: {
+        ...i,
+        action: o.value
+      }
+    }, F(this, "config-changed", { config: this._config });
   }
   _addSubButton() {
     if (!this._config)
       return;
-    const t = [...this._config.sub_button || []];
-    t.push({ icon: "mdi:power", show_state: !0 }), this._config = { ...this._config, sub_button: t }, w(this, "config-changed", { config: this._config });
+    const e = [...this._config.sub_button ?? []];
+    e.push({ icon: "mdi:power", show_state: !0 }), this._setDirectValue("sub_button", e);
   }
-  _updateSubButton(t, e, a) {
+  _updateSubButton(e, t, o) {
     if (!this._config || !this._config.sub_button)
       return;
-    const r = [...this._config.sub_button];
-    r[t] = { ...r[t], [e]: a || void 0 }, this._config = { ...this._config, sub_button: r }, w(this, "config-changed", { config: this._config });
+    const i = [...this._config.sub_button];
+    i[e] = {
+      ...i[e],
+      [t]: o === "" ? void 0 : o
+    }, this._setDirectValue("sub_button", i);
   }
-  _removeSubButton(t) {
+  _removeSubButton(e) {
     if (!this._config || !this._config.sub_button)
       return;
-    const e = this._config.sub_button.filter((a, r) => r !== t);
-    this._config = { ...this._config, sub_button: e }, w(this, "config-changed", { config: this._config });
+    const t = this._config.sub_button.filter((o, i) => i !== e);
+    this._setDirectValue("sub_button", t);
   }
   static {
-    this.styles = g`
+    this.styles = me`
     :host {
       display: block;
-      color: var(--primary-text-color, #f8fafc);
-      padding: 4px 0;
+      color: var(--primary-text-color, #e1e1e1);
+      font-family: var(--paper-font-body1_-_font-family, inherit);
     }
-    .card-config-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .editor-header {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 12px;
-    }
-    .header-titles h3 {
-      margin: 0 0 2px 0;
-      font-size: 17px;
-    }
-    .header-titles p {
-      margin: 0;
-      font-size: 12px;
-      color: #94a3b8;
-    }
-    .editor-tabs {
-      display: flex;
-      gap: 6px;
-    }
-    .tab-btn {
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.04);
-      color: #94a3b8;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .tab-btn.active {
-      background: #818cf8;
-      color: #fff;
-      border-color: #818cf8;
-    }
-    .tab-content {
+
+    .aurora-editor-root {
+      position: relative;
       display: flex;
       flex-direction: column;
       gap: 14px;
+      padding: 4px 0 16px 0;
     }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+
+    .aurora-toast {
+      position: sticky;
+      top: 6px;
+      z-index: 100;
+      background: #0284c7;
+      color: #ffffff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
     }
-    .form-group {
+
+    /* Hybrid Category Bar */
+    .category-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .cat-pill {
+      background: var(--secondary-background-color, #202124);
+      color: var(--secondary-text-color, #9b9b9b);
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+      border-radius: 18px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .cat-pill[data-active] {
+      background: var(--primary-color, #03a9f4);
+      color: #ffffff;
+      border-color: var(--primary-color, #03a9f4);
+    }
+
+    /* Top Floating-Label Boxes */
+    .top-selectors {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 12px;
     }
-    label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #cbd5e1;
-    }
-    select, input {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      color: #fff;
-      padding: 9px 12px;
+
+    .section-caption {
       font-size: 13px;
+      color: var(--primary-text-color, #e1e1e1);
+      margin-bottom: -4px;
+    }
+
+    .ha-filled-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.06));
+      border-bottom: 1px solid var(--secondary-text-color, rgba(255, 255, 255, 0.4));
+      border-radius: 4px 4px 0 0;
+      padding: 6px 12px;
+      min-height: 44px;
+    }
+
+    .box-content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 2px;
+    }
+
+    .floating-label {
+      font-size: 11px;
+      color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    .native-select,
+    .native-input {
+      background: transparent;
+      border: none;
+      color: var(--primary-text-color, #ffffff);
+      font-size: 15px;
+      padding: 2px 0;
       outline: none;
       width: 100%;
-      box-sizing: border-box;
     }
-    select:focus, input:focus {
-      border-color: #818cf8;
+
+    .native-select option,
+    .native-select optgroup {
+      background: var(--card-background-color, #1c1c1c);
+      color: var(--primary-text-color, #ffffff);
     }
-    .sub-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .primary-action-btn {
-      background: #818cf8;
-      color: #fff;
+
+    .clear-btn {
+      background: transparent;
       border: none;
-      border-radius: 6px;
-      padding: 6px 12px;
+      color: var(--secondary-text-color, #9b9b9b);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    /* Entity Box */
+    .ha-entity-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.06));
+      border-bottom: 1px solid var(--secondary-text-color, rgba(255, 255, 255, 0.4));
+      border-radius: 4px 4px 0 0;
+      padding: 8px 12px;
+      min-height: 48px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .ha-entity-box:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .entity-icon-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    .entity-text-col {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .entity-primary {
+      font-size: 15px;
+      color: var(--primary-text-color, #ffffff);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .entity-secondary {
+      font-size: 12px;
+      color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    .dropdown-caret {
+      font-size: 10px;
+      color: var(--secondary-text-color, #9b9b9b);
+      padding-left: 4px;
+    }
+
+    /* PHASE 2: Searchable Entity Picker Modal Overlay */
+    .picker-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .picker-sheet {
+      width: 100%;
+      max-width: 540px;
+      height: 84vh;
+      background: var(--card-background-color, #141414);
+      border-radius: 20px 20px 0 0;
+      border-top: 1px solid var(--divider-color, rgba(255, 255, 255, 0.14));
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .picker-handle-bar {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 4px 0;
+    }
+
+    .sheet-grip {
+      width: 38px;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .picker-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px 10px 14px;
+    }
+
+    .picker-search-Input-wrap {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1.5px solid rgba(255, 255, 255, 0.55);
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+
+    .picker-search-Input-wrap:focus-within {
+      border-color: var(--primary-color, #03a9f4);
+    }
+
+    .search-icon {
+      color: var(--primary-text-color, #ffffff);
+      --mdc-icon-size: 20px;
+    }
+
+    .picker-search-input {
+      background: transparent;
+      border: none;
+      color: var(--primary-text-color, #ffffff);
+      font-size: 15px;
+      width: 100%;
+      outline: none;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary-color, #03a9f4);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 8px;
+    }
+
+    .picker-domain-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 0 14px 10px 14px;
+      border-bottom: 1px solid var(--divider-color, rgba(255, 255, 255, 0.1));
+    }
+
+    .dom-chip {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--secondary-text-color, #9b9b9b);
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 4px 12px;
       font-size: 12px;
       cursor: pointer;
+      white-space: nowrap;
     }
-    .sub-list {
+
+    .dom-chip[data-active] {
+      background: rgba(3, 169, 244, 0.2);
+      color: var(--primary-color, #03a9f4);
+      border-color: var(--primary-color, #03a9f4);
+    }
+
+    .picker-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .picker-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--divider-color, rgba(255, 255, 255, 0.06));
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+
+    .picker-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .picker-row[data-selected] {
+      background: rgba(3, 169, 244, 0.18);
+    }
+
+    .picker-row-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      color: var(--secondary-text-color, #a0a0a0);
+    }
+
+    .picker-row[data-selected] .picker-row-icon {
+      color: var(--primary-color, #38bdf8);
+    }
+
+    .picker-row-main {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+      gap: 2px;
+    }
+
+    .picker-row-title {
+      font-size: 15px;
+      color: var(--primary-text-color, #ffffff);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .picker-row-sub {
+      font-size: 12px;
+      color: var(--secondary-text-color, #9b9b9b);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .picker-row-domain {
+      font-size: 12px;
+      color: var(--secondary-text-color, #9b9b9b);
+      white-space: nowrap;
+      padding-left: 8px;
+    }
+
+    .picker-empty,
+    .picker-more-hint {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    /* Main Accordions Stack */
+    .accordions-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ha-accordion {
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+      border-radius: 14px;
+      background: var(--card-background-color, #1c1c1c);
+      overflow: hidden;
+    }
+
+    .ha-accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--primary-text-color, #ffffff);
+    }
+
+    .chevron {
+      font-size: 11px;
+      color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    .ha-accordion-body {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 4px 16px 16px 16px;
+    }
+
+    /* Nested Accordions */
+    .ha-nested-accordion {
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.1));
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .ha-nested-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      cursor: pointer;
+    }
+
+    .ha-nested-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 4px 14px 14px 14px;
+    }
+
+    /* HA Pill Switches */
+    .toggle-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 4px 0;
+    }
+
+    .ha-toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+    }
+
+    .ha-pill-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .ha-pill-switch[data-checked] {
+      background: rgba(3, 169, 244, 0.35);
+      border-color: var(--primary-color, #03a9f4);
+    }
+
+    .switch-thumb {
+      position: absolute;
+      top: 3px;
+      left: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--secondary-text-color, #9b9b9b);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .ha-pill-switch[data-checked] .switch-thumb {
+      transform: translateX(20px);
+      background: var(--primary-color, #03a9f4);
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      color: var(--primary-text-color, #e1e1e1);
+    }
+
+    /* State Content Chips */
+    .state-content-block {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
-    .sub-item-card {
+
+    .block-label {
+      font-size: 13px;
+      color: var(--primary-text-color, #e1e1e1);
+    }
+
+    .chips-well {
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.05));
+      border-bottom: 1px solid var(--divider-color, rgba(255, 255, 255, 0.2));
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chips-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ha-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+
+    .chip-drag {
+      color: var(--secondary-text-color, #9b9b9b);
+      cursor: grab;
+    }
+
+    .chip-remove {
+      background: transparent;
+      border: none;
+      color: var(--secondary-text-color, #9b9b9b);
+      cursor: pointer;
+      font-size: 12px;
+      padding: 0 2px;
+    }
+
+    .chip-add-btn {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.2));
+      border-radius: 18px;
+      color: var(--primary-text-color, #ffffff);
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Sub-button rows */
+    .sub-button-row {
       display: grid;
       grid-template-columns: 1.5fr 1fr auto;
       gap: 8px;
       align-items: center;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.04));
       padding: 8px;
-      border-radius: 10px;
+      border-radius: 8px;
     }
-    .danger-btn {
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.4);
+
+    .sub-entity-picker-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      color: var(--primary-text-color, #ffffff);
+      padding: 6px 10px;
+      cursor: pointer;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .sub-ent-label {
+      flex: 1;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sub-icon-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 13px;
+    }
+
+    .danger-icon-btn {
+      background: rgba(244, 67, 54, 0.15);
+      color: #f44336;
+      border: 1px solid rgba(244, 67, 54, 0.3);
       border-radius: 6px;
       width: 32px;
-      height: 34px;
+      height: 32px;
       cursor: pointer;
     }
-    .module-store-header h4 {
-      margin: 0 0 4px 0;
-      font-size: 15px;
+
+    /* Info Callout Box */
+    .ha-info-callout {
+      background: rgba(255, 255, 255, 0.04);
+      border-left: 4px solid var(--primary-color, #03a9f4);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--secondary-text-color, #b0b0b0);
     }
-    .module-store-header p {
-      margin: 0 0 10px 0;
-      font-size: 12px;
-      color: #94a3b8;
-    }
-    .module-grid {
+
+    .callout-title {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--primary-text-color, #ffffff);
+      margin-bottom: 6px;
+    }
+
+    .callout-list {
+      margin: 6px 0 0 0;
+      padding-left: 18px;
+    }
+
+    .callout-list li {
+      margin-bottom: 4px;
+    }
+
+    /* ============================================================================
+       PHASE 3 STYLES: MODULES, MODULE CREATOR STUDIO & MODULE STORE
+       ============================================================================ */
+    .module-subtabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+    }
+
+    .mod-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--secondary-text-color, #9b9b9b);
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .mod-tab[data-active] {
+      color: var(--primary-text-color, #ffffff);
+      border-bottom-color: var(--primary-color, #03a9f4);
+    }
+
+    .module-search-row {
+      display: flex;
+      align-items: center;
       gap: 8px;
     }
-    .module-card-item {
+
+    .module-search-bar {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      gap: 10px;
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.06));
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.15));
+      border-radius: 24px;
+      padding: 8px 14px;
+    }
+
+    .module-search-bar input {
+      background: transparent;
+      border: none;
+      color: var(--primary-text-color, #ffffff);
+      font-size: 14px;
+      width: 100%;
+      outline: none;
+    }
+
+    .sort-icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--secondary-text-color, #9b9b9b);
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .modules-accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .module-item-accordion {
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      overflow: hidden;
+      opacity: 0.55;
+      transition: all 0.18s ease;
+    }
+
+    .module-item-accordion[data-compatible] {
+      opacity: 1;
+    }
+
+    .module-item-accordion[data-active] {
+      border-color: var(--primary-color, #03a9f4);
+      box-shadow: 0 0 0 1px rgba(3, 169, 244, 0.25);
+    }
+
+    .module-item-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 12px;
-      border-radius: 12px;
-    }
-    .m-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .m-title {
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .m-desc {
-      font-size: 11px;
-      color: #94a3b8;
-    }
-    .install-btn {
-      background: rgba(52, 211, 153, 0.2);
-      color: #34d399;
-      border: 1px solid rgba(52, 211, 153, 0.4);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 12px;
+      padding: 14px 16px;
       cursor: pointer;
     }
-  `;
-  }
-};
-V([
-  u({ attribute: !1 })
-], E.prototype, "hass", void 0);
-V([
-  y()
-], E.prototype, "_config", void 0);
-V([
-  y()
-], E.prototype, "_activeTab", void 0);
-V([
-  y()
-], E.prototype, "_entitySearchFilter", void 0);
-E = V([
-  b("aurora-card-editor")
-], E);
-const x = g`
-  :host {
-    --aurora-card-background: var(--ha-card-background, var(--card-background-color, rgba(15, 23, 42, 0.68)));
-    --aurora-card-backdrop-filter: blur(20px) saturate(180%);
-    --aurora-card-border: 1px solid rgba(255, 255, 255, 0.09);
-    --aurora-card-border-radius: var(--ha-card-border-radius, 20px);
-    --aurora-card-shadow: 0 10px 32px 0 rgba(0, 0, 0, 0.42);
-    --aurora-surface-subtle: rgba(255, 255, 255, 0.04);
-    --aurora-surface-hover: rgba(255, 255, 255, 0.08);
-    --aurora-text-primary: var(--primary-text-color, #f8fafc);
-    --aurora-text-secondary: var(--secondary-text-color, #94a3b8);
-    --aurora-accent-color: var(--primary-color, #818cf8);
-    --aurora-accent-glow: rgba(129, 140, 248, 0.28);
-    --aurora-success-color: #34d399;
-    --aurora-warning-color: #fbbf24;
-    --aurora-danger-color: #f87171;
-  }
-`;
-var dt = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let U = class extends f {
-  constructor() {
-    super(...arguments), this._sliderValue = null;
-  }
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.entity, e = t ? this.hass.states[t] : void 0, a = e ? e.state : "unavailable", r = ["on", "open", "playing", "home", "unlocked", "active"].includes(a), i = this.config.button_type || "switch", s = this.config.name || e?.attributes.friendly_name || "Aurora Button", n = this.config.icon || e?.attributes.icon || "mdi:radiobox-marked", l = this._getEntityPercentage(e), d = this._sliderValue !== null ? this._sliderValue : l;
-    return c`
-      <ha-card class="${r ? "is-on" : "is-off"} mode-${i}">
-        ${i === "slider" ? c`
-              <div class="slider-fill" style="width: ${d}%"></div>
-              <input
-                type="range"
-                class="range-input"
-                min="0"
-                max="100"
-                .value="${String(d)}"
-                @input="${this._onSliderInput}"
-                @change="${this._onSliderChange}"
-              />
-            ` : ""}
 
-        <div class="card-content" @click="${this._onMainClick}">
-          <div class="icon-container ${r ? "active" : ""}" @click="${this._onIconClick}">
-            <ha-icon .icon="${n}"></ha-icon>
-          </div>
-
-          <div class="info-container">
-            <span class="title">${s}</span>
-            <div class="secondary-line">
-              ${this.config.show_state !== !1 && e ? c`<span class="state">${a}</span>` : ""}
-              ${i === "slider" ? c`<span class="percent-badge">${Math.round(d)}%</span>` : ""}
-              ${this.config.show_attribute && this.config.attribute && e?.attributes[this.config.attribute] !== void 0 ? c`<span class="attr">• ${e.attributes[this.config.attribute]}</span>` : ""}
-            </div>
-          </div>
-
-          ${this.config.sub_button && this.config.sub_button.length > 0 ? c`
-                <div class="sub-buttons-stack" @click="${(p) => p.stopPropagation()}">
-                  ${this.config.sub_button.map((p) => this._renderSubButton(p))}
-                </div>
-              ` : ""}
-        </div>
-      </ha-card>
-    `;
-  }
-  _renderSubButton(t) {
-    const e = t.entity ? this.hass.states[t.entity] : void 0, a = e && ["on", "open", "playing", "active"].includes(e.state), r = t.icon || e?.attributes.icon || "mdi:circle-medium";
-    return c`
-      <button
-        class="sub-btn ${a ? "sub-on" : ""} ${t.show_background === !1 ? "no-bg" : ""}"
-        @click="${() => m(this, this.hass, t)}"
-        title="${t.name || e?.attributes.friendly_name || ""}"
-      >
-        <ha-icon .icon="${r}"></ha-icon>
-        ${t.show_state && e ? c`<span class="sub-state">${e.state}</span>` : ""}
-        ${t.name ? c`<span class="sub-state">${t.name}</span>` : ""}
-      </button>
-    `;
-  }
-  _getEntityPercentage(t) {
-    return t ? t.attributes.brightness !== void 0 ? Math.round(t.attributes.brightness / 255 * 100) : t.attributes.percentage !== void 0 ? Number(t.attributes.percentage) : t.attributes.current_position !== void 0 ? Number(t.attributes.current_position) : t.attributes.volume_level !== void 0 ? Math.round(Number(t.attributes.volume_level) * 100) : t.state === "on" ? 100 : 0 : 0;
-  }
-  _onSliderInput(t) {
-    t.stopPropagation();
-    const e = t.target;
-    this._sliderValue = Number(e.value);
-  }
-  _onSliderChange(t) {
-    t.stopPropagation();
-    const e = t.target, a = Number(e.value);
-    if (this._sliderValue = null, !this.config.entity)
-      return;
-    const r = this.config.entity.split(".")[0];
-    r === "light" ? this.hass.callService("light", "turn_on", {
-      entity_id: this.config.entity,
-      brightness_pct: a
-    }) : r === "fan" ? this.hass.callService("fan", "set_percentage", {
-      entity_id: this.config.entity,
-      percentage: a
-    }) : r === "cover" ? this.hass.callService("cover", "set_cover_position", {
-      entity_id: this.config.entity,
-      position: a
-    }) : r === "media_player" && this.hass.callService("media_player", "volume_set", {
-      entity_id: this.config.entity,
-      volume_level: a / 100
-    });
-  }
-  _onIconClick(t) {
-    t.stopPropagation(), this.config.entity && m(this, this.hass, { entity: this.config.entity, tap_action: { action: "more-info" } });
-  }
-  _onMainClick() {
-    if (this.config.button_type === "slider")
-      return;
-    const t = this.config.button_type === "state" ? "more-info" : "toggle", e = {
-      ...this.config,
-      tap_action: this.config.tap_action || { action: t }
-    };
-    m(this, this.hass, e);
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        position: relative;
-        overflow: hidden;
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 12px 16px;
-        cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: var(--aurora-card-shadow);
-        user-select: none;
-      }
-      ha-card.is-on {
-        border-color: var(--aurora-accent-color);
-        box-shadow: 0 8px 28px 0 var(--aurora-accent-glow);
-      }
-      .slider-fill {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, var(--aurora-accent-glow) 0%, rgba(129, 140, 248, 0.38) 100%);
-        pointer-events: none;
-        transition: width 0.1s ease-out;
-        z-index: 0;
-      }
-      .range-input {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: ew-resize;
-        z-index: 2;
-        margin: 0;
-      }
-      .card-content {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-      .icon-container {
-        position: relative;
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--aurora-text-secondary);
-        transition: all 0.25s ease;
-        flex-shrink: 0;
-      }
-      .icon-container.active {
-        background: var(--aurora-accent-color);
-        color: #ffffff;
-        box-shadow: 0 0 16px var(--aurora-accent-glow);
-      }
-      .info-container {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-width: 0;
-      }
-      .title {
-        font-size: 14px;
-        font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .secondary-line {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-        text-transform: capitalize;
-      }
-      .percent-badge {
-        font-weight: 600;
-        color: var(--aurora-accent-color);
-      }
-      .sub-buttons-stack {
-        position: relative;
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-left: auto;
-      }
-      .sub-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        height: 36px;
-        min-width: 36px;
-        padding: 0 10px;
-        border-radius: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--aurora-text-primary);
-        cursor: pointer;
-        font-size: 12px;
-        transition: all 0.2s ease;
-      }
-      .sub-btn.sub-on {
-        background: var(--aurora-accent-color);
-        border-color: var(--aurora-accent-color);
-        color: #ffffff;
-      }
-      .sub-btn.no-bg {
-        background: transparent;
-        border-color: transparent;
-      }
-      .sub-btn:hover {
-        transform: scale(1.05);
-      }
-    `
-    ];
-  }
-};
-dt([
-  u({ attribute: !1 })
-], U.prototype, "hass", void 0);
-dt([
-  u({ attribute: !1 })
-], U.prototype, "config", void 0);
-dt([
-  y()
-], U.prototype, "_sliderValue", void 0);
-U = dt([
-  b("aurora-button-card")
-], U);
-var $t = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let Y = class extends f {
-  render() {
-    if (!this.config)
-      return c``;
-    const t = this.config.name || "Section", e = this.config.icon;
-    return c`
-      <div class="separator-wrapper">
-        ${e ? c`
-              <div class="sep-icon">
-                <ha-icon .icon="${e}"></ha-icon>
-              </div>
-            ` : ""}
-        <span class="sep-title">${t}</span>
-        <div class="sep-line"></div>
-        ${this.config.sub_button && this.config.sub_button.length > 0 ? c`
-              <div class="sep-sub-buttons">
-                ${this.config.sub_button.map((a) => {
-      const r = a.entity ? this.hass?.states[a.entity] : void 0;
-      return c`
-                    <button
-                      class="sep-sub-btn"
-                      @click="${() => m(this, this.hass, a)}"
-                    >
-                      ${a.icon ? c`<ha-icon .icon="${a.icon}"></ha-icon>` : ""}
-                      ${a.show_state && r ? c`<span>${r.state}</span>` : ""}
-                    </button>
-                  `;
-    })}
-              </div>
-            ` : ""}
-      </div>
-    `;
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      .separator-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 8px 4px;
-        color: var(--aurora-text-primary);
-      }
-      .sep-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--aurora-accent-color);
-      }
-      .sep-title {
-        font-size: 15px;
-        font-weight: 600;
-        letter-spacing: 0.4px;
-        white-space: nowrap;
-      }
-      .sep-line {
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.18) 0%,
-          rgba(255, 255, 255, 0.03) 100%
-        );
-      }
-      .sep-sub-buttons {
-        display: flex;
-        gap: 6px;
-      }
-      .sep-sub-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 10px;
-        border-radius: 14px;
-        background: var(--aurora-card-background);
-        border: var(--aurora-card-border);
-        color: var(--aurora-text-secondary);
-        font-size: 12px;
-        cursor: pointer;
-      }
-    `
-    ];
-  }
-};
-$t([
-  u({ attribute: !1 })
-], Y.prototype, "hass", void 0);
-$t([
-  u({ attribute: !1 })
-], Y.prototype, "config", void 0);
-Y = $t([
-  b("aurora-separator-card")
-], Y);
-var Jt = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let gt = class extends f {
-  render() {
-    return c`<div class="empty-column"></div>`;
-  }
-  static {
-    this.styles = g`
-    :host {
-      display: block;
+    .mod-puzzle-icon {
+      color: var(--secondary-text-color, #9b9b9b);
     }
-    .empty-column {
-      min-height: 1px;
-      width: 100%;
+
+    .module-item-accordion[data-active] .mod-puzzle-icon {
+      color: var(--primary-color, #03a9f4);
+    }
+
+    .mod-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-text-color, #ffffff);
+    }
+
+    .unsupported-tag {
+      font-size: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--secondary-text-color, #9b9b9b);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+
+    .module-item-body {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 4px 14px 16px 14px;
+      border-top: 1px solid var(--divider-color, rgba(255, 255, 255, 0.07));
+    }
+
+    /* APPLY TO Bar (Screenshots 7, 11, 12) */
+    .apply-to-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-top: 8px;
+    }
+
+    .apply-to-caption {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    .apply-to-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .apply-pills-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .apply-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       background: transparent;
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.25));
+      border-radius: 18px;
+      color: var(--primary-text-color, #ffffff);
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      --mdc-icon-size: 15px;
+    }
+
+    .apply-pill[data-selected] {
+      background: rgba(3, 169, 244, 0.22);
+      border-color: var(--primary-color, #03a9f4);
+      color: #ffffff;
+    }
+
+    .circle-help-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.25));
+      background: transparent;
+      color: var(--secondary-text-color, #9b9b9b);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .apply-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .icon-tool-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary-text-color, #e1e1e1);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 50%;
+      --mdc-icon-size: 18px;
+    }
+
+    .icon-tool-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .mod-config-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-text-color, #e1e1e1);
+      --mdc-icon-size: 18px;
+    }
+
+    .mod-controls-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .media-dropzone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px dashed var(--divider-color, rgba(255, 255, 255, 0.22));
+      border-radius: 10px;
+      padding: 20px 12px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .media-pick-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(3, 169, 244, 0.18);
+      color: var(--primary-color, #38bdf8);
+      border: 1px solid rgba(3, 169, 244, 0.35);
+      border-radius: 16px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .slider-control-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .slider-label {
+      font-size: 12px;
+      color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    .slider-input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ha-range-slider {
+      flex: 1;
+      accent-color: var(--primary-color, #03a9f4);
+      cursor: pointer;
+    }
+
+    .slider-num-box {
+      width: 58px;
+      background: var(--secondary-background-color, rgba(255, 255, 255, 0.06));
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.15));
+      border-radius: 6px;
+      color: var(--primary-text-color, #ffffff);
+      padding: 6px 8px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .num-circle-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* About This Module & YAML Code Preview (Screenshots 7, 11, 12) */
+    .yaml-code-preview {
+      background: #0c4a6e;
+      color: #e0f2fe;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+
+    .mod-about-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding-top: 6px;
+    }
+
+    .mod-creator-credit {
+      font-size: 11px;
+      color: var(--secondary-text-color, #9b9b9b);
+    }
+
+    .mod-version-badge {
+      background: #0284c7;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* Action Pills Row (Create new Module | Import from YAML - Screenshot 6) */
+    .module-action-pills-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 4px 0;
+    }
+
+    .teal-action-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #0c4a6e;
+      color: #ffffff;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 24px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .teal-action-pill:hover {
+      background: #075985;
+    }
+
+    .secondary-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .import-yaml-drawer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.15));
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Creator Studio View (Screenshots 3, 4, 5) */
+    .creator-studio-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 6px;
+    }
+
+    .creator-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary-text-color, #ffffff);
+      padding: 4px 0;
+    }
+
+    .field-caption-note {
+      font-size: 11px;
+      color: var(--secondary-text-color, #9b9b9b);
+      line-height: 1.4;
+      margin-top: -4px;
+    }
+
+    .creator-sub-section {
+      border-top: 1px solid var(--divider-color, rgba(255, 255, 255, 0.1));
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .creator-sub-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 4px;
+      cursor: pointer;
+    }
+
+    .creator-sub-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 4px 8px 4px;
+    }
+
+    .checkbox-two-col-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 16px;
+      padding-top: 6px;
+      border-top: 1px solid var(--divider-color, rgba(255, 255, 255, 0.08));
+    }
+
+    .ha-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--primary-text-color, #e1e1e1);
+      cursor: pointer;
+    }
+
+    .ha-checkbox-item input[type='checkbox'] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary-color, #03a9f4);
+      cursor: pointer;
+    }
+
+    /* Code Editor Widget with Line Number Gutter (Screenshots 4 & 5) */
+    .aurora-code-widget {
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.14));
+      border-radius: 8px;
+      overflow: hidden;
+      background: #141414;
+    }
+
+    .code-widget-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0c2d48;
+      padding: 6px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .snippet-chips-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .snippet-chip {
+      background: rgba(255, 255, 255, 0.1);
+      color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 10px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-family: monospace;
+      cursor: pointer;
+    }
+
+    .toolbar-icons-right {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-tool-btn {
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      cursor: pointer;
+      padding: 2px 4px;
+      --mdc-icon-size: 16px;
+    }
+
+    .code-gutter-body {
+      display: flex;
+      min-height: 84px;
+    }
+
+    .line-num-gutter {
+      width: 28px;
+      background: #1a1a1a;
+      color: #64748b;
+      font-family: monospace;
+      font-size: 12px;
+      padding: 10px 4px;
+      text-align: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      user-select: none;
+    }
+
+    .gutter-textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #e2e8f0;
+      font-family: monospace;
+      font-size: 13px;
+      padding: 10px;
+      outline: none;
+      resize: vertical;
+    }
+
+    .sub-block-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-text-color, #ffffff);
+      margin-top: 4px;
+    }
+
+    .creator-preview-card {
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.14));
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .export-pills-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .export-full-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: #0c4a6e;
+      color: #ffffff;
+      border: none;
+      border-radius: 28px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .export-full-pill:hover {
+      background: #075985;
+    }
+
+    .creator-bottom-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    /* Module Store Cards */
+    .store-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .store-module-card {
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .store-mod-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .store-mod-desc {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--secondary-text-color, #b0b0b0);
+    }
+
+    .store-mod-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .store-install-btn {
+      padding: 6px 14px;
+      font-size: 12px;
+    }
+
+    .code-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: #141414;
+      color: #e2e8f0;
+      border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.15));
+      border-radius: 8px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .muted-note {
+      margin: 0;
+      font-size: 12px;
+      color: var(--secondary-text-color, #9b9b9b);
     }
   `;
   }
 };
-Jt([
-  u({ attribute: !1 })
-], gt.prototype, "config", void 0);
-gt = Jt([
-  b("aurora-empty-column-card")
-], gt);
-var W = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
+_([
+  oe({ attribute: !1 })
+], m.prototype, "hass", void 0);
+_([
+  f()
+], m.prototype, "_config", void 0);
+_([
+  f()
+], m.prototype, "_activeCategory", void 0);
+_([
+  f()
+], m.prototype, "_moduleSubTab", void 0);
+_([
+  f()
+], m.prototype, "_moduleSearchFilter", void 0);
+_([
+  f()
+], m.prototype, "_pickerOpen", void 0);
+_([
+  f()
+], m.prototype, "_pickerTarget", void 0);
+_([
+  f()
+], m.prototype, "_pickerSearchQuery", void 0);
+_([
+  f()
+], m.prototype, "_pickerDomainFilter", void 0);
+_([
+  f()
+], m.prototype, "_installedModules", void 0);
+_([
+  f()
+], m.prototype, "_expandedModules", void 0);
+_([
+  f()
+], m.prototype, "_moduleInnerAccordions", void 0);
+_([
+  f()
+], m.prototype, "_creatorOpen", void 0);
+_([
+  f()
+], m.prototype, "_importYamlOpen", void 0);
+_([
+  f()
+], m.prototype, "_importYamlText", void 0);
+_([
+  f()
+], m.prototype, "_statusToast", void 0);
+_([
+  f()
+], m.prototype, "_creatorDraft", void 0);
+_([
+  f()
+], m.prototype, "_creatorPreviewMode", void 0);
+_([
+  f()
+], m.prototype, "_creatorPreviewEntity", void 0);
+_([
+  f()
+], m.prototype, "_creatorSections", void 0);
+_([
+  f()
+], m.prototype, "_openSections", void 0);
+m = _([
+  xe("aurora-card-editor")
+], m);
+var qe = Object.defineProperty, Ke = Object.getOwnPropertyDescriptor, L = (a, e, t, o) => {
+  for (var i = o > 1 ? void 0 : o ? Ke(e, t) : e, s = a.length - 1, n; s >= 0; s--)
+    (n = a[s]) && (i = (o ? n(e, t, i) : n(i)) || i);
+  return o && i && qe(e, t, i), i;
 };
-let O = class extends f {
+let A = class extends T {
   constructor() {
-    super(...arguments), this._isOpen = !1, this._childCards = [], this._boundHashListener = () => this._checkHash();
+    super(...arguments), this._sliderTempValue = null, this._subButtonsCollapsed = !1, this._holdTimer = null, this._holdTriggered = !1;
   }
-  connectedCallback() {
-    super.connectedCallback(), window.addEventListener("hashchange", this._boundHashListener), window.addEventListener("location-changed", this._boundHashListener), this._checkHash();
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback(), window.removeEventListener("hashchange", this._boundHashListener), window.removeEventListener("location-changed", this._boundHashListener), this._clearTimer();
-  }
-  updated(t) {
-    t.has("config") && this.config?.cards && this._buildChildCards(), t.has("hass") && this._childCards.length > 0 && this._childCards.forEach((e) => {
-      e && (e.hass = this.hass);
-    });
-  }
-  async _buildChildCards() {
-    if (!this.config?.cards || !Array.isArray(this.config.cards)) {
-      this._childCards = [];
-      return;
-    }
-    const t = await window.loadCardHelpers?.(), e = [];
-    for (const a of this.config.cards)
-      try {
-        let r;
-        if (t)
-          r = await t.createCardElement(a);
-        else {
-          const i = a.type.startsWith("custom:") ? a.type.replace("custom:", "") : `hui-${a.type}-card`;
-          r = document.createElement(i), r.setConfig && r.setConfig(a);
-        }
-        this.hass && (r.hass = this.hass), e.push(r);
-      } catch (r) {
-        console.error("Aurora Pop-up child card error:", r);
-      }
-    this._childCards = e;
-  }
-  _checkHash() {
-    const t = this.config?.hash || "#aurora-popup", e = t.startsWith("#") ? t : `#${t}`, a = window.location.hash === e;
-    a !== this._isOpen && (this._isOpen = a, this._isOpen && this.config?.auto_close ? (this._clearTimer(), this._autoCloseTimer = window.setTimeout(() => {
-      this._closePopUp();
-    }, this.config.auto_close)) : this._clearTimer());
-  }
-  _clearTimer() {
-    this._autoCloseTimer && (clearTimeout(this._autoCloseTimer), this._autoCloseTimer = void 0);
-  }
-  _closePopUp() {
-    this._clearTimer(), window.location.hash === (this.config?.hash || "#aurora-popup") && (history.replaceState(null, "", window.location.pathname + window.location.search), w(window, "location-changed", {})), this._isOpen = !1;
-  }
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.hash || "#aurora-popup", e = this.config.entity ? this.hass.states[this.config.entity] : void 0, a = this.config.name || e?.attributes.friendly_name || "Aurora Pop-up", r = this.config.icon || e?.attributes.icon || "mdi:layers-triple-outline";
-    return c`
-      <!-- Compact trigger bar always visible in editor or dashboard to open the Pop-up -->
-      <div class="popup-trigger-bar" @click="${() => this._openPopUp(t)}">
-        <div class="trigger-left">
-          <ha-icon .icon="${r}"></ha-icon>
-          <span>${a}</span>
-          <span class="hash-pill">${t}</span>
-        </div>
-        <ha-icon icon="mdi:arrow-expand-all"></ha-icon>
-      </div>
-
-      ${this._isOpen ? c`
-            <div
-              class="popup-backdrop"
-              style="--popup-blur: ${this.config.backdrop_blur ?? 18}px"
-              @click="${this._closePopUp}"
-            >
-              <div
-                class="popup-sheet"
-                @click="${(i) => {
-      i.stopPropagation(), this.config.close_on_click && this._closePopUp();
-    }}"
-              >
-                <div class="sheet-handle-bar" @click="${this._closePopUp}">
-                  <div class="sheet-pill"></div>
-                </div>
-
-                <div class="sheet-header">
-                  <div class="header-main" @click="${() => m(this, this.hass, this.config)}">
-                    <div class="header-icon">
-                      <ha-icon .icon="${r}"></ha-icon>
-                    </div>
-                    <div class="header-titles">
-                      <span class="header-name">${a}</span>
-                      ${e ? c`<span class="header-state">${e.state}</span>` : ""}
-                    </div>
-                  </div>
-
-                  <button class="close-btn" @click="${this._closePopUp}">
-                    <ha-icon icon="mdi:close"></ha-icon>
-                  </button>
-                </div>
-
-                <div class="sheet-body">
-                  ${this._childCards.length > 0 ? this._childCards.map((i) => c`<div class="child-card-slot">${i}</div>`) : c`
-                        <div class="empty-hint">
-                          Pop-up active (${t}). Add child cards via the <code>cards:</code> array in YAML or the editor.
-                        </div>
-                      `}
-                </div>
-              </div>
-            </div>
-          ` : ""}
-    `;
-  }
-  _openPopUp(t) {
-    const e = t.startsWith("#") ? t : `#${t}`;
-    window.location.hash = e, w(window, "location-changed", {});
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      .popup-trigger-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 14px;
-        border-radius: var(--aurora-card-border-radius);
-        background: var(--aurora-card-background);
-        border: 1px dashed rgba(129, 140, 248, 0.35);
-        color: var(--aurora-text-primary);
-        cursor: pointer;
-        font-size: 13px;
-      }
-      .trigger-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .hash-pill {
-        padding: 2px 8px;
-        border-radius: 10px;
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-        font-family: monospace;
-        font-size: 11px;
-      }
-      .popup-backdrop {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        background: rgba(8, 12, 24, 0.65);
-        backdrop-filter: blur(var(--popup-blur, 18px)) saturate(160%);
-        -webkit-backdrop-filter: blur(var(--popup-blur, 18px)) saturate(160%);
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        animation: fadeIn 0.22s ease-out;
-      }
-      @media (min-width: 768px) {
-        .popup-backdrop {
-          align-items: center;
-        }
-      }
-      .popup-sheet {
-        width: 100%;
-        max-width: 540px;
-        max-height: 86vh;
-        background: var(--aurora-card-background);
-        border: var(--aurora-card-border);
-        border-radius: 28px 28px 0 0;
-        padding: 12px 18px 24px 18px;
-        box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.65);
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        overflow-y: auto;
-        animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      @media (min-width: 768px) {
-        .popup-sheet {
-          border-radius: 28px;
-        }
-      }
-      .sheet-handle-bar {
-        display: flex;
-        justify-content: center;
-        padding: 4px 0;
-        cursor: pointer;
-      }
-      .sheet-pill {
-        width: 42px;
-        height: 5px;
-        border-radius: 3px;
-        background: rgba(255, 255, 255, 0.25);
-      }
-      .sheet-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .header-main {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-      }
-      .header-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .header-titles {
-        display: flex;
-        flex-direction: column;
-      }
-      .header-name {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--aurora-text-primary);
-      }
-      .header-state {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-        text-transform: capitalize;
-      }
-      .close-btn {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--aurora-text-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
-      .sheet-body {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .empty-hint {
-        padding: 20px;
-        text-align: center;
-        font-size: 13px;
-        color: var(--aurora-text-secondary);
-        border: 1px dashed rgba(255, 255, 255, 0.15);
-        border-radius: 14px;
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      @keyframes slideUp {
-        from { transform: translateY(40px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-      }
-    `
-    ];
-  }
-};
-W([
-  u({ attribute: !1 })
-], O.prototype, "hass", void 0);
-W([
-  u({ attribute: !1 })
-], O.prototype, "config", void 0);
-W([
-  y()
-], O.prototype, "_isOpen", void 0);
-W([
-  y()
-], O.prototype, "_childCards", void 0);
-O = W([
-  b("aurora-pop-up-card")
-], O);
-var pt = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let q = class extends f {
-  constructor() {
-    super(...arguments), this._dragPos = null;
-  }
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.entity, e = t ? this.hass.states[t] : void 0, a = e ? e.state : "unavailable", r = e?.attributes.current_position ?? (a === "open" ? 100 : 0), i = this._dragPos !== null ? this._dragPos : r, s = this.config.name || e?.attributes.friendly_name || "Cover", n = this.config.icon || e?.attributes.icon || (i > 0 ? "mdi:window-shutter-open" : "mdi:window-shutter");
-    return c`
-      <ha-card>
-        <div class="cover-top">
-          <div class="cover-identity" @click="${() => m(this, this.hass, { entity: t, tap_action: { action: "more-info" } })}">
-            <div class="cover-icon ${i > 0 ? "open" : ""}">
-              <ha-icon .icon="${n}"></ha-icon>
-            </div>
-            <div class="cover-meta">
-              <span class="title">${s}</span>
-              <span class="subtitle">${a} •${Math.round(i)}%</span>
-            </div>
-          </div>
-
-          <div class="cover-actions">
-            <button class="ctrl-btn" @click="${() => this._callCover("open_cover")}" title="Open">
-              <ha-icon icon="mdi:arrow-up"></ha-icon>
-            </button>
-            <button class="ctrl-btn" @click="${() => this._callCover("stop_cover")}" title="Stop">
-              <ha-icon icon="mdi:stop"></ha-icon>
-            </button>
-            <button class="ctrl-btn" @click="${() => this._callCover("close_cover")}" title="Close">
-              <ha-icon icon="mdi:arrow-down"></ha-icon>
-            </button>
-          </div>
-        </div>
-
-        <div class="position-rail">
-          <div class="position-fill" style="width: ${i}%"></div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            .value="${String(i)}"
-            @input="${(l) => {
-      this._dragPos = Number(l.target.value);
-    }}"
-            @change="${(l) => {
-      const d = Number(l.target.value);
-      this._dragPos = null, t && this.hass.callService("cover", "set_cover_position", {
-        entity_id: t,
-        position: d
-      });
-    }}"
-          />
-        </div>
-      </ha-card>
-    `;
-  }
-  _callCover(t) {
-    this.config.entity && this.hass.callService("cover", t, { entity_id: this.config.entity });
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 14px 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .cover-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-      }
-      .cover-identity {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-        min-width: 0;
-      }
-      .cover-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--aurora-text-secondary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .cover-icon.open {
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-      }
-      .cover-meta {
-        display: flex;
-        flex-direction: column;
-      }
-      .title {
-        font-size: 14px;
-        font-weight: 600;
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-        text-transform: capitalize;
-      }
-      .cover-actions {
-        display: flex;
-        gap: 6px;
-      }
-      .ctrl-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--aurora-text-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-      .ctrl-btn:hover {
-        background: var(--aurora-accent-color);
-        border-color: var(--aurora-accent-color);
-      }
-      .position-rail {
-        position: relative;
-        height: 10px;
-        border-radius: 5px;
-        background: rgba(255, 255, 255, 0.08);
-        overflow: hidden;
-      }
-      .position-fill {
-        height: 100%;
-        background: var(--aurora-accent-color);
-        border-radius: 5px;
-        transition: width 0.1s ease;
-      }
-      .position-rail input[type='range'] {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: ew-resize;
-        margin: 0;
-      }
-    `
-    ];
-  }
-};
-pt([
-  u({ attribute: !1 })
-], q.prototype, "hass", void 0);
-pt([
-  u({ attribute: !1 })
-], q.prototype, "config", void 0);
-pt([
-  y()
-], q.prototype, "_dragPos", void 0);
-q = pt([
-  b("aurora-cover-card")
-], q);
-var wt = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let K = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.entity, e = t ? this.hass.states[t] : void 0, a = e ? e.state : "off", r = e?.attributes.hvac_action || a, i = e?.attributes.current_temperature ?? "--", s = e?.attributes.temperature ?? 20, n = this.config.step || e?.attributes.target_temp_step || 0.5, l = e?.attributes.hvac_modes || ["off", "heat", "auto"], d = this.config.name || e?.attributes.friendly_name || "Climate", p = this.config.icon || e?.attributes.icon || "mdi:thermostat";
-    return c`
-      <ha-card class="mode-${a}">
-        <div class="climate-header">
-          <div
-            class="climate-id"
-            @click="${() => m(this, this.hass, { entity: t, tap_action: { action: "more-info" } })}"
-          >
-            <div class="climate-icon ${r}">
-              <ha-icon .icon="${p}"></ha-icon>
-            </div>
-            <div class="climate-titles">
-              <span class="title">${d}</span>
-              <span class="subtitle">${r} • Current: ${i}°</span>
-            </div>
-          </div>
-
-          <div class="temp-stepper">
-            <button class="step-btn" @click="${() => this._adjustTemp(Number(s) - n)}">
-              <ha-icon icon="mdi:minus"></ha-icon>
-            </button>
-            <span class="target-val">${s}°</span>
-            <button class="step-btn" @click="${() => this._adjustTemp(Number(s) + n)}">
-              <ha-icon icon="mdi:plus"></ha-icon>
-            </button>
-          </div>
-        </div>
-
-        <div class="hvac-modes-bar">
-          ${l.map((h) => c`
-              <button
-                class="mode-pill ${h === a ? "active" : ""}"
-                @click="${() => this._setHvacMode(h)}"
-              >
-                ${h}
-              </button>
-            `)}
-        </div>
-      </ha-card>
-    `;
-  }
-  _adjustTemp(t) {
-    this.config.entity && this.hass.callService("climate", "set_temperature", {
-      entity_id: this.config.entity,
-      temperature: t
-    });
-  }
-  _setHvacMode(t) {
-    this.config.entity && this.hass.callService("climate", "set_hvac_mode", {
-      entity_id: this.config.entity,
-      hvac_mode: t
-    });
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 14px 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      ha-card.mode-heat {
-        border-color: rgba(249, 115, 22, 0.45);
-      }
-      ha-card.mode-cool {
-        border-color: rgba(56, 189, 248, 0.45);
-      }
-      .climate-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-      }
-      .climate-id {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-      }
-      .climate-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--aurora-text-secondary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .climate-icon.heating,
-      .climate-icon.heat {
-        background: rgba(249, 115, 22, 0.2);
-        color: #fb923c;
-      }
-      .climate-icon.cooling,
-      .climate-icon.cool {
-        background: rgba(56, 189, 248, 0.2);
-        color: #38bdf8;
-      }
-      .climate-titles {
-        display: flex;
-        flex-direction: column;
-      }
-      .title {
-        font-size: 14px;
-        font-weight: 600;
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-        text-transform: capitalize;
-      }
-      .temp-stepper {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.05);
-        padding: 4px 8px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .step-btn {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--aurora-text-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
-      .step-btn:hover {
-        background: var(--aurora-accent-color);
-      }
-      .target-val {
-        font-size: 15px;
-        font-weight: 700;
-        min-width: 38px;
-        text-align: center;
-      }
-      .hvac-modes-bar {
-        display: flex;
-        gap: 6px;
-      }
-      .mode-pill {
-        flex: 1;
-        padding: 6px 0;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.04);
-        color: var(--aurora-text-secondary);
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: capitalize;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-      .mode-pill.active {
-        background: var(--aurora-accent-color);
-        border-color: var(--aurora-accent-color);
-        color: #ffffff;
-      }
-    `
-    ];
-  }
-};
-wt([
-  u({ attribute: !1 })
-], K.prototype, "hass", void 0);
-wt([
-  u({ attribute: !1 })
-], K.prototype, "config", void 0);
-K = wt([
-  b("aurora-climate-card")
-], K);
-var ut = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let I = class extends f {
-  constructor() {
-    super(...arguments), this._volDrag = null;
-  }
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.entity, e = t ? this.hass.states[t] : void 0, a = e ? e.state : "off", r = a === "playing", i = e?.attributes.media_title || this.config.name || e?.attributes.friendly_name || "Media Player", s = e?.attributes.media_artist || a, n = e?.attributes.entity_picture, l = this._volDrag !== null ? this._volDrag : Math.round((e?.attributes.volume_level ?? 0.5) * 100);
-    return c`
-      <ha-card class="${r ? "playing" : ""}">
-        ${n ? c`<div class="artwork-bg" style="background-image: url('${n}')"></div>` : ""}
-
-        <div class="media-content">
-          <div class="media-top">
-            <div
-              class="album-thumb"
-              @click="${() => m(this, this.hass, { entity: t, tap_action: { action: "more-info" } })}"
-            >
-              ${n ? c`<img src="${n}" alt="Album Art" />` : c`<ha-icon icon="mdi:music-note"></ha-icon>`}
-            </div>
-
-            <div class="track-info">
-              <span class="track-title">${i}</span>
-              <span class="track-artist">${s}</span>
-            </div>
-
-            <div class="transport-controls">
-              <button class="t-btn" @click="${() => this._mediaCmd("media_previous_track")}">
-                <ha-icon icon="mdi:skip-previous"></ha-icon>
-              </button>
-              <button class="t-btn play-btn" @click="${() => this._mediaCmd("media_play_pause")}">
-                <ha-icon .icon="${r ? "mdi:pause" : "mdi:play"}"></ha-icon>
-              </button>
-              <button class="t-btn" @click="${() => this._mediaCmd("media_next_track")}">
-                <ha-icon icon="mdi:skip-next"></ha-icon>
-              </button>
-            </div>
-          </div>
-
-          <div class="volume-row">
-            <ha-icon icon="mdi:volume-medium"></ha-icon>
-            <div class="vol-slider-wrap">
-              <div class="vol-fill" style="width: ${l}%"></div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                .value="${String(l)}"
-                @input="${(d) => {
-      this._volDrag = Number(d.target.value);
-    }}"
-                @change="${(d) => {
-      const p = Number(d.target.value);
-      this._volDrag = null, t && this.hass.callService("media_player", "volume_set", {
-        entity_id: t,
-        volume_level: p / 100
-      });
-    }}"
-              />
-            </div>
-            <span class="vol-pct">${l}%</span>
-          </div>
-        </div>
-      </ha-card>
-    `;
-  }
-  _mediaCmd(t) {
-    this.config.entity && this.hass.callService("media_player", t, { entity_id: this.config.entity });
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        position: relative;
-        overflow: hidden;
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 14px 16px;
-        box-shadow: var(--aurora-card-shadow);
-      }
-      ha-card.playing {
-        border-color: var(--aurora-accent-color);
-      }
-      .artwork-bg {
-        position: absolute;
-        inset: 0;
-        background-size: cover;
-        background-position: center;
-        filter: blur(26px) brightness(0.45);
-        transform: scale(1.15);
-        z-index: 0;
-        opacity: 0.65;
-      }
-      .media-content {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .media-top {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .album-thumb {
-        width: 46px;
-        height: 46px;
-        border-radius: 12px;
-        overflow: hidden;
-        background: rgba(255, 255, 255, 0.08);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        flex-shrink: 0;
-      }
-      .album-thumb img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .track-info {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-width: 0;
-      }
-      .track-title {
-        font-size: 14px;
-        font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .track-artist {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-transform: capitalize;
-      }
-      .transport-controls {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .t-btn {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--aurora-text-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
-      .t-btn.play-btn {
-        width: 40px;
-        height: 40px;
-        background: var(--aurora-accent-color);
-        color: #ffffff;
-      }
-      .volume-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--aurora-text-secondary);
-        font-size: 12px;
-      }
-      .vol-slider-wrap {
-        position: relative;
-        flex: 1;
-        height: 8px;
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 0.12);
-        overflow: hidden;
-      }
-      .vol-fill {
-        height: 100%;
-        background: var(--aurora-accent-color);
-      }
-      .vol-slider-wrap input[type='range'] {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: ew-resize;
-        margin: 0;
-      }
-      .vol-pct {
-        min-width: 32px;
-        text-align: right;
-      }
-    `
-    ];
-  }
-};
-ut([
-  u({ attribute: !1 })
-], I.prototype, "hass", void 0);
-ut([
-  u({ attribute: !1 })
-], I.prototype, "config", void 0);
-ut([
-  y()
-], I.prototype, "_volDrag", void 0);
-I = ut([
-  b("aurora-media-card")
-], I);
-var F = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let M = class extends f {
-  constructor() {
-    super(...arguments), this._executing = !1, this._currentStepIndex = 0;
-  }
-  setConfig(t) {
-    this.config = t;
-  }
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.entity ? this.hass.states[this.config.entity] : void 0, e = this.config.name || t?.attributes.friendly_name || "Routine Macro", a = this.config.icon || t?.attributes.icon || "mdi:flash-auto", r = this.config.macro_steps || [], i = r.length > 0 ? r.length : 1, s = this._executing ? Math.round((this._currentStepIndex + 1) / i * 100) : 0;
-    return c`
-      <ha-card class="${this._executing ? "is-running" : ""}" @click="${this._runSequence}">
-        <div class="progress-bar" style="width: ${s}%"></div>
-
-        <div class="macro-container">
-          <div class="icon-wrapper ${this._executing ? "pulse" : ""}">
-            <ha-icon .icon="${this._executing ? "mdi:loading" : a}"></ha-icon>
-          </div>
-
-          <div class="macro-info">
-            <span class="title">${e}</span>
-            <span class="subtitle">
-              ${this._executing ? `Executing step ${this._currentStepIndex + 1} of ${i}...` : r.length > 0 ? `${r.length} sequential actions ready` : t ? `Target: ${t.entity_id}` : "Tap to trigger macro"}
-            </span>
-          </div>
-
-          <div class="badge-pill">
-            ${this._executing ? `${s}%` : "RUN"}
-          </div>
-        </div>
-      </ha-card>
-    `;
-  }
-  async _runSequence() {
-    if (this._executing || !this.hass || !this.config)
-      return;
-    this._executing = !0, this._currentStepIndex = 0;
-    const t = this.config.macro_steps && this.config.macro_steps.length > 0 ? this.config.macro_steps : [
-      {
-        service: this.config.tap_action?.service || (this.config.entity?.startsWith("scene.") ? "scene.turn_on" : "homeassistant.toggle"),
-        entity_id: this.config.entity,
-        data: this.config.tap_action?.service_data
-      }
-    ];
-    try {
-      for (let e = 0; e < t.length; e++) {
-        this._currentStepIndex = e;
-        const a = t[e];
-        if (a.service) {
-          const [r, i] = a.service.split("."), s = { ...a.data || {} };
-          a.entity_id && !s.entity_id && (s.entity_id = a.entity_id), await this.hass.callService(r, i, s);
-        }
-        a.delay_ms && a.delay_ms > 0 && await new Promise((r) => setTimeout(r, a.delay_ms));
-      }
-    } catch (e) {
-      console.error("Aurora Routine Macro execution error:", e);
-    } finally {
-      setTimeout(() => {
-        this._executing = !1, this._currentStepIndex = 0;
-      }, 700);
-    }
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        position: relative;
-        overflow: hidden;
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 14px 16px;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: var(--aurora-card-shadow);
-      }
-      ha-card:hover,
-      ha-card.is-running {
-        border-color: var(--aurora-accent-color);
-        box-shadow: 0 10px 32px 0 var(--aurora-accent-glow);
-      }
-      .progress-bar {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        height: 3px;
-        background: var(--aurora-accent-color);
-        transition: width 0.25s ease;
-      }
-      .macro-container {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-      .icon-wrapper {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-      }
-      .pulse ha-icon {
-        animation: spin 1s linear infinite;
-      }
-      @keyframes spin {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      .macro-info {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-        flex: 1;
-        min-width: 0;
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-      }
-      .badge-pill {
-        padding: 5px 12px;
-        border-radius: 14px;
-        background: rgba(129, 140, 248, 0.18);
-        border: 1px solid rgba(129, 140, 248, 0.35);
-        color: var(--aurora-accent-color);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.6px;
-      }
-    `
-    ];
-  }
-};
-F([
-  u({ attribute: !1 })
-], M.prototype, "hass", void 0);
-F([
-  u({ attribute: !1 })
-], M.prototype, "config", void 0);
-F([
-  y()
-], M.prototype, "_executing", void 0);
-F([
-  y()
-], M.prototype, "_currentStepIndex", void 0);
-M = F([
-  b("aurora-routine-macro-card")
-], M);
-var kt = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let X = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this._readVal(this.config.solar_entity), e = this._readVal(this.config.grid_entity || this.config.entity), a = this._readVal(this.config.battery_entity), r = this.config.home_entity ? this._readVal(this.config.home_entity) : Math.max(0, t + e), i = this.config.tariff_entity ? this.hass.states[this.config.tariff_entity]?.state : void 0, s = this.config.name || "Energy Flow Matrix";
-    return c`
-      <ha-card>
-        <div class="energy-header">
-          <div class="header-left">
-            <ha-icon .icon="${this.config.icon || "mdi:transmission-tower"}"></ha-icon>
-            <span class="title">${s}</span>
-          </div>
-          ${i ? c`<span class="tariff-badge">${i}</span>` : c`<span class="tariff-badge">Live Telemetry</span>`}
-        </div>
-
-        <div class="flow-grid">
-          <!-- Solar Node -->
-          <div
-            class="node solar ${t > 0 ? "active" : ""}"
-            @click="${() => this._openMoreInfo(this.config.solar_entity)}"
-          >
-            <ha-icon icon="mdi:solar-power-variant"></ha-icon>
-            <span class="node-label">Solar</span>
-            <span class="node-val">${t} W</span>
-          </div>
-
-          <!-- Grid Node -->
-          <div
-            class="node grid ${e !== 0 ? "active" : ""}"
-            @click="${() => this._openMoreInfo(this.config.grid_entity || this.config.entity)}"
-          >
-            <ha-icon icon="mdi:transmission-tower"></ha-icon>
-            <span class="node-label">${e < 0 ? "Export" : "Grid"}</span>
-            <span class="node-val">${Math.abs(e)} W</span>
-          </div>
-
-          <!-- Home Consumption Node -->
-          <div
-            class="node home active"
-            @click="${() => this._openMoreInfo(this.config.home_entity)}"
-          >
-            <ha-icon icon="mdi:home-lightning-bolt-outline"></ha-icon>
-            <span class="node-label">Home</span>
-            <span class="node-val">${r} W</span>
-          </div>
-
-          <!-- Battery / Storage Node -->
-          <div
-            class="node battery ${a > 0 ? "active" : ""}"
-            @click="${() => this._openMoreInfo(this.config.battery_entity)}"
-          >
-            <ha-icon icon="mdi:battery-charging-80"></ha-icon>
-            <span class="node-label">Storage</span>
-            <span class="node-val">${a}${this.config.battery_entity?.includes("soc") ? "%" : " W"}</span>
-          </div>
-        </div>
-
-        <div class="distribution-bar">
-          <div
-            class="seg solar-seg"
-            style="flex: ${Math.max(1, t)}"
-            title="Solar Contribution"
-          ></div>
-          <div
-            class="seg grid-seg"
-            style="flex: ${Math.max(1, Math.abs(e))}"
-            title="Grid Contribution"
-          ></div>
-        </div>
-      </ha-card>
-    `;
-  }
-  _readVal(t) {
-    if (!t || !this.hass.states[t])
-      return 0;
-    const e = parseFloat(this.hass.states[t].state);
-    return isNaN(e) ? 0 : Math.round(e);
-  }
-  _openMoreInfo(t) {
-    t && m(this, this.hass, { entity: t, tap_action: { action: "more-info" } });
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-      .energy-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .header-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--aurora-accent-color);
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--aurora-text-primary);
-      }
-      .tariff-badge {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 4px 10px;
-        border-radius: 12px;
-        background: rgba(16, 185, 129, 0.16);
-        color: #34d399;
-        border: 1px solid rgba(16, 185, 129, 0.3);
-      }
-      .flow-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-      }
-      .node {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-        padding: 10px 6px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-      .node:hover {
-        transform: translateY(-2px);
-        border-color: var(--aurora-accent-color);
-      }
-      .node.solar.active ha-icon {
-        color: #facc15;
-      }
-      .node.grid.active ha-icon {
-        color: #38bdf8;
-      }
-      .node.home.active ha-icon {
-        color: var(--aurora-accent-color);
-      }
-      .node.battery.active ha-icon {
-        color: #34d399;
-      }
-      .node-label {
-        font-size: 11px;
-        color: var(--aurora-text-secondary);
-      }
-      .node-val {
-        font-size: 13px;
-        font-weight: 700;
-      }
-      .distribution-bar {
-        display: flex;
-        height: 6px;
-        border-radius: 3px;
-        overflow: hidden;
-        gap: 3px;
-        background: rgba(255, 255, 255, 0.06);
-      }
-      .solar-seg {
-        background: #facc15;
-      }
-      .grid-seg {
-        background: #38bdf8;
-      }
-    `
-    ];
-  }
-};
-kt([
-  u({ attribute: !1 })
-], X.prototype, "hass", void 0);
-kt([
-  u({ attribute: !1 })
-], X.prototype, "config", void 0);
-X = kt([
-  b("aurora-energy-flow-card")
-], X);
-var ht = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let L = class extends f {
-  constructor() {
-    super(...arguments), this._selectedCamIndex = 0;
-  }
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.cameras && this.config.cameras.length > 0 ? this.config.cameras : this.config.entity ? [this.config.entity] : [], e = t[this._selectedCamIndex] || t[0], a = e ? this.hass.states[e] : void 0, r = a?.attributes.entity_picture, i = this.config.alarm_entity, s = i ? this.hass.states[i]?.state : void 0, n = this.config.doorbell_chime_entity ? this.hass.states[this.config.doorbell_chime_entity] : void 0, l = this.config.doorbell_motion_entity ? this.hass.states[this.config.doorbell_motion_entity] : void 0;
-    return c`
-      <ha-card>
-        <div class="sec-header">
-          <div class="sec-title-group">
-            <ha-icon .icon="${this.config.icon || "mdi:shield-home"}"></ha-icon>
-            <div class="sec-titles">
-              <span class="title">${this.config.name || "Security & Perimeter Hub"}</span>
-              <span class="subtitle">
-                ${s ? `Alarm: ${s.replace("_", " ")}` : "Perimeter Active"}
-              </span>
-            </div>
-          </div>
-
-          ${t.length > 1 ? c`
-                <div class="cam-tabs">
-                  ${t.map((d, p) => c`
-                      <button
-                        class="cam-tab ${p === this._selectedCamIndex ? "active" : ""}"
-                        @click="${() => this._selectedCamIndex = p}"
-                      >
-                        Cam ${p + 1}
-                      </button>
-                    `)}
-                </div>
-              ` : ""}
-        </div>
-
-        <!-- Camera / Doorbell Viewport -->
-        <div
-          class="camera-viewport"
-          @click="${() => e && m(this, this.hass, { entity: e, tap_action: { action: "more-info" } })}"
-        >
-          ${r ? c`<img src="${r}" alt="${e}" />` : c`
-                <div class="cam-fallback">
-                  <ha-icon icon="mdi:cctv"></ha-icon>
-                  <span>${a?.attributes.friendly_name || e || "Camera Stream Ready"}</span>
-                </div>
-              `}
-          <div class="live-pill">
-            <span class="dot"></span>
-            LIVE
-          </div>
-        </div>
-
-        <!-- Doorbell / Perimeter Status Pills (Chime, Entryway Doorbell, Motion) -->
-        <div class="telemetry-pills">
-          ${e ? c`
-                <div
-                  class="t-pill"
-                  @click="${() => m(this, this.hass, { entity: e, tap_action: { action: "more-info" } })}"
-                >
-                  <ha-icon icon="mdi:doorbell-video"></ha-icon>
-                  <span>${a?.attributes.friendly_name || "Entryway Doorbell"}: ${a?.state || "Ready"}</span>
-                </div>
-              ` : ""}
-          ${n ? c`
-                <div
-                  class="t-pill"
-                  @click="${() => m(this, this.hass, { entity: n.entity_id, tap_action: { action: "toggle" } })}"
-                >
-                  <ha-icon icon="mdi:bell-ring-outline"></ha-icon>
-                  <span>Chime: ${n.state}</span>
-                </div>
-              ` : ""}
-          ${l ? c`
-                <div class="t-pill ${l.state === "on" ? "alert" : ""}">
-                  <ha-icon icon="mdi:motion-sensor"></ha-icon>
-                  <span>Motion: ${l.state}</span>
-                </div>
-              ` : ""}
-        </div>
-
-        ${i ? c`
-              <div class="alarm-actions">
-                <button @click="${() => this._setAlarm("alarm_arm_home")}">Arm Home</button>
-                <button @click="${() => this._setAlarm("alarm_arm_away")}">Arm Away</button>
-                <button class="disarm" @click="${() => this._setAlarm("alarm_disarm")}">Disarm</button>
-              </div>
-            ` : ""}
-      </ha-card>
-    `;
-  }
-  _setAlarm(t) {
-    this.config.alarm_entity && this.hass.callService("alarm_control_panel", t, {
-      entity_id: this.config.alarm_entity
-    });
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .sec-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .sec-title-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--aurora-accent-color);
-      }
-      .sec-titles {
-        display: flex;
-        flex-direction: column;
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--aurora-text-primary);
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-        text-transform: capitalize;
-      }
-      .cam-tabs {
-        display: flex;
-        gap: 6px;
-      }
-      .cam-tab {
-        padding: 4px 10px;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--aurora-text-secondary);
-        font-size: 11px;
-        cursor: pointer;
-      }
-      .cam-tab.active {
-        background: var(--aurora-accent-color);
-        color: #ffffff;
-        border-color: var(--aurora-accent-color);
-      }
-      .camera-viewport {
-        position: relative;
-        height: 165px;
-        border-radius: 14px;
-        overflow: hidden;
-        background: rgba(10, 14, 24, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .camera-viewport img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .cam-fallback {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-        color: var(--aurora-text-secondary);
-        font-size: 12px;
-      }
-      .live-pill {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 3px 9px;
-        border-radius: 10px;
-        background: rgba(239, 68, 68, 0.85);
-        color: #ffffff;
-        font-size: 10px;
-        font-weight: 700;
-      }
-      .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #ffffff;
-      }
-      .telemetry-pills {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .t-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 10px;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 12px;
-        cursor: pointer;
-      }
-      .t-pill.alert {
-        background: rgba(239, 68, 68, 0.2);
-        border-color: rgba(239, 68, 68, 0.5);
-        color: #fca5a5;
-      }
-      .alarm-actions {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-      }
-      .alarm-actions button {
-        padding: 8px;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--aurora-text-primary);
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-      }
-      .alarm-actions button:hover {
-        background: var(--aurora-accent-color);
-      }
-    `
-    ];
-  }
-};
-ht([
-  u({ attribute: !1 })
-], L.prototype, "hass", void 0);
-ht([
-  u({ attribute: !1 })
-], L.prototype, "config", void 0);
-ht([
-  y()
-], L.prototype, "_selectedCamIndex", void 0);
-L = ht([
-  b("aurora-security-matrix-card")
-], L);
-var At = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let tt = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.entity || "weather.home", e = this.hass.states[t], a = e ? e.state : "partlycloudy", r = e?.attributes.temperature ?? "--", i = e?.attributes.humidity ?? "--", s = e?.attributes.wind_speed ?? "--", n = this.config.dew_point_entity ? this.hass.states[this.config.dew_point_entity]?.state : this._calcDewPoint(Number(r), Number(i)), l = this.config.vpd_entity ? this.hass.states[this.config.vpd_entity]?.state : this._calcVpd(Number(r), Number(i)), d = this.config.discomfort_entity ? this.hass.states[this.config.discomfort_entity]?.state : this._calcThomDi(Number(r), Number(i));
-    return c`
-      <ha-card
-        @click="${() => m(this, this.hass, { entity: t, tap_action: { action: "more-info" } })}"
-      >
-        <div class="weather-top">
-          <div class="weather-main">
-            <div class="weather-icon">
-              <ha-icon .icon="${this.config.icon || "mdi:weather-partly-cloudy"}"></ha-icon>
-            </div>
-            <div class="weather-primary">
-              <span class="title">${this.config.name || e?.attributes.friendly_name || "Atmosphere & Microclimate"}</span>
-              <span class="condition-text">${a} • Wind ${s} km/h</span>
-            </div>
-          </div>
-
-          <div class="temp-readout">${r}°</div>
-        </div>
-
-        <div class="microclimate-grid">
-          <div class="metric-box">
-            <span class="m-label">Humidity</span>
-            <span class="m-val">${i}%</span>
-          </div>
-          <div class="metric-box">
-            <span class="m-label">Dew Point</span>
-            <span class="m-val">${n}°C</span>
-          </div>
-          <div class="metric-box">
-            <span class="m-label">VPD</span>
-            <span class="m-val">${l} kPa</span>
-          </div>
-          <div class="metric-box">
-            <span class="m-label">Thom DI</span>
-            <span class="m-val">${d}</span>
-          </div>
-        </div>
-      </ha-card>
-    `;
-  }
-  _calcDewPoint(t, e) {
-    if (isNaN(t) || isNaN(e) || e <= 0)
-      return "--";
-    const a = 17.27, r = 237.7, i = a * t / (r + t) + Math.log(e / 100);
-    return (r * i / (a - i)).toFixed(1);
-  }
-  _calcVpd(t, e) {
-    return isNaN(t) || isNaN(e) ? "--" : (0.61078 * Math.exp(17.27 * t / (t + 237.3)) * (1 - e / 100)).toFixed(2);
-  }
-  _calcThomDi(t, e) {
-    return isNaN(t) || isNaN(e) ? "--" : (t - 0.55 * (1 - 0.01 * e) * (t - 14.5)).toFixed(1);
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        cursor: pointer;
-      }
-      .weather-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .weather-main {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .weather-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .weather-primary {
-        display: flex;
-        flex-direction: column;
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-      }
-      .condition-text {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-        text-transform: capitalize;
-      }
-      .temp-readout {
-        font-size: 26px;
-        font-weight: 700;
-        color: var(--aurora-accent-color);
-      }
-      .microclimate-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-      }
-      .metric-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 8px 6px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.07);
-      }
-      .m-label {
-        font-size: 11px;
-        color: var(--aurora-text-secondary);
-      }
-      .m-val {
-        font-size: 13px;
-        font-weight: 700;
-        margin-top: 2px;
-      }
-    `
-    ];
-  }
-};
-At([
-  u({ attribute: !1 })
-], tt.prototype, "hass", void 0);
-At([
-  u({ attribute: !1 })
-], tt.prototype, "config", void 0);
-tt = At([
-  b("aurora-weather-radar-card")
-], tt);
-var Ct = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let et = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.entity, e = t ? this.hass.states[t] : void 0, a = e?.state === "playing", r = e?.attributes.media_title || this.config.name || e?.attributes.friendly_name || "Music Assistant Matrix", i = e?.attributes.media_artist || e?.state || "Idle", s = this.config.speaker_entities && this.config.speaker_entities.length > 0 ? this.config.speaker_entities : t ? [t] : [], n = e?.attributes.group_members || [];
-    return c`
-      <ha-card>
-        <div class="ma-header">
-          <div class="ma-icon ${a ? "active" : ""}">
-            <ha-icon .icon="${this.config.icon || "mdi:speaker-multiple"}"></ha-icon>
-          </div>
-          <div class="ma-meta">
-            <span class="title">${r}</span>
-            <span class="subtitle">${i}</span>
-          </div>
-          <button
-            class="play-toggle"
-            @click="${() => t && this.hass.callService("media_player", "media_play_pause", { entity_id: t })}"
-          >
-            <ha-icon .icon="${a ? "mdi:pause" : "mdi:play"}"></ha-icon>
-          </button>
-        </div>
-
-        <div class="zones-list">
-          ${s.map((l) => {
-      const d = this.hass.states[l];
-      if (!d)
-        return c``;
-      const p = Math.round((d.attributes.volume_level ?? 0.4) * 100), h = n.includes(l) || l === t;
-      return c`
-              <div class="zone-row">
-                <button
-                  class="join-btn ${h ? "joined" : ""}"
-                  @click="${() => this._toggleSpeakerJoin(l, h)}"
-                  title="Join / Unjoin Zone"
-                >
-                  <ha-icon .icon="${h ? "mdi:checkbox-marked-circle" : "mdi:checkbox-blank-circle-outline"}"></ha-icon>
-                </button>
-                <span class="zone-name">${d.attributes.friendly_name || l}</span>
-                <input
-                  type="range"
-                  class="zone-slider"
-                  min="0"
-                  max="100"
-                  .value="${String(p)}"
-                  @change="${(_) => {
-        const $ = Number(_.target.value);
-        this.hass.callService("media_player", "volume_set", {
-          entity_id: l,
-          volume_level: $ / 100
-        });
-      }}"
-                />
-                <span class="zone-vol">${p}%</span>
-              </div>
-            `;
-    })}
-        </div>
-      </ha-card>
-    `;
-  }
-  _toggleSpeakerJoin(t, e) {
-    const a = this.config.entity;
-    !a || t === a || (e ? this.hass.callService("media_player", "unjoin", { entity_id: t }) : this.hass.callService("media_player", "join", {
-      entity_id: a,
-      group_members: [t]
-    }));
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-      .ma-header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .ma-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--aurora-text-secondary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .ma-icon.active {
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-      }
-      .ma-meta {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-width: 0;
-      }
-      .title {
-        font-size: 14px;
-        font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-        text-transform: capitalize;
-      }
-      .play-toggle {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        border: none;
-        background: var(--aurora-accent-color);
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
-      .zones-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .zone-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 10px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-      }
-      .join-btn {
-        background: transparent;
-        border: none;
-        color: var(--aurora-text-secondary);
-        cursor: pointer;
-        padding: 0;
-        display: flex;
-      }
-      .join-btn.joined {
-        color: var(--aurora-accent-color);
-      }
-      .zone-name {
-        font-size: 12px;
-        font-weight: 500;
-        width: 110px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .zone-slider {
-        flex: 1;
-        accent-color: var(--aurora-accent-color);
-        cursor: ew-resize;
-      }
-      .zone-vol {
-        font-size: 11px;
-        color: var(--aurora-text-secondary);
-        min-width: 30px;
-        text-align: right;
-      }
-    `
-    ];
-  }
-};
-Ct([
-  u({ attribute: !1 })
-], et.prototype, "hass", void 0);
-Ct([
-  u({ attribute: !1 })
-], et.prototype, "config", void 0);
-et = Ct([
-  b("aurora-multi-room-audio-card")
-], et);
-var St = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let at = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.zone_entities && this.config.zone_entities.length > 0 ? this.config.zone_entities : this.config.entity ? [this.config.entity] : Object.keys(this.hass.states).filter((r) => r.startsWith("climate.")).slice(0, 4), e = this.config.charging_window || "00:30 – 04:30", a = this._checkOffPeakWindow(e);
-    return c`
-      <ha-card>
-        <div class="zoning-header">
-          <div class="header-left">
-            <div class="hvac-badge-icon">
-              <ha-icon .icon="${this.config.icon || "mdi:radiator"}"></ha-icon>
-            </div>
-            <div class="header-titles">
-              <span class="title">${this.config.name || "HVAC & Storage Zoning"}</span>
-              <span class="subtitle">${t.length} Active Thermal Zones</span>
-            </div>
-          </div>
-
-          <div class="window-pill ${a ? "charging" : ""}">
-            <ha-icon icon="mdi:clock-bolt-outline"></ha-icon>
-            <span>${e}</span>
-          </div>
-        </div>
-
-        <div class="zones-grid">
-          ${t.map((r) => {
-      const i = this.hass.states[r];
-      if (!i)
-        return c``;
-      const s = i.attributes.friendly_name || r, n = i.attributes.current_temperature ?? "--", l = i.attributes.temperature ?? 20, d = i.state, p = i.attributes.hvac_action === "heating" || d === "heat" || d === "boost";
-      return c`
-              <div class="zone-card ${p ? "heating" : ""}">
-                <div
-                  class="zone-info"
-                  @click="${() => m(this, this.hass, { entity: r, tap_action: { action: "more-info" } })}"
-                >
-                  <span class="z-name">${s}</span>
-                  <span class="z-status">${d} • Now ${n}°C</span>
-                </div>
-
-                <div class="zone-controls">
-                  <button class="z-step" @click="${() => this._stepZoneTemp(r, Number(l) - 0.5)}">
-                    <ha-icon icon="mdi:minus"></ha-icon>
-                  </button>
-                  <span class="z-target">${l}°</span>
-                  <button class="z-step" @click="${() => this._stepZoneTemp(r, Number(l) + 0.5)}">
-                    <ha-icon icon="mdi:plus"></ha-icon>
-                  </button>
-                </div>
-              </div>
-            `;
-    })}
-        </div>
-      </ha-card>
-    `;
-  }
-  _stepZoneTemp(t, e) {
-    this.hass.callService("climate", "set_temperature", {
-      entity_id: t,
-      temperature: e
-    });
-  }
-  _checkOffPeakWindow(t) {
-    const e = /* @__PURE__ */ new Date(), a = e.getHours() * 60 + e.getMinutes();
-    return t.includes("00:30") && t.includes("04:30") ? a >= 30 && a <= 270 : !1;
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-      .zoning-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-      }
-      .header-left {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .hvac-badge-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .header-titles {
-        display: flex;
-        flex-direction: column;
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-      }
-      .window-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 5px 10px;
-        border-radius: 12px;
-        background: var(--aurora-surface-subtle);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--aurora-text-secondary);
-      }
-      .window-pill.charging {
-        background: rgba(52, 211, 153, 0.16);
-        border-color: rgba(52, 211, 153, 0.4);
-        color: var(--aurora-success-color);
-      }
-      .zones-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .zone-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 12px;
-        border-radius: 14px;
-        background: var(--aurora-surface-subtle);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        transition: all 0.2s ease;
-      }
-      .zone-card.heating {
-        border-color: rgba(251, 146, 60, 0.4);
-        background: rgba(251, 146, 60, 0.08);
-      }
-      .zone-info {
-        display: flex;
-        flex-direction: column;
-        cursor: pointer;
-      }
-      .z-name {
-        font-size: 13px;
-        font-weight: 600;
-      }
-      .z-status {
-        font-size: 11px;
-        color: var(--aurora-text-secondary);
-        text-transform: capitalize;
-      }
-      .zone-controls {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .z-step {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--aurora-text-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
-      .z-step:hover {
-        background: var(--aurora-accent-color);
-      }
-      .z-target {
-        font-size: 14px;
-        font-weight: 700;
-        min-width: 34px;
-        text-align: center;
-      }
-    `
-    ];
-  }
-};
-St([
-  u({ attribute: !1 })
-], at.prototype, "hass", void 0);
-St([
-  u({ attribute: !1 })
-], at.prototype, "config", void 0);
-at = St([
-  b("aurora-hvac-zoning-card")
-], at);
-var zt = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let rt = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this._collectMeshNodes(), e = t.length > 0 ? Math.round(t.reduce((r, i) => r + i.lqi, 0) / t.length) : 255, a = this.config.coordinator_entity ? this.hass.states[this.config.coordinator_entity]?.state : "Online";
-    return c`
-      <ha-card>
-        <div class="mesh-header">
-          <div class="mesh-id">
-            <div class="mesh-icon">
-              <ha-icon .icon="${this.config.icon || "mdi:hubspot"}"></ha-icon>
-            </div>
-            <div class="mesh-titles">
-              <span class="title">${this.config.name || "Zigbee2MQTT & Matter Mesh"}</span>
-              <span class="subtitle">Coordinator: ${a} • Avg LQI ${e}</span>
-            </div>
-          </div>
-
-          <span class="node-count-pill">${t.length} Nodes</span>
-        </div>
-
-        <div class="mesh-list">
-          ${t.slice(0, 6).map((r) => {
-      const i = Math.min(100, Math.round(r.lqi / 255 * 100)), s = i > 60 ? "good" : i > 30 ? "fair" : "weak";
-      return c`
-              <div
-                class="mesh-row"
-                @click="${() => m(this, this.hass, { entity: r.entity_id, tap_action: { action: "more-info" } })}"
-              >
-                <span class="proto-tag ${r.protocol.toLowerCase()}">${r.protocol}</span>
-                <span class="node-name">${r.name}</span>
-                <div class="lqi-bar-wrap">
-                  <div class="lqi-bar ${s}" style="width: ${i}%"></div>
-                </div>
-                <span class="lqi-num">${r.lqi}</span>
-              </div>
-            `;
-    })}
-        </div>
-      </ha-card>
-    `;
-  }
-  _collectMeshNodes() {
-    const t = [];
-    for (const [e, a] of Object.entries(this.hass.states))
-      if (e.endsWith("_linkquality") || a.attributes.linkquality !== void 0) {
-        const r = Number(a.attributes.linkquality !== void 0 ? a.attributes.linkquality : a.state);
-        isNaN(r) || t.push({
-          entity_id: e,
-          name: (a.attributes.friendly_name || e).replace(/ linkquality$/i, ""),
-          lqi: r,
-          protocol: "Zigbee"
-        });
-      } else (e.includes("matter") || e.includes("thread")) && t.push({
-        entity_id: e,
-        name: a.attributes.friendly_name || e,
-        lqi: a.state === "unavailable" ? 0 : 220,
-        protocol: "Matter"
-      });
-    return t.sort((e, a) => e.lqi - a.lqi);
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .mesh-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .mesh-id {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .mesh-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .mesh-titles {
-        display: flex;
-        flex-direction: column;
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-      }
-      .node-count-pill {
-        padding: 4px 10px;
-        border-radius: 12px;
-        background: var(--aurora-surface-subtle);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 11px;
-        font-weight: 600;
-      }
-      .mesh-list {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .mesh-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 7px 10px;
-        border-radius: 10px;
-        background: var(--aurora-surface-subtle);
-        cursor: pointer;
-        font-size: 12px;
-      }
-      .proto-tag {
-        font-size: 10px;
-        font-weight: 700;
-        padding: 2px 6px;
-        border-radius: 6px;
-        text-transform: uppercase;
-      }
-      .proto-tag.zigbee {
-        background: rgba(251, 191, 36, 0.18);
-        color: var(--aurora-warning-color);
-      }
-      .proto-tag.matter {
-        background: rgba(56, 189, 248, 0.18);
-        color: #38bdf8;
-      }
-      .node-name {
-        flex: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .lqi-bar-wrap {
-        width: 64px;
-        height: 6px;
-        border-radius: 3px;
-        background: rgba(255, 255, 255, 0.08);
-        overflow: hidden;
-      }
-      .lqi-bar.good {
-        height: 100%;
-        background: var(--aurora-success-color);
-      }
-      .lqi-bar.fair {
-        height: 100%;
-        background: var(--aurora-warning-color);
-      }
-      .lqi-bar.weak {
-        height: 100%;
-        background: var(--aurora-danger-color);
-      }
-      .lqi-num {
-        min-width: 28px;
-        text-align: right;
-        font-weight: 600;
-        color: var(--aurora-text-secondary);
-      }
-    `
-    ];
-  }
-};
-zt([
-  u({ attribute: !1 })
-], rt.prototype, "hass", void 0);
-zt([
-  u({ attribute: !1 })
-], rt.prototype, "config", void 0);
-rt = zt([
-  b("aurora-mesh-topology-card")
-], rt);
-var Pt = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let it = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.entity ? this.hass.states[this.config.entity] : void 0, e = Math.min(100, Math.max(0, Number(t?.state || 0))), a = this.config.power_entity && this.hass.states[this.config.power_entity]?.state || "0", r = this.config.charger_switch_entity || this.config.entity, i = r && this.hass.states[r]?.state === "on" || Number(a) > 10;
-    return c`
-      <ha-card class="${i ? "charging" : ""}">
-        <div class="ev-top">
-          <div
-            class="ev-id"
-            @click="${() => m(this, this.hass, { entity: this.config.entity, tap_action: { action: "more-info" } })}"
-          >
-            <div class="ev-icon">
-              <ha-icon .icon="${this.config.icon || "mdi:ev-station"}"></ha-icon>
-            </div>
-            <div class="ev-titles">
-              <span class="title">${this.config.name || t?.attributes.friendly_name || "Smart Charger Hub"}</span>
-              <span class="subtitle">${i ? `Charging • ${a} W` : "Standby"}</span>
-            </div>
-          </div>
-
-          <button class="charge-btn ${i ? "active" : ""}" @click="${this._toggleCharge}">
-            ${i ? "STOP" : "CHARGE"}
-          </button>
-        </div>
-
-        <div class="soc-bar-container">
-          <div class="soc-bar-fill" style="width: ${e}%"></div>
-          <span class="soc-label">Battery SoC: ${isNaN(e) ? "--" : `${e}%`}</span>
-        </div>
-      </ha-card>
-    `;
-  }
-  _toggleCharge() {
-    const t = this.config.charger_switch_entity || this.config.entity;
-    t && this.hass.callService("homeassistant", "toggle", { entity_id: t });
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-      ha-card.charging {
-        border-color: var(--aurora-success-color);
-      }
-      .ev-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .ev-id {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        cursor: pointer;
-      }
-      .ev-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: rgba(52, 211, 153, 0.16);
-        color: var(--aurora-success-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .ev-titles {
-        display: flex;
-        flex-direction: column;
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-      }
-      .charge-btn {
-        padding: 6px 14px;
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: var(--aurora-surface-subtle);
-        color: var(--aurora-text-primary);
-        font-size: 11px;
-        font-weight: 700;
-        cursor: pointer;
-      }
-      .charge-btn.active {
-        background: var(--aurora-success-color);
-        border-color: var(--aurora-success-color);
-        color: #064e3b;
-      }
-      .soc-bar-container {
-        position: relative;
-        height: 26px;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.06);
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .soc-bar-fill {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, rgba(52, 211, 153, 0.35), rgba(52, 211, 153, 0.75));
-        transition: width 0.3s ease;
-      }
-      .soc-label {
-        position: relative;
-        z-index: 1;
-        font-size: 12px;
-        font-weight: 700;
-      }
-    `
-    ];
-  }
-};
-Pt([
-  u({ attribute: !1 })
-], it.prototype, "hass", void 0);
-Pt([
-  u({ attribute: !1 })
-], it.prototype, "config", void 0);
-it = Pt([
-  b("aurora-ev-charger-card")
-], it);
-var jt = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let ot = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this._getState(this.config.co2_entity || this.config.entity, "420"), e = this._getState(this.config.pm25_entity, "6"), a = this._getState(this.config.humidity_entity, "48"), r = this._getState(this.config.air_density_entity, "1.204"), s = parseFloat(t) > 1e3 ? "Ventilate Soon" : "Optimal Air Quality";
-    return c`
-      <ha-card
-        @click="${() => m(this, this.hass, { entity: this.config.entity, tap_action: { action: "more-info" } })}"
-      >
-        <div class="aq-header">
-          <div class="aq-left">
-            <div class="aq-icon">
-              <ha-icon .icon="${this.config.icon || "mdi:air-filter"}"></ha-icon>
-            </div>
-            <div class="aq-titles">
-              <span class="title">${this.config.name || "Air Quality & Density Matrix"}</span>
-              <span class="subtitle">${s}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="aq-metrics">
-          <div class="aq-box">
-            <span class="lbl">CO₂</span>
-            <span class="val">${t} ppm</span>
-          </div>
-          <div class="aq-box">
-            <span class="lbl">PM2.5</span>
-            <span class="val">${e} µg/m³</span>
-          </div>
-          <div class="aq-box">
-            <span class="lbl">Humidity</span>
-            <span class="val">${a}%</span>
-          </div>
-          <div class="aq-box">
-            <span class="lbl">Air Density</span>
-            <span class="val">${r} kg/m³</span>
-          </div>
-        </div>
-      </ha-card>
-    `;
-  }
-  _getState(t, e = "--") {
-    return !t || !this.hass.states[t] ? e : this.hass.states[t].state;
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        cursor: pointer;
-      }
-      .aq-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .aq-left {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .aq-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: var(--aurora-accent-glow);
-        color: var(--aurora-accent-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .aq-titles {
-        display: flex;
-        flex-direction: column;
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-      }
-      .subtitle {
-        font-size: 12px;
-        color: var(--aurora-text-secondary);
-      }
-      .aq-metrics {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-      }
-      .aq-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 8px 6px;
-        border-radius: 12px;
-        background: var(--aurora-surface-subtle);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-      }
-      .lbl {
-        font-size: 11px;
-        color: var(--aurora-text-secondary);
-      }
-      .val {
-        font-size: 12px;
-        font-weight: 700;
-        margin-top: 2px;
-      }
-    `
-    ];
-  }
-};
-jt([
-  u({ attribute: !1 })
-], ot.prototype, "hass", void 0);
-jt([
-  u({ attribute: !1 })
-], ot.prototype, "config", void 0);
-ot = jt([
-  b("aurora-air-quality-matrix-card")
-], ot);
-var Et = function(o, t, e, a) {
-  var r = arguments.length, i = r < 3 ? t : a === null ? a = Object.getOwnPropertyDescriptor(t, e) : a, s;
-  if (typeof Reflect == "object" && typeof Reflect.decorate == "function") i = Reflect.decorate(o, t, e, a);
-  else for (var n = o.length - 1; n >= 0; n--) (s = o[n]) && (i = (r < 3 ? s(i) : r > 3 ? s(t, e, i) : s(t, e)) || i);
-  return r > 3 && i && Object.defineProperty(t, e, i), i;
-};
-let st = class extends f {
-  render() {
-    if (!this.config || !this.hass)
-      return c``;
-    const t = this.config.hotspots && this.config.hotspots.length > 0 ? this.config.hotspots : this.config.entity ? [{ entity: this.config.entity, x: 50, y: 50, icon: this.config.icon || "mdi:lightbulb" }] : [];
-    return c`
-      <ha-card>
-        <div class="fp-header">
-          <ha-icon .icon="${this.config.icon || "mdi:floor-plan"}"></ha-icon>
-          <span class="title">${this.config.name || "Interactive Zone Floorplan"}</span>
-        </div>
-
-        <div
-          class="fp-canvas"
-          style="${this.config.image_url ? `background-image: url('${this.config.image_url}')` : ""}"
-        >
-          ${this.config.image_url ? "" : c`
-                <div class="fp-grid-lines">
-                  <div class="room-box">Living Room</div>
-                  <div class="room-box">Kitchen</div>
-                  <div class="room-box">Hall</div>
-                  <div class="room-box">Bedroom</div>
-                </div>
-              `}
-
-          ${t.map((e) => {
-      const a = this.hass.states[e.entity], r = a && ["on", "open", "playing", "detected"].includes(a.state), i = e.icon || a?.attributes.icon || "mdi:radiobox-marked";
-      return c`
-              <button
-                class="hotspot-pin ${r ? "active" : ""}"
-                style="left: ${e.x}%; top: ${e.y}%"
-                @click="${() => this._onHotspotClick(e)}"
-                title="${e.name || a?.attributes.friendly_name || e.entity}"
-              >
-                <ha-icon .icon="${i}"></ha-icon>
-              </button>
-            `;
-    })}
-        </div>
-      </ha-card>
-    `;
-  }
-  _onHotspotClick(t) {
-    if (t.hash) {
-      window.location.hash = t.hash.startsWith("#") ? t.hash : `#${t.hash}`, w(window, "location-changed", {});
-      return;
-    }
-    m(this, this.hass, { entity: t.entity, tap_action: { action: "toggle" } });
-  }
-  static {
-    this.styles = [
-      x,
-      g`
-      ha-card {
-        background: var(--aurora-card-background);
-        backdrop-filter: var(--aurora-card-backdrop-filter);
-        -webkit-backdrop-filter: var(--aurora-card-backdrop-filter);
-        border: var(--aurora-card-border);
-        border-radius: var(--aurora-card-border-radius);
-        color: var(--aurora-text-primary);
-        padding: 16px;
-        box-shadow: var(--aurora-card-shadow);
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .fp-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--aurora-accent-color);
-      }
-      .title {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--aurora-text-primary);
-      }
-      .fp-canvas {
-        position: relative;
-        height: 190px;
-        border-radius: 14px;
-        background-color: rgba(10, 15, 28, 0.75);
-        background-size: cover;
-        background-position: center;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        overflow: hidden;
-      }
-      .fp-grid-lines {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        width: 100%;
-        height: 100%;
-      }
-      .room-box {
-        border: 1px dashed rgba(255, 255, 255, 0.08);
-        padding: 10px;
-        font-size: 11px;
-        color: var(--aurora-text-secondary);
-      }
-      .hotspot-pin {
-        position: absolute;
-        transform: translate(-50%, -50%);
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(15, 23, 42, 0.85);
-        color: var(--aurora-text-secondary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.25s ease;
-      }
-      .hotspot-pin.active {
-        background: var(--aurora-accent-color);
-        border-color: #ffffff;
-        color: #ffffff;
-        box-shadow: 0 0 18px var(--aurora-accent-glow);
-      }
-    `
-    ];
-  }
-};
-Et([
-  u({ attribute: !1 })
-], st.prototype, "hass", void 0);
-Et([
-  u({ attribute: !1 })
-], st.prototype, "config", void 0);
-st = Et([
-  b("aurora-interactive-floorplan-card")
-], st);
-var we = Object.defineProperty, ke = Object.getOwnPropertyDescriptor, Ot = (o, t, e, a) => {
-  for (var r = a > 1 ? void 0 : a ? ke(t, e) : t, i = o.length - 1, s; i >= 0; i--)
-    (s = o[i]) && (r = (a ? s(t, e, r) : s(r)) || r);
-  return a && r && we(t, e, r), r;
-};
-let nt = class extends f {
-  setConfig(o) {
-    if (!o)
-      throw new Error("Invalid Aurora Card configuration");
-    this._config = {
-      card_type: "button",
-      ...o
-    };
-  }
-  getCardSize() {
-    return this._config?.card_type === "empty-column" ? 0 : [
-      "media-player",
-      "climate",
-      "energy-flow",
-      "security-matrix",
-      "weather-radar",
-      "multi-room-audio",
-      "hvac-zoning",
-      "mesh-topology",
-      "floorplan"
-    ].includes(this._config?.card_type || "") ? 3 : 1;
-  }
-  static getConfigElement() {
+  static async getConfigElement() {
     return document.createElement("aurora-card-editor");
   }
   static getStubConfig() {
@@ -4183,74 +4605,506 @@ let nt = class extends f {
       type: "custom:aurora-card",
       card_type: "button",
       button_type: "switch",
-      entity: "light.living_room",
-      name: "Living Room",
-      icon: "mdi:ceiling-light"
+      scrolling_effect: !0,
+      show_icon: !0,
+      show_name: !0,
+      state_content: ["state"]
     };
   }
-  updated(o) {
-    super.updated(o), this.hass && $e(this.hass);
+  setConfig(a) {
+    if (!a)
+      throw new Error("Invalid Aurora Card configuration");
+    this._config = {
+      card_type: "button",
+      button_type: "switch",
+      scrolling_effect: !0,
+      show_icon: !0,
+      prioritise_icon: !1,
+      show_name: !0,
+      state_content: ["state"],
+      ...a
+    }, k.syncGlobalConfigFromCard(this._config);
+  }
+  getCardSize() {
+    return 1;
+  }
+  _isEntityActive(a) {
+    if (!a || !this.hass || !this.hass.states[a]) return !1;
+    const e = this.hass.states[a].state;
+    return e === "on" || e === "playing" || e === "open" || e === "heat" || e === "cool" || e === "heating" || e === "home";
+  }
+  _resolveIcon(a, e) {
+    if (e) return e;
+    if (a && this.hass && this.hass.states[a]) {
+      const i = this.hass.states[a].attributes.icon;
+      if (i) return String(i);
+    }
+    const t = a ? a.split(".")[0] : "", o = {
+      light: "mdi:lightbulb",
+      switch: "mdi:power",
+      climate: "mdi:thermostat",
+      media_player: "mdi:speaker",
+      cover: "mdi:window-shutter",
+      sensor: "mdi:eye-outline",
+      binary_sensor: "mdi:radiobox-marked"
+    };
+    return o[t] ? o[t] : "mdi:aurora";
+  }
+  _resolveName(a, e) {
+    if (e) return e;
+    if (a && this.hass && this.hass.states[a]) {
+      const t = this.hass.states[a].attributes.friendly_name;
+      if (t) return String(t);
+    }
+    return a || "Aurora Card";
+  }
+  _resolveFormattedState(a) {
+    if (!a || !this.hass || !this.hass.states[a]) return "";
+    const e = this.hass.states[a], t = this._config?.state_content ?? ["state"], o = [];
+    for (const i of t)
+      if (i === "state") {
+        const s = e.attributes.unit_of_measurement ?? "";
+        o.push(s ? `${e.state}${s}` : e.state);
+      } else e.attributes[i] !== void 0 && o.push(String(e.attributes[i]));
+    return o.join(" • ");
+  }
+  _resolveNumericSliderPercent(a) {
+    if (this._sliderTempValue !== null) return this._sliderTempValue;
+    if (!a || !this.hass || !this.hass.states[a]) return 0;
+    const e = this.hass.states[a];
+    if (e.attributes.brightness !== void 0)
+      return Math.round(Number(e.attributes.brightness) / 255 * 100);
+    if (e.attributes.volume_level !== void 0)
+      return Math.round(Number(e.attributes.volume_level) * 100);
+    if (e.attributes.current_position !== void 0)
+      return Number(e.attributes.current_position);
+    const t = parseFloat(e.state);
+    return Number.isNaN(t) ? this._isEntityActive(a) ? 100 : 0 : Math.max(0, Math.min(100, t));
+  }
+  _onSliderInput(a) {
+    a.stopPropagation();
+    const e = Number(a.target.value);
+    this._sliderTempValue = e;
+  }
+  _onSliderChange(a) {
+    a.stopPropagation();
+    const e = Number(a.target.value);
+    this._sliderTempValue = null;
+    const t = this._config?.entity ?? "";
+    if (!t || !this.hass) return;
+    const o = t.split(".")[0];
+    o === "light" ? this.hass.callService("light", "turn_on", {
+      entity_id: t,
+      brightness_pct: e
+    }) : o === "media_player" ? this.hass.callService("media_player", "volume_set", {
+      entity_id: t,
+      volume_level: e / 100
+    }) : o === "cover" ? this.hass.callService("cover", "set_cover_position", {
+      entity_id: t,
+      position: e
+    }) : (o === "input_number" || o === "number") && this.hass.callService(o, "set_value", {
+      entity_id: t,
+      value: e
+    });
+  }
+  _handlePointerDown() {
+    this._holdTriggered = !1, this._holdTimer = window.setTimeout(() => {
+      this._holdTriggered = !0, this._config && this.hass && R(
+        this,
+        this.hass,
+        this._config,
+        this._config.hold_action ?? { action: "more-info" }
+      );
+    }, 520);
+  }
+  _handlePointerUp() {
+    this._holdTimer !== null && (clearTimeout(this._holdTimer), this._holdTimer = null);
+  }
+  _handleCardClick() {
+    if (this._holdTriggered) {
+      this._holdTriggered = !1;
+      return;
+    }
+    !this._config || !this.hass || R(this, this.hass, this._config, this._config.tap_action);
+  }
+  _handleIconClick(a) {
+    a.stopPropagation(), !(!this._config || !this.hass) && R(
+      this,
+      this.hass,
+      this._config,
+      this._config.icon_tap_action ?? this._config.tap_action
+    );
   }
   render() {
-    if (!this._config || !this.hass) return c``;
-    if (!ye(this.hass, this._config.visibility))
-      return this.style.display = "none", c``;
-    switch (this.style.display = "block", this._config.card_type) {
-      case "pop-up":
-        return c`<aurora-pop-up-card .hass="${this.hass}" .config="${this._config}"></aurora-pop-up-card>`;
-      case "separator":
-        return c`<aurora-separator-card .hass="${this.hass}" .config="${this._config}"></aurora-separator-card>`;
-      case "cover":
-        return c`<aurora-cover-card .hass="${this.hass}" .config="${this._config}"></aurora-cover-card>`;
-      case "climate":
-        return c`<aurora-climate-card .hass="${this.hass}" .config="${this._config}"></aurora-climate-card>`;
-      case "media-player":
-        return c`<aurora-media-card .hass="${this.hass}" .config="${this._config}"></aurora-media-card>`;
-      case "empty-column":
-        return c`<aurora-empty-column-card .config="${this._config}"></aurora-empty-column-card>`;
-      case "routine-macro":
-        return c`<aurora-routine-macro-card .hass="${this.hass}" .config="${this._config}"></aurora-routine-macro-card>`;
-      case "energy-flow":
-        return c`<aurora-energy-flow-card .hass="${this.hass}" .config="${this._config}"></aurora-energy-flow-card>`;
-      case "security-matrix":
-        return c`<aurora-security-matrix-card .hass="${this.hass}" .config="${this._config}"></aurora-security-matrix-card>`;
-      case "weather-radar":
-        return c`<aurora-weather-radar-card .hass="${this.hass}" .config="${this._config}"></aurora-weather-radar-card>`;
-      case "multi-room-audio":
-        return c`<aurora-multi-room-audio-card .hass="${this.hass}" .config="${this._config}"></aurora-multi-room-audio-card>`;
-      case "hvac-zoning":
-        return c`<aurora-hvac-zoning-card .hass="${this.hass}" .config="${this._config}"></aurora-hvac-zoning-card>`;
-      case "mesh-topology":
-        return c`<aurora-mesh-topology-card .hass="${this.hass}" .config="${this._config}"></aurora-mesh-topology-card>`;
-      case "ev-charger":
-        return c`<aurora-ev-charger-card .hass="${this.hass}" .config="${this._config}"></aurora-ev-charger-card>`;
-      case "air-quality":
-        return c`<aurora-air-quality-matrix-card .hass="${this.hass}" .config="${this._config}"></aurora-air-quality-matrix-card>`;
-      case "floorplan":
-        return c`<aurora-interactive-floorplan-card .hass="${this.hass}" .config="${this._config}"></aurora-interactive-floorplan-card>`;
-      case "button":
-      default:
-        return c`<aurora-button-card .hass="${this.hass}" .config="${this._config}"></aurora-button-card>`;
-    }
+    if (!this._config) return r``;
+    if ((this._config.card_type ?? "button") === "empty-column")
+      return r`<div class="aurora-empty-column"></div>`;
+    const e = this._config.entity ?? "", t = this._isEntityActive(e), o = k.generateDynamicStyles(this.hass, this._config), i = k.shouldHideDefaultContent(this._config), s = this._config.button_type === "slider", n = s ? this._resolveNumericSliderPercent(e) : 0;
+    return r`
+      <style>
+        ${o}
+      </style>
+      <div
+        class="aurora-card-surface"
+        ?data-state-on="${t}"
+        @pointerdown="${this._handlePointerDown}"
+        @pointerup="${this._handlePointerUp}"
+        @pointercancel="${this._handlePointerUp}"
+        @click="${this._handleCardClick}"
+      >
+        <!-- Module Extension: Card Backdrop Image Layer -->
+        ${k.renderBackdropLayer(this._config)}
+
+        <!-- Optional Range Slider Fill Track -->
+        ${s ? r`
+              <div class="aurora-slider-fill" style="width: ${n}%;"></div>
+              <input
+                type="range"
+                class="aurora-slider-overlay-input"
+                min="0"
+                max="100"
+                .value="${String(n)}"
+                @click="${(c) => c.stopPropagation()}"
+                @input="${this._onSliderInput}"
+                @change="${this._onSliderChange}"
+              />
+            ` : r``}
+
+        <!-- Main Card Foreground Content (Hidden if Multi Section Card hides default) -->
+        ${i ? r`` : this._renderMainContent(e)}
+
+        <!-- Module Extension: Multi Section Card (2, 3, or 4 sections) -->
+        ${k.renderMultiSectionExtension(
+      this,
+      this.hass,
+      this._config,
+      (c, l) => this._resolveIcon(c, l),
+      (c, l) => this._resolveName(c, l),
+      (c) => this._resolveFormattedState(c)
+    )}
+      </div>
+    `;
+  }
+  _renderMainContent(a) {
+    const e = this._config?.show_icon !== !1, t = this._config?.show_name !== !1, o = this._config?.scrolling_effect !== !1, i = !!this._config?.prioritise_icon, n = (a && this.hass?.states ? this.hass.states[a] : void 0)?.attributes?.entity_picture, c = !!(n && !i), l = this._resolveIcon(a, this._config?.icon), d = this._resolveName(a, this._config?.name), u = this._resolveFormattedState(a), p = this._config?.sub_button ?? [], g = k.getActiveModuleIds(this._config).includes("collapsible_sub_button_groups");
+    return r`
+      <div class="aurora-foreground-row">
+        ${e ? r`
+              <div class="aurora-main-icon-wrap" @click="${this._handleIconClick}">
+                ${k.renderIconProgressRing(this.hass, this._config)}${c ? r`<img class="entity-avatar-img" src="${n}" alt="" />` : r`<ha-icon .icon="${l}"></ha-icon>`}
+              </div>
+            ` : r``}
+
+        <div class="aurora-title-state-col" ?data-scrolling="${o}">
+          ${t ? r`<span class="aurora-card-title">${d}</span>` : r``}
+          ${u ? r`<span class="aurora-card-state">${u}</span>` : r``}
+        </div>
+
+        ${p.length > 0 ? r`
+              <div class="aurora-sub-buttons-bar">
+                ${g ? r`
+                      <button
+                        type="button"
+                        class="aurora-sub-pill drawer-toggle-pill"
+                        @click="${(v) => {
+      v.stopPropagation(), this._subButtonsCollapsed = !this._subButtonsCollapsed;
+    }}"
+                      >
+                        <ha-icon
+                          .icon="${this._subButtonsCollapsed ? "mdi:dots-horizontal" : "mdi:chevron-right"}"
+                        ></ha-icon>
+                      </button>
+                    ` : r``}
+                ${this._subButtonsCollapsed ? r`` : p.map((v) => this._renderSubButtonPill(v))}
+              </div>
+            ` : r``}
+      </div>
+    `;
+  }
+  _renderSubButtonPill(a) {
+    const e = a.entity ?? this._config?.entity ?? "", t = this._resolveIcon(e, a.icon), o = this._isEntityActive(e), i = a.show_state && e && this.hass?.states?.[e] ? this.hass.states[e].state : "";
+    return r`
+      <button
+        type="button"
+        class="aurora-sub-pill"
+        ?data-sub-active="${o}"
+        @click="${(s) => {
+      s.stopPropagation(), this._config && this.hass && R(
+        this,
+        this.hass,
+        this._config,
+        a.tap_action ?? { action: "toggle" },
+        e
+      );
+    }}"
+      >
+        <ha-icon .icon="${t}"></ha-icon>
+        ${i ? r`<span class="sub-pill-state">${i}</span>` : r``}
+      </button>
+    `;
   }
 };
-Ot([
-  u({ attribute: !1 })
-], nt.prototype, "hass", 2);
-Ot([
-  y()
-], nt.prototype, "_config", 2);
-nt = Ot([
-  b("aurora-card")
-], nt);
-window.customCards = window.customCards || [];
-window.customCards.push({
-  type: "aurora-card",
-  name: "Aurora Card",
-  description: "High-performance modular glassmorphism card suite for Home Assistant.",
-  preview: !0
-});
+A.styles = me`
+    :host {
+      display: block;
+      --aurora-accent: var(--primary-color, #38bdf8);
+    }
+
+    .aurora-empty-column {
+      min-height: 12px;
+    }
+
+    .aurora-card-surface {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 56px;
+      padding: 10px 14px;
+      border-radius: 28px;
+      background: rgba(30, 41, 59, 0.72);
+      backdrop-filter: blur(18px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--primary-text-color, #f8fafc);
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      box-sizing: border-box;
+    }
+
+    .aurora-card-surface[data-state-on] {
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.15);
+    }
+
+    /* Card Backdrop Image Module Layer */
+    .aurora-backdrop-container {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .aurora-backdrop-image,
+    .aurora-backdrop-overlay {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* Slider Track & Input */
+    .aurora-slider-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      background: rgba(56, 189, 248, 0.28);
+      pointer-events: none;
+      transition: width 0.1s ease-out;
+    }
+
+    .aurora-slider-overlay-input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      z-index: 3;
+      cursor: ew-resize;
+      margin: 0;
+    }
+
+    /* Foreground Row */
+    .aurora-foreground-row {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .aurora-main-icon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--secondary-text-color, #94a3b8);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .aurora-card-surface[data-state-on] .aurora-main-icon-wrap {
+      background: rgba(56, 189, 248, 0.22);
+      color: var(--aurora-accent, #38bdf8);
+    }
+
+    .entity-avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .aurora-icon-progress-svg {
+      position: absolute;
+      inset: -3px;
+      width: 44px;
+      height: 44px;
+      transform: rotate(-90deg);
+      pointer-events: none;
+    }
+
+    .ring-track {
+      stroke: rgba(255, 255, 255, 0.12);
+    }
+
+    .ring-fill {
+      stroke: var(--aurora-accent, #38bdf8);
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.3s ease;
+    }
+
+    .aurora-title-state-col {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .aurora-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-text-color, #ffffff);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .aurora-card-state {
+      font-size: 12px;
+      color: var(--secondary-text-color, #94a3b8);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Sub-Buttons Bar */
+    .aurora-sub-buttons-bar {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .aurora-sub-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--primary-text-color, #f8fafc);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      --mdc-icon-size: 18px;
+      transition: all 0.15s ease;
+    }
+
+    .aurora-sub-pill[data-sub-active] {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--aurora-accent, #38bdf8);
+      color: #ffffff;
+    }
+
+    /* Multi Section Card Module Grid */
+    .aurora-multi-section-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .aurora-multi-sec-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .aurora-multi-sec-cell:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .sec-cell-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+      --mdc-icon-size: 17px;
+    }
+
+    .sec-cell-text {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .sec-cell-name {
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sec-cell-state {
+      font-size: 11px;
+      color: var(--secondary-text-color, #94a3b8);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  `;
+L([
+  oe({ attribute: !1 })
+], A.prototype, "hass", 2);
+L([
+  f()
+], A.prototype, "_config", 2);
+L([
+  f()
+], A.prototype, "_sliderTempValue", 2);
+L([
+  f()
+], A.prototype, "_subButtonsCollapsed", 2);
+A = L([
+  xe("aurora-card")
+], A);
 export {
-  nt as AuroraCard
+  A as AuroraCard
 };
 //# sourceMappingURL=aurora-card.js.map

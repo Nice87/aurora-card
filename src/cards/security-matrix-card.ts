@@ -50,8 +50,7 @@ export class AuroraSecurityMatrixCard extends LitElement {
           ${cameras.length > 1
             ? html`
                 <div class="cam-tabs">
-                  ${cameras.map(
-                    (camId, idx) => html`
+                  ${cameras.map((camId: string, idx: number) => html`
                       <button
                         class="cam-tab ${idx === this._selectedCamIndex ? 'active' : ''}"
                         @click="${() => (this._selectedCamIndex = idx)}"

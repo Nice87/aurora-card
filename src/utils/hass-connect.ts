@@ -1,27 +1,7 @@
 import { HomeAssistant } from 'custom-card-helpers';
-import { AuroraCondition } from './visibility';
-
-export type AuroraCardType =
-  | 'button'
-  | 'pop-up'
-  | 'separator'
-  | 'cover'
-  | 'climate'
-  | 'media-player'
-  | 'empty-column'
-  | 'routine-macro'
-  | 'energy-flow'
-  | 'security-matrix'
-  | 'weather-radar'
-  | 'multi-room-audio'
-  | 'hvac-zoning'
-  | 'mesh-topology'
-  | 'ev-charger'
-  | 'air-quality'
-  | 'floorplan';
 
 export interface AuroraActionConfig {
-  action: 'more-info' | 'toggle' | 'navigate' | 'call-service' | 'none';
+  action: 'toggle' | 'more-info' | 'navigate' | 'call-service' | 'none';
   navigation_path?: string;
   service?: string;
   service_data?: Record<string, any>;
@@ -32,150 +12,169 @@ export interface AuroraSubButtonConfig {
   name?: string;
   icon?: string;
   show_state?: boolean;
+  show_name?: boolean;
+  show_icon?: boolean;
   show_background?: boolean;
+  sub_button_type?: 'default' | 'slider' | 'select';
   tap_action?: AuroraActionConfig;
+}
+
+export interface AuroraFloorplanHotspot {
+  id: string;
+  name?: string;
+  entity?: string;
+  hash?: string;
+  x: number;
+  y: number;
+  icon?: string;
 }
 
 export interface AuroraMacroStep {
   service: string;
   entity_id?: string;
+  target?: { entity_id?: string | string[] };
   data?: Record<string, any>;
+  delay?: number;
   delay_ms?: number;
 }
 
-export interface AuroraFloorplanHotspot {
-  entity: string;
-  name?: string;
-  icon?: string;
-  x: number;
-  y: number;
-  hash?: string;
-}
-
 export interface AuroraCardConfig {
-  type: string;
-  card_type?: AuroraCardType;
+  type?: string;
+  card_type?: string;
+  button_type?: 'switch' | 'slider' | 'state' | 'name';
   entity?: string;
   name?: string;
   icon?: string;
-  button_type?: 'switch' | 'slider' | 'state' | 'name';
-  show_state?: boolean;
-  show_attribute?: boolean;
-  attribute?: string;
-  sub_button?: AuroraSubButtonConfig[];
-  // Pop-up properties
   hash?: string;
-  auto_close?: number;
-  close_on_click?: boolean;
-  backdrop_blur?: number;
-  cards?: Array<Record<string, any>>;
-  // Climate & Cover properties
-  step?: number;
-  min_temp?: number;
-  max_temp?: number;
-  // Batch 3: Routine Macro
-  macro_steps?: AuroraMacroStep[];
-  // Batch 3: Energy Flow
-  solar_entity?: string;
-  grid_entity?: string;
-  battery_entity?: string;
-  home_entity?: string;
-  tariff_entity?: string;
-  // Batch 3: Security Matrix
-  alarm_entity?: string;
-  cameras?: string[];
-  perimeter_entities?: string[];
-  doorbell_chime_entity?: string;
-  doorbell_motion_entity?: string;
-  // Batch 3: Weather & Microclimate
-  dew_point_entity?: string;
-  vpd_entity?: string;
-  discomfort_entity?: string;
-  // Batch 3: Multi-Room Audio
-  speaker_entities?: string[];
-  // Batch 4: HVAC & Storage Heating Zoning
-  zone_entities?: string[];
-  charging_window?: string;
-  // Batch 4: Zigbee / Matter Mesh Topology
-  coordinator_entity?: string;
-  mesh_filter?: string;
-  // Batch 4: EV / E-Bike & Solar Charger
-  power_entity?: string;
-  current_limit_entity?: string;
-  charger_switch_entity?: string;
-  // Batch 4: Air Quality & Acoustic Density Matrix
-  co2_entity?: string;
-  pm25_entity?: string;
-  voc_entity?: string;
-  humidity_entity?: string;
-  air_density_entity?: string;
-  // Batch 4: Interactive Floorplan
-  image_url?: string;
-  hotspots?: AuroraFloorplanHotspot[];
-  // Universal
-  visibility?: AuroraCondition[];
+  backdrop_blur?: string;
+  scrolling_effect?: boolean;
+  show_icon?: boolean;
+  prioritise_icon?: boolean;
+  show_name?: boolean;
+  state_content?: string[];
   tap_action?: AuroraActionConfig;
+  icon_tap_action?: AuroraActionConfig;
   hold_action?: AuroraActionConfig;
+  sub_button?: AuroraSubButtonConfig[];
+  vibe_preset?: 'aurora_lumina' | 'crimson_midnight' | 'obsidian_minimal' | 'ha_native';
+  custom_styles?: string;
+  enable_unsupported_modules?: boolean;
+  active_modules?: string[];
+  global_modules?: string[];
+  module_configs?: Record<string, Record<string, any>>;
+  [key: string]: any;
 }
 
-export function fireEvent(
+export interface ExtendedAuroraConfig extends AuroraCardConfig {
+  type?: string;
+  card_type?: string;
+  button_type?: 'switch' | 'slider' | 'state' | 'name';
+  entity?: string;
+  name?: string;
+  icon?: string;
+  hash?: string;
+  backdrop_blur?: string;
+  scrolling_effect?: boolean;
+  show_icon?: boolean;
+  prioritise_icon?: boolean;
+  show_name?: boolean;
+  state_content?: string[];
+  icon_tap_action?: AuroraActionConfig;
+  hold_action?: AuroraActionConfig;
+  card_layout?: string;
+  vibe_preset?: 'aurora_lumina' | 'crimson_midnight' | 'obsidian_minimal' | 'ha_native';
+  custom_styles?: string;
+  enable_unsupported_modules?: boolean;
+  active_modules?: string[];
+  global_modules?: string[];
+  module_configs?: Record<string, Record<string, any>>;
+  [key: string]: any;
+}
+
+export const fireEvent = (
   node: HTMLElement | Window,
   type: string,
-  detail: Record<string, any> = {},
-  options: { bubbles?: boolean; composed?: boolean } = {}
-) {
+  detail?: Record<string, any>,
+  options?: { bubbles?: boolean; cancelable?: boolean; composed?: boolean }
+): CustomEvent => {
+  const opts = options ?? {};
   const event = new CustomEvent(type, {
-    bubbles: options.bubbles ?? true,
-    composed: options.composed ?? true,
-    detail,
+    bubbles: opts.bubbles === undefined ? true : opts.bubbles,
+    cancelable: Boolean(opts.cancelable),
+    composed: opts.composed === undefined ? true : opts.composed,
+    detail: detail ?? {},
   });
   node.dispatchEvent(event);
   return event;
-}
+};
 
-export function handleAction(
-  node: HTMLElement,
+export const executeAuroraAction = (
+  node: HTMLElement | Window,
   hass: HomeAssistant,
-  config: { entity?: string; tap_action?: AuroraActionConfig; hold_action?: AuroraActionConfig },
-  actionType: 'tap' | 'hold'
-) {
-  const action = actionType === 'tap' ? config.tap_action : config.hold_action;
-  const actionName = action?.action || (actionType === 'tap' ? 'toggle' : 'more-info');
+  config: AuroraCardConfig,
+  actionConfig?: AuroraActionConfig | string,
+  overrideEntityId?: string
+): void => {
+  if (!hass) return;
+  const targetEntity = overrideEntityId ?? config.entity ?? '';
+  
+  const resolvedAction: AuroraActionConfig =
+    typeof actionConfig === 'string'
+      ? { action: 'toggle' }
+      : actionConfig ?? config.tap_action ?? { action: 'toggle' };
 
-  switch (actionName) {
-    case 'toggle':
-      if (config.entity) {
-        hass.callService('homeassistant', 'toggle', { entity_id: config.entity });
-      }
-      break;
-    case 'navigate':
-      if (action?.navigation_path) {
-        if (action.navigation_path.startsWith('#')) {
-          window.location.hash = action.navigation_path;
-          fireEvent(window, 'location-changed', {});
-        } else {
-          history.pushState(null, '', action.navigation_path);
-          fireEvent(window, 'location-changed', {});
-        }
-      }
-      break;
-    case 'call-service':
-      if (action?.service) {
-        const [domain, service] = action.service.split('.');
-        const serviceData = { ...(action.service_data || {}) };
-        if (config.entity && !serviceData.entity_id) {
-          serviceData.entity_id = config.entity;
-        }
-        hass.callService(domain, service, serviceData);
-      }
-      break;
-    case 'more-info':
-      if (config.entity) {
-        fireEvent(node, 'hass-more-info', { entityId: config.entity });
-      }
-      break;
-    case 'none':
-    default:
-      break;
+  const act = resolvedAction.action ?? 'toggle';
+
+  if (act === 'none') return;
+
+  if (act === 'more-info') {
+    if (targetEntity && node instanceof HTMLElement) {
+      fireEvent(node, 'hass-more-info', { entityId: targetEntity });
+    }
+    return;
   }
-}
+
+  if (act === 'navigate') {
+    const path = resolvedAction.navigation_path ?? config.hash ?? '#aurora-popup';
+    if (path.startsWith('#')) {
+      window.location.hash = path;
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    } else {
+      window.history.pushState(null, '', path);
+      if (window instanceof Window) {
+        fireEvent(window, 'location-changed', { replace: false });
+      }
+    }
+    return;
+  }
+
+  if (act === 'call-service' && resolvedAction.service) {
+    const [domain, service] = resolvedAction.service.split('.');
+    if (domain && service) {
+      hass.callService(domain, service, resolvedAction.service_data ?? { entity_id: targetEntity });
+    }
+    return;
+  }
+
+  if (targetEntity) {
+    const domain = targetEntity.split('.')[0];
+    if (domain === 'scene' || domain === 'script') {
+      hass.callService(domain, 'turn_on', { entity_id: targetEntity });
+    } else {
+      hass.callService('homeassistant', 'toggle', { entity_id: targetEntity });
+    }
+  }
+};
+
+/**
+ * Compatibility alias for legacy cards using `handleAction`
+ */
+export const handleAction = (
+  node: HTMLElement | Window,
+  hass: HomeAssistant,
+  config: AuroraCardConfig,
+  actionConfig?: AuroraActionConfig | string,
+  overrideEntityId?: string
+): void => {
+  executeAuroraAction(node, hass, config, actionConfig, overrideEntityId);
+};

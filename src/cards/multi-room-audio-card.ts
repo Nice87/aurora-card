@@ -52,7 +52,7 @@ export class AuroraMultiRoomAudioCard extends LitElement {
         </div>
 
         <div class="zones-list">
-          ${speakers.map((spkId) => {
+          ${speakers.map((spkId: string) => {
             const spkObj = this.hass.states[spkId];
             if (!spkObj) return html``;
             const vol = Math.round((spkObj.attributes.volume_level ?? 0.4) * 100);

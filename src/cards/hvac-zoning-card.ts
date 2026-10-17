@@ -44,7 +44,7 @@ export class AuroraHvacZoningCard extends LitElement {
         </div>
 
         <div class="zones-grid">
-          ${zones.map((zoneId) => {
+          ${zones.map((zoneId: string) => {
             const stateObj = this.hass.states[zoneId];
             if (!stateObj) return html``;
             const friendly = stateObj.attributes.friendly_name || zoneId;
