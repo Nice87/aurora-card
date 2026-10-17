@@ -5104,6 +5104,14 @@ L([
 A = L([
   xe("aurora-card")
 ], A);
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "aurora-card",
+  name: "Aurora Card",
+  description: "A high-performance modular card inspired by Bubble Card.",
+  preview: !0
+  // Optional: enables visual preview in the card picker
+});
 export {
   A as AuroraCard
 };
